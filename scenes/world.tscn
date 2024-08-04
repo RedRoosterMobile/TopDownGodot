@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=17 format=3 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://shader/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Texture2D" uid="uid://b56x2nqhh8vo1" path="res://assets/pink.png" id="1_v0cjd"]
@@ -37,8 +37,15 @@ occlusion_layer_0/sdf_collision = true
 physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_g65ky")
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_w4vx6"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dl3bm"]
+seamless = true
+noise = SubResource("FastNoiseLite_w4vx6")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tiey2"]
 shader = ExtResource("1_mwh1s")
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_dl3bm")
 
 [node name="world" type="Node2D"]
 material = SubResource("ShaderMaterial_g8jts")

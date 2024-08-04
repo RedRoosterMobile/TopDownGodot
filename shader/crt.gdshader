@@ -3,7 +3,9 @@ shader_type canvas_item;
 // tutorial: https://www.youtube.com/watch?v=gqe0InyIk4U&t=117s
 // https://godotshaders.com/shader/crt-shader-2/
 // Based on: https://www.shadertoy.com/view/Ms23DR
+// https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/canvas_item_shader.html
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
+uniform sampler2D noise_texture : repeat_enable;
 
 // Loosely based on postprocessing shader by inigo quilez, License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 
@@ -19,9 +21,13 @@ vec2 curve(vec2 uv)
 }
 void fragment(  )
 {
+	
 	vec2 iResolution = 1.0 / SCREEN_PIXEL_SIZE;
     vec2 q = FRAGCOORD.xy / iResolution.xy;
     vec2 uv = q;
+	
+	vec3 noise_color = texture( noise_texture, vec2(q.x,q.y) + TIME/10.0 ).xyz;
+	float noise = noise_color.b/20.0;
     uv = curve( uv );
     vec3 oricol = texture( screen_texture, vec2(q.x,q.y) ).xyz;
     vec3 col;
@@ -57,6 +63,7 @@ void fragment(  )
 	
     float comp = smoothstep( 0.1, 0.9, sin(TIME) );
  
-
-    COLOR = vec4(col,1.0);
+	//vec4 noise_color = texture( noise_texture, vec2(q.x,q.y) );
+    COLOR = vec4(col+noise,1.0);
+	//COLOR=noise_color;
 }
