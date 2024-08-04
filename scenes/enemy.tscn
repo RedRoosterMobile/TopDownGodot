@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dg2icd6fsnaur"]
+[gd_scene load_steps=6 format=3 uid="uid://dg2icd6fsnaur"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bcf45"]
-[ext_resource type="Texture2D" uid="uid://h1cafnnk0wca" path="res://assets/enemy1.png" id="2_pqj5q"]
+[ext_resource type="Texture2D" uid="uid://h1cafnnk0wca" path="res://assets/sprites/enemy1.png" id="2_pqj5q"]
+[ext_resource type="AudioStream" uid="uid://byic1s2ye1oge" path="res://assets/sounds/sfx/zombie/1.wav" id="3_fyqbl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ejwtv"]
 size = Vector2(12, 30)
@@ -16,6 +17,9 @@ script = ExtResource("1_bcf45")
 scale = Vector2(3, 3)
 texture = ExtResource("2_pqj5q")
 
+[node name="SfxZombieGrowl" type="AudioStreamPlayer2D" parent="Sprite2D"]
+stream = ExtResource("3_fyqbl")
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ejwtv")
 
@@ -24,4 +28,7 @@ shape = SubResource("RectangleShape2D_ejwtv")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_t2ff6")
 
+[node name="Timer" type="Timer" parent="."]
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

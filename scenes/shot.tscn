@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvl6j563ytllb"]
+
+[ext_resource type="AudioStream" uid="uid://j1cl564fgau4" path="res://assets/sounds/sfx/sndFireBass.wav" id="1_873j0"]
+
+[node name="Shot" type="AudioStreamPlayer2D"]
+stream = ExtResource("1_873j0")
