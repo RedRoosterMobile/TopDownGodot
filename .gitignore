@@ -1,0 +1,39 @@
+# Godot 4+ specific ignores
+# Godot 4.2 specific files and directories
+.import/
+.export/
+export_presets.cfg
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Swap files
+*.swp
+*.swo
+
+# Godot configuration files
+.editorconfig
+.config/
+mono/
+data_*
+default_env.tres
+
+# Binary files
+*.exe
+*.dll
+*.so
+*.dylib
+*.pdb
+*.pck
+*.pck.gz
+*.zip
+*.tar.gz
+
+# Debug and build directories
+.debug/
+.build/
+
+# Godot's version control metadata
+.godot/
+
