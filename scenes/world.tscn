@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=38 format=3 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Texture2D" uid="uid://b56x2nqhh8vo1" path="res://assets/sprites/pink.png" id="1_v0cjd"]
@@ -8,10 +8,83 @@
 [ext_resource type="PackedScene" uid="uid://dg2icd6fsnaur" path="res://scenes/enemy.tscn" id="5_fhhcs"]
 [ext_resource type="Texture2D" uid="uid://dt64eejyglffe" path="res://assets/sprites/wall_tile.png" id="6_do7ht"]
 [ext_resource type="AudioStream" uid="uid://j1cl564fgau4" path="res://assets/sounds/sfx/sndFireBass.wav" id="6_frdab"]
+[ext_resource type="Texture2D" uid="uid://by7xima65d7uh" path="res://assets/sprites/legs/sprWaiterLegs_0.png" id="7_tmm25"]
+[ext_resource type="Texture2D" uid="uid://buwwoumx8nltd" path="res://assets/sprites/legs/sprWaiterLegs_1.png" id="8_hwoig"]
 [ext_resource type="AudioStream" uid="uid://vm2xo6m2jejv" path="res://assets/sounds/music/music.ogg" id="9_26m4r"]
+[ext_resource type="Texture2D" uid="uid://c4nug2i0hyhul" path="res://assets/sprites/legs/sprWaiterLegs_2.png" id="9_byxgy"]
+[ext_resource type="Texture2D" uid="uid://dkv85pqwoh1w1" path="res://assets/sprites/legs/sprWaiterLegs_3.png" id="10_5k35o"]
+[ext_resource type="Texture2D" uid="uid://nlayamc5c0x" path="res://assets/sprites/legs/sprWaiterLegs_4.png" id="11_y3wb7"]
+[ext_resource type="Texture2D" uid="uid://28rurgx0fahr" path="res://assets/sprites/legs/sprWaiterLegs_5.png" id="12_autc3"]
+[ext_resource type="Texture2D" uid="uid://c8yprpkroygxy" path="res://assets/sprites/legs/sprWaiterLegs_6.png" id="13_r7gc4"]
+[ext_resource type="Texture2D" uid="uid://dxwav5qi3v6j2" path="res://assets/sprites/legs/sprWaiterLegs_7.png" id="14_ofv2c"]
+[ext_resource type="Texture2D" uid="uid://bn2vostulkged" path="res://assets/sprites/legs/sprWaiterLegs_8.png" id="15_4qc2g"]
+[ext_resource type="Texture2D" uid="uid://dllo25nw8pkhw" path="res://assets/sprites/legs/sprWaiterLegs_9.png" id="16_0stdy"]
+[ext_resource type="Texture2D" uid="uid://dvkv74tv6ly4i" path="res://assets/sprites/legs/sprWaiterLegs_10.png" id="17_um1xk"]
+[ext_resource type="Texture2D" uid="uid://bgiovc780vnbd" path="res://assets/sprites/legs/sprWaiterLegs_11.png" id="18_qqsf5"]
+[ext_resource type="Texture2D" uid="uid://w206vgspw6hf" path="res://assets/sprites/legs/sprWaiterLegs_12.png" id="19_abx8c"]
+[ext_resource type="Texture2D" uid="uid://bcc8j78aja3vd" path="res://assets/sprites/legs/sprWaiterLegs_13.png" id="20_pgc72"]
+[ext_resource type="Texture2D" uid="uid://pomg71wni0fl" path="res://assets/sprites/legs/sprWaiterLegs_14.png" id="21_kcmh3"]
+[ext_resource type="Texture2D" uid="uid://qo25iv03ahv8" path="res://assets/sprites/legs/sprWaiterLegs_15.png" id="22_icxiy"]
+[ext_resource type="Texture2D" uid="uid://dj4t4cm1ado8" path="res://assets/sprites/sprExplosion_0.png" id="26_t410r"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g8jts"]
 shader = ExtResource("1_mwh1s")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3rdmb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_tmm25")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_hwoig")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_byxgy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_5k35o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_y3wb7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_autc3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_r7gc4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_ofv2c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_4qc2g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_0stdy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_um1xk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_qqsf5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_abx8c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_pgc72")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_kcmh3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_icxiy")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 10.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hf8xc"]
 size = Vector2(48, 112)
@@ -49,6 +122,10 @@ noise = SubResource("FastNoiseLite_w4vx6")
 shader = ExtResource("1_mwh1s")
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_dl3bm")
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wd3uy"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 98, 0)
+
 [node name="world" type="Node2D"]
 material = SubResource("ShaderMaterial_g8jts")
 
@@ -61,6 +138,12 @@ texture = ExtResource("1_v0cjd")
 [node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(200, 200)
 script = ExtResource("2_c88fv")
+
+[node name="AnimLegs" type="AnimatedSprite2D" parent="Player"]
+modulate = Color(0.279357, 0.279357, 0.279357, 1)
+scale = Vector2(6, 6)
+sprite_frames = SubResource("SpriteFrames_3rdmb")
+animation = &"walk"
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 scale = Vector2(8, 8)
@@ -80,16 +163,18 @@ shape = SubResource("RectangleShape2D_x0ods")
 position_smoothing_enabled = true
 
 [node name="PointLight2D" type="PointLight2D" parent="Player"]
-position = Vector2(6, 6)
+position = Vector2(21, 21)
 scale = Vector2(1.97235, 1.97235)
 shadow_enabled = true
 texture = ExtResource("4_as6n4")
 
 [node name="SfxShot" type="AudioStreamPlayer2D" parent="Player"]
 stream = ExtResource("6_frdab")
+bus = &"SFX"
 
-[node name="Enemy" parent="." instance=ExtResource("5_fhhcs")]
+[node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
 scale = Vector2(4, 4)
+player = NodePath("../Player")
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_dw68l")
@@ -110,5 +195,14 @@ grow_vertical = 2
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("9_26m4r")
 autoplay = true
+bus = &"MUSIC"
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+visible = false
+position = Vector2(100, 100)
+process_material = SubResource("ParticleProcessMaterial_wd3uy")
+texture = ExtResource("26_t410r")
+lifetime = 4.0
+preprocess = 1.0
 
 [connection signal="body_entered" from="Player/Area2D" to="Player" method="_on_area_2d_body_entered"]

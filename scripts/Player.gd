@@ -6,6 +6,11 @@ var movespeed:float = 500
 var bullet_speed:float = 2000
 var bullet = preload("res://scenes/bullet.tscn")
 @onready var sfx_shot := $SfxShot
+@onready var spr_player = $Sprite2D
+@onready var anim_legs = $AnimLegs
+# @onready var bullet_particles = $BulletParticles2D
+@onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
+
 
 func _ready():
 	pass
@@ -35,6 +40,14 @@ func _physics_process(delta):
 	
 	# Apply the movement
 	velocity = motion * movespeed
+	
+	# leg animation
+	if(velocity.length() > 0):
+		anim_legs.play()
+		anim_legs.rotation = velocity.angle() - rotation
+	else:
+		anim_legs.stop()
+
 	move_and_slide()
 	look_at(get_global_mouse_position())
 	
@@ -55,7 +68,16 @@ func fire():
 	
 	# Add the bullet instance to the scene tree
 	get_tree().get_root().call_deferred("add_child", bullet_instance)
+	# bullet_particles.restart()
+	# bullet_particles.emitting = true
+	
+	# Instance and add the particles
+	var bullet_particles_instance := bullet_particles_scene.instantiate()
+	bullet_particles_instance.position = bullet_rigid_body.position # Adjust the position if needed
+	get_tree().get_root().call_deferred("add_child", bullet_particles_instance)
 	sfx_shot.play()
+	
+	
 	
 
 # https://youtu.be/HycyFNQfqI0?si=NJQaapwXdqKIyq7M&t=410

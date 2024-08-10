@@ -1,8 +1,12 @@
 extends CharacterBody2D
 
 var motion := Vector2()
-@onready var sfx_zombie_growl := $Sprite2D/SfxZombieGrowl
+var dead := false
+@onready var sfx_zombie_growl := $AnimZombie/SfxZombieGrowl
 @onready var timer := $Timer
+@onready var animated_sprite_2d = $AnimZombie
+
+@export var player: Node2D;
 
 var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/1.wav",
@@ -35,18 +39,29 @@ func _ready():
 	randomize() # Ensure randomness each time the game runs
 	play_random_sound()
 	start_random_timer()
+	animated_sprite_2d.play("walk")
 
 func _physics_process(delta):
-	var player: CharacterBody2D = get_parent().get_node("Player")
+	if dead:
+		return
+	#  var player: CharacterBody2D = get_parent().get_node("Player")
 	position += (player.position - position) / randf_range(55, 85)
 	look_at(player.position)
 	move_and_collide(motion)
 
 func _on_area_2d_body_entered(body):
 	if "BulletRigidBody2D" in body.name:
-		queue_free()
+		
 		body.get_parent().queue_free()
-
+		dead = true
+		timer.stop()
+		animated_sprite_2d.play("die")
+		
 func _on_timer_timeout():
 	play_random_sound()
 	start_random_timer()
+
+func _on_anim_zombie_animation_finished():
+	print("done")
+	# draw to renderr texture?
+	queue_free()

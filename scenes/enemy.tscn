@@ -1,8 +1,19 @@
-[gd_scene load_steps=6 format=3 uid="uid://dg2icd6fsnaur"]
+[gd_scene load_steps=18 format=3 uid="uid://dg2icd6fsnaur"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bcf45"]
-[ext_resource type="Texture2D" uid="uid://h1cafnnk0wca" path="res://assets/sprites/enemy1.png" id="2_pqj5q"]
 [ext_resource type="AudioStream" uid="uid://byic1s2ye1oge" path="res://assets/sounds/sfx/zombie/1.wav" id="3_fyqbl"]
+[ext_resource type="Texture2D" uid="uid://c142ch7r31wku" path="res://assets/sprites/enemy/enemy5.png" id="4_f177n"]
+[ext_resource type="Texture2D" uid="uid://bhy06hsu6aasb" path="res://assets/sprites/enemy/enemy6.png" id="5_1wch4"]
+[ext_resource type="Texture2D" uid="uid://bfk3ymk40p0ff" path="res://assets/sprites/enemy/enemy7.png" id="6_uf42t"]
+[ext_resource type="Texture2D" uid="uid://c3cn2s8k56fss" path="res://assets/sprites/enemy/enemy8.png" id="7_go66y"]
+[ext_resource type="Texture2D" uid="uid://cuu1hw1dc0ebt" path="res://assets/sprites/enemy/enemy9.png" id="8_an6yw"]
+[ext_resource type="Texture2D" uid="uid://bouw77ejll5hi" path="res://assets/sprites/enemy/enemy10.png" id="9_4oblw"]
+[ext_resource type="Texture2D" uid="uid://b1dnsku6bnxec" path="res://assets/sprites/enemy/enemy11.png" id="10_si83q"]
+[ext_resource type="Texture2D" uid="uid://bsbkit250h3g6" path="res://assets/sprites/enemy/enemy12.png" id="11_by0d5"]
+[ext_resource type="Texture2D" uid="uid://cagc2k5i3fc8c" path="res://assets/sprites/enemy/enemy3.png" id="12_qbpni"]
+[ext_resource type="Texture2D" uid="uid://bm12gwfvv403c" path="res://assets/sprites/enemy/enemy4.png" id="13_s0j3y"]
+[ext_resource type="Texture2D" uid="uid://g8mo7a1ho5a1" path="res://assets/sprites/enemy/enemy1.png" id="14_bqxwp"]
+[ext_resource type="Texture2D" uid="uid://coknc8x25v432" path="res://assets/sprites/enemy/enemy2.png" id="15_k201j"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ejwtv"]
 size = Vector2(12, 30)
@@ -10,15 +21,62 @@ size = Vector2(12, 30)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t2ff6"]
 size = Vector2(14, 32)
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_g1f26"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_f177n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_1wch4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_uf42t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_go66y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_an6yw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_4oblw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_si83q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_by0d5")
+}],
+"loop": false,
+"name": &"die",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("12_qbpni")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_s0j3y")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_bqxwp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_k201j")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
 [node name="Enemy" type="CharacterBody2D"]
 script = ExtResource("1_bcf45")
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(3, 3)
-texture = ExtResource("2_pqj5q")
-
-[node name="SfxZombieGrowl" type="AudioStreamPlayer2D" parent="Sprite2D"]
-stream = ExtResource("3_fyqbl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ejwtv")
@@ -30,5 +88,15 @@ shape = SubResource("RectangleShape2D_t2ff6")
 
 [node name="Timer" type="Timer" parent="."]
 
+[node name="AnimZombie" type="AnimatedSprite2D" parent="."]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_g1f26")
+animation = &"walk"
+
+[node name="SfxZombieGrowl" type="AudioStreamPlayer2D" parent="AnimZombie"]
+stream = ExtResource("3_fyqbl")
+bus = &"SFX"
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="animation_finished" from="AnimZombie" to="." method="_on_anim_zombie_animation_finished"]

@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://btrwyt02sx6oj"]
+
+[ext_resource type="Texture2D" uid="uid://cdfgaiub122m4" path="res://assets/sprites/sprSmoke_0.png" id="1_jqdcv"]
+[ext_resource type="Script" path="res://scripts/bullet_particles_2d.gd" id="2_6fb0t"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_p8yy5"]
+
+[node name="BulletParticles2D" type="CPUParticles2D"]
+material = SubResource("CanvasItemMaterial_p8yy5")
+position = Vector2(264, 199)
+emitting = false
+amount = 1
+one_shot = true
+speed_scale = 1.2
+texture = ExtResource("1_jqdcv")
+emission_shape = 2
+emission_sphere_radius = 1.0
+direction = Vector2(1, 1)
+spread = 180.0
+gravity = Vector2(2.08165e-12, 2.08165e-12)
+initial_velocity_min = 50.0
+initial_velocity_max = 75.0
+scale_amount_max = 2.0
+color = Color(1, 1, 1, 0.581)
+script = ExtResource("2_6fb0t")
+
+[connection signal="finished" from="." to="." method="_on_finished"]
