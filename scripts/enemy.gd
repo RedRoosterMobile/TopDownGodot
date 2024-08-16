@@ -3,9 +3,10 @@ extends CharacterBody2D
 var motion := Vector2()
 var dead := false
 @onready var sfx_zombie_growl := $AnimZombie/SfxZombieGrowl
-@onready var timer := $Timer
+@onready var timer:Timer = $Timer
 @onready var animated_sprite_2d = $AnimZombie
 
+# will be set in the editor, like in Unity
 @export var player: Node2D;
 
 var sound_files: Array[String] = [
