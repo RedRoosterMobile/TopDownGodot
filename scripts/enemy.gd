@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 var motion := Vector2()
-var dead := false
+var is_dead := false
 @onready var sfx_zombie_growl := $AnimZombie/SfxZombieGrowl
 @onready var timer:Timer = $Timer
 @onready var animated_sprite_2d = $AnimZombie
@@ -47,7 +47,7 @@ func _ready():
 	animated_sprite_2d.play("walk")
 
 func _physics_process(delta):
-	if dead:
+	if is_dead:
 		return
 	
 	if player.position.distance_to(self.position) < 400:
@@ -72,7 +72,7 @@ func _physics_process(delta):
 func _on_area_2d_body_entered(body):
 	if "BulletRigidBody2D" in body.name:
 		body.get_parent().queue_free()
-		dead = true
+		is_dead = true
 		timer.stop()
 		animated_sprite_2d.play("die")
 		

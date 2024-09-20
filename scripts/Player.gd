@@ -99,9 +99,6 @@ func fire():
 	bullet_particles_instance.position = bullet_rigid_body.position # Adjust the position if needed
 	get_tree().get_root().call_deferred("add_child", bullet_particles_instance)
 	sfx_shot.play()
-	
-	
-	
 
 # https://youtu.be/HycyFNQfqI0?si=NJQaapwXdqKIyq7M&t=410
 func kill():
@@ -110,7 +107,8 @@ func kill():
 
 func _on_area_2d_body_entered(body):
 	if "Enemy" in body.name:
-		kill()
+		if not body.is_dead:
+			kill()
 		
 # when dialogue done
 func _on_example_balloon_tree_exited() -> void:
