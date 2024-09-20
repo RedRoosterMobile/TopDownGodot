@@ -30,6 +30,7 @@ shape = SubResource("RectangleShape2D_yfms3")
 
 [node name="PointLight2D" type="PointLight2D" parent="BulletRigidBody2D"]
 scale = Vector2(1, 0.319999)
+energy = 0.5
 shadow_enabled = true
 texture = ExtResource("3_anxvs")
 texture_scale = 0.5

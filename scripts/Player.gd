@@ -3,17 +3,15 @@ extends CharacterBody2D
 # original tutorial https://www.youtube.com/watch?v=HycyFNQfqI0
 
 var movespeed:float = 500
-var bullet_speed:float = 2000
+@export var bullet_speed:float = 3000
+@export var bullet_accuracy:float = 0.05
 var bullet = preload("res://scenes/bullet.tscn")
 var dialogue_active:bool = false
 @onready var sfx_shot := $SfxShot
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
-# @onready var bullet_particles = $BulletParticles2D
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
-
-@export var bullet_accuracy:float = 0.05
 
 func _ready():
 	pass
