@@ -11,6 +11,7 @@ var speed:float = 1.0
 @onready var sprite_2d: Sprite2D = $Sprite2D
 # pathfinding
 # https://www.youtube.com/watch?v=yT22SXYpoYM
+@onready var ray_cast_2d: RayCast2D = $RayCast2D
 
 var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/1.wav",
@@ -50,10 +51,22 @@ func _physics_process(delta):
 		return
 	
 	if player.position.distance_to(self.position) < 400:
+		# todo: only walk if the path is clear (raycast the motion vector)
 		motion = (player.position - position) / randf_range(55, 85) * speed
+		
+		
 		look_at(player.position)
-		# does this even do sth?
-		move_and_collide(motion)
+		if ray_cast_2d.is_colliding():
+			print(ray_cast_2d.get_collider())
+			if ray_cast_2d.get_collider() == player:
+				move_and_collide(motion)
+			else:
+				motion = Vector2.ZERO
+		# todo: path-finding
+		# todo: think of some following logic:
+		# sound attraction? noise level?
+		# distract enemies? decoys?
+		
 	else:
 		motion = Vector2.ZERO
 
