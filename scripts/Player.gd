@@ -13,6 +13,8 @@ var dialogue_active:bool = false
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
 
+@export var bullet_accuracy:float = 0.05
+
 func _ready():
 	pass
 	# Set the player's collision layer and mask
@@ -40,7 +42,6 @@ func _physics_process(delta):
 			example_balloon.start(resource,"start")
 			dialogue_active = true
 			toggle_pause()
-		print(example_balloon.dialogue_line)
 		
 		# wroking but bare bones..
 		
@@ -67,22 +68,23 @@ func _physics_process(delta):
 	move_and_slide()
 	look_at(get_global_mouse_position())
 
-# fixme: this pauses dialog as well 🤦
 # check https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html
 func toggle_pause():
-	get_tree().paused = not get_tree().paused
-	#print(example_balloon.paused)
-	#$DialogueWindow.pause_mode = Node.PAUSE_MODE_PROCESS
+	if get_tree():
+		get_tree().paused = not get_tree().paused
+		dialogue_active = get_tree().paused
 
 func fire():
 	var bullet_instance = bullet.instantiate()
 	var bullet_rigid_body:RigidBody2D = bullet_instance.get_node("BulletRigidBody2D")
-	bullet_rigid_body.position = get_global_position() + Vector2(50, 0).rotated(rotation)
+	
+	bullet_rigid_body.position = get_global_position() + Vector2(120, 0).rotated(rotation)
 	# bullet_rigid_body.position = global_position
 	bullet_rigid_body.rotation = rotation
 
+	var accuracy:float = randf_range(-bullet_accuracy, bullet_accuracy)
 	# Apply the impulse to the bullet
-	var direction := Vector2(1, 0).rotated(rotation)
+	var direction := Vector2(1, 0).rotated(rotation+accuracy)
 	bullet_rigid_body.linear_velocity = direction * bullet_speed
 	
 	# Set the bullet's collision layer and mask
