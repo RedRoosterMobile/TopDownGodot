@@ -5,9 +5,12 @@ var dead := false
 @onready var sfx_zombie_growl := $AnimZombie/SfxZombieGrowl
 @onready var timer:Timer = $Timer
 @onready var animated_sprite_2d = $AnimZombie
-
+var speed:float = 1.0
 # will be set in the editor, like in Unity
 @export var player: Node2D;
+@onready var sprite_2d: Sprite2D = $Sprite2D
+# pathfinding
+# https://www.youtube.com/watch?v=yT22SXYpoYM
 
 var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/1.wav",
@@ -45,14 +48,17 @@ func _ready():
 func _physics_process(delta):
 	if dead:
 		return
-	#  var player: CharacterBody2D = get_parent().get_node("Player")
-	position += (player.position - position) / randf_range(55, 85)
-	look_at(player.position)
-	move_and_collide(motion)
+	
+	if player.position.distance_to(self.position) < 400:
+		motion = (player.position - position) / randf_range(55, 85) * speed
+		look_at(player.position)
+		# does this even do sth?
+		move_and_collide(motion)
+	else:
+		motion = Vector2.ZERO
 
 func _on_area_2d_body_entered(body):
 	if "BulletRigidBody2D" in body.name:
-		
 		body.get_parent().queue_free()
 		dead = true
 		timer.stop()

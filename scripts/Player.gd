@@ -5,12 +5,12 @@ extends CharacterBody2D
 var movespeed:float = 500
 var bullet_speed:float = 2000
 var bullet = preload("res://scenes/bullet.tscn")
+var is_awake:bool = false
 @onready var sfx_shot := $SfxShot
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
 # @onready var bullet_particles = $BulletParticles2D
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
-
 
 func _ready():
 	pass
@@ -33,7 +33,12 @@ func _physics_process(delta):
 		motion.x -= 1
 		
 	if Input.is_action_just_pressed("shoot"):
-		fire()
+		if not is_awake:
+			# https://youtu.be/UhPFk8FSbd8?si=-AI9E1rRgZJXa5di&t=162
+			DialogueManager.show_example_dialogue_balloon(load("res://dialogue/main.dialogue"), "start")
+			is_awake = true
+		else:
+			fire()
 	# Normalize the motion vector to prevent faster diagonal movement
 	if motion.length() > 0:
 		motion = motion.normalized()

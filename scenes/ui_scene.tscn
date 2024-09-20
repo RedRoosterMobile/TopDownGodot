@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqs5ka2kivw75"]
+
+[ext_resource type="Script" path="res://scenes/ui_scene.gd" id="1_hnq2l"]
+[ext_resource type="Script" path="res://addons/Theatre/classes/Stage.gd" id="1_mo5gf"]
+[ext_resource type="Script" path="res://addons/Theatre/classes/DialogueLabel.gd" id="2_3q4oc"]
+
+[node name="UiScene" type="Control" node_paths=PackedStringArray("my_stage")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_hnq2l")
+my_stage = NodePath("Stage")
+
+[node name="Stage" type="Node" parent="." node_paths=PackedStringArray("actor_label", "dialogue_label")]
+script = ExtResource("1_mo5gf")
+actor_label = NodePath("../PanelContainer/VBoxContainer/Label")
+dialogue_label = NodePath("../PanelContainer/VBoxContainer/DialogueLabel")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DialogueLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "this is a test
+xdcdf"
+fit_content = true
+script = ExtResource("2_3q4oc")

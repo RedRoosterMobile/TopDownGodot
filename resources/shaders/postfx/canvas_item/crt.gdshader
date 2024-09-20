@@ -12,7 +12,7 @@ uniform sampler2D noise_texture : repeat_enable;
 vec2 curve(vec2 uv)
 {
 	uv = (uv - 0.5) * 2.0;
-	uv *= 1.1;	
+	uv *= 1.1;
 	uv.x *= 1.0 + pow((abs(uv.y) / 5.0), 2.0);
 	uv.y *= 1.0 + pow((abs(uv.x) / 4.0), 2.0);
 	uv  = (uv / 2.0) + 0.5;
@@ -21,11 +21,11 @@ vec2 curve(vec2 uv)
 }
 void fragment(  )
 {
-	
+
 	vec2 iResolution = 1.0 / SCREEN_PIXEL_SIZE;
     vec2 q = FRAGCOORD.xy / iResolution.xy;
     vec2 uv = q;
-	
+
 	vec3 noise_color = texture( noise_texture, vec2(q.x,q.y) + TIME/10.0 ).xyz;
 	float noise = noise_color.b/20.0;
     uv = curve( uv );
@@ -49,7 +49,7 @@ void fragment(  )
 	col *= 2.8;
 
 	float scans = clamp( 0.35+0.35*sin(3.5*TIME+uv.y*iResolution.y*1.5), 0.0, 1.0);
-	
+
 	float s = pow(scans,1.7);
 	col = col*vec3( 0.4+0.7*s) ;
 
@@ -58,12 +58,12 @@ void fragment(  )
 		col *= 0.0;
 	if (uv.y < 0.0 || uv.y > 1.0)
 		col *= 0.0;
-	
+
 	col*=1.0-0.65*vec3(clamp((mod(FRAGCOORD.x, 2.0)-1.0)*2.0,0.0,1.0));
-	
+
     float comp = smoothstep( 0.1, 0.9, sin(TIME) );
- 
+
 	//vec4 noise_color = texture( noise_texture, vec2(q.x,q.y) );
-    COLOR = vec4(col+noise,1.0);
+    COLOR = vec4(col,1.0);
 	//COLOR=noise_color;
 }

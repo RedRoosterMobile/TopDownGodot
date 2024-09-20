@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dg2icd6fsnaur"]
+[gd_scene load_steps=21 format=3 uid="uid://dg2icd6fsnaur"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bcf45"]
 [ext_resource type="AudioStream" uid="uid://byic1s2ye1oge" path="res://assets/sounds/sfx/zombie/1.wav" id="3_fyqbl"]
@@ -14,6 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://bm12gwfvv403c" path="res://assets/sprites/enemy/enemy4.png" id="13_s0j3y"]
 [ext_resource type="Texture2D" uid="uid://g8mo7a1ho5a1" path="res://assets/sprites/enemy/enemy1.png" id="14_bqxwp"]
 [ext_resource type="Texture2D" uid="uid://coknc8x25v432" path="res://assets/sprites/enemy/enemy2.png" id="15_k201j"]
+[ext_resource type="Texture2D" uid="uid://cbdohqpnpbxxh" path="res://assets/sprites/sprElectricity1.png" id="15_tcrkf"]
+[ext_resource type="Script" path="res://scenes/sprite_2d.gd" id="16_0qwgh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ejwtv"]
 size = Vector2(12, 30)
@@ -94,15 +96,36 @@ shape = SubResource("RectangleShape2D_t2ff6")
 [node name="AnimZombie" type="AnimatedSprite2D" parent="."]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_g1f26")
-animation = &"walk"
-frame_progress = 0.572615
+animation = &"fly"
+frame_progress = 0.777454
 
 [node name="SfxZombieGrowl" type="AudioStreamPlayer2D" parent="AnimZombie"]
 stream = ExtResource("3_fyqbl")
 bus = &"SFX"
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+visible = false
 occluder = SubResource("OccluderPolygon2D_q0p46")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("15_tcrkf")
+hframes = 19
+vframes = 9
+script = ExtResource("16_0qwgh")
+metadata/_aseprite_wizard_config_ = {
+"i_mode": -1,
+"keep_anim_length": false,
+"layer": "",
+"o_ex_p": "",
+"o_folder": "",
+"o_name": "",
+"only_visible": false,
+"player": "AnimationPlayer",
+"slice": "",
+"source": ""
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -1,0 +1,10 @@
+~ start
+
+You did it again. 
+Couldn’t stay out of trouble. 
+Power’s out, it’s all going to hell. 
+Meet me at the lab – if you make it.
+- Damn, why do I have such a hangover? => start
+- What the fuck happened? => start
+- Is that a flashlight? => END
+=> END

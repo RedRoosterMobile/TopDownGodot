@@ -2,5 +2,5 @@ extends Node2D
 
 func _on_area_2d_body_entered(body):
 	# hit the wall
-	if "TileMap" in body.name:
+	if "CosmicLilacLayer" in body.name:
 		queue_free()
