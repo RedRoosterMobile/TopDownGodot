@@ -97,7 +97,7 @@ shape = SubResource("RectangleShape2D_t2ff6")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_g1f26")
 animation = &"fly"
-frame_progress = 0.777454
+frame_progress = 0.830473
 
 [node name="SfxZombieGrowl" type="AudioStreamPlayer2D" parent="AnimZombie"]
 stream = ExtResource("3_fyqbl")
