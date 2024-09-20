@@ -54,10 +54,9 @@ func _physics_process(delta):
 		# todo: only walk if the path is clear (raycast the motion vector)
 		motion = (player.position - position) / randf_range(55, 85) * speed
 		
-		
 		look_at(player.position)
 		if ray_cast_2d.is_colliding():
-			print(ray_cast_2d.get_collider())
+			# player in plain sight?
 			if ray_cast_2d.get_collider() == player:
 				move_and_collide(motion)
 			else:

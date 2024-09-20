@@ -5,12 +5,13 @@ extends CharacterBody2D
 var movespeed:float = 500
 var bullet_speed:float = 2000
 var bullet = preload("res://scenes/bullet.tscn")
-var is_awake:bool = false
+var dialogue_active:bool = false
 @onready var sfx_shot := $SfxShot
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
 # @onready var bullet_particles = $BulletParticles2D
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
+@onready var example_balloon: CanvasLayer = $ExampleBalloon
 
 func _ready():
 	pass
@@ -32,13 +33,23 @@ func _physics_process(delta):
 	if Input.is_action_pressed("left"):
 		motion.x -= 1
 		
+	if Input.is_action_just_pressed("interact"):
+		# https://youtu.be/UhPFk8FSbd8?si=-AI9E1rRgZJXa5di&t=162
+		if not dialogue_active:
+			var resource = load("res://dialogue/main.dialogue")
+			example_balloon.start(resource,"start")
+			dialogue_active = true
+			toggle_pause()
+		print(example_balloon.dialogue_line)
+		
+		# wroking but bare bones..
+		
+		#var dialogue_line = await DialogueManager.get_next_dialogue_line(resource, "start")
+		#print(dialogue_line)
+		# DialogueManager.show_example_dialogue_balloon(load("res://dialogue/main.dialogue"), "start")
+	
 	if Input.is_action_just_pressed("shoot"):
-		if not is_awake:
-			# https://youtu.be/UhPFk8FSbd8?si=-AI9E1rRgZJXa5di&t=162
-			DialogueManager.show_example_dialogue_balloon(load("res://dialogue/main.dialogue"), "start")
-			is_awake = true
-		else:
-			fire()
+		fire()
 	# Normalize the motion vector to prevent faster diagonal movement
 	if motion.length() > 0:
 		motion = motion.normalized()
@@ -55,7 +66,14 @@ func _physics_process(delta):
 
 	move_and_slide()
 	look_at(get_global_mouse_position())
-	
+
+# fixme: this pauses dialog as well 🤦
+# check https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html
+func toggle_pause():
+	get_tree().paused = not get_tree().paused
+	#print(example_balloon.paused)
+	#$DialogueWindow.pause_mode = Node.PAUSE_MODE_PROCESS
+
 func fire():
 	var bullet_instance = bullet.instantiate()
 	var bullet_rigid_body:RigidBody2D = bullet_instance.get_node("BulletRigidBody2D")
@@ -94,3 +112,7 @@ func _on_area_2d_body_entered(body):
 	if "Enemy" in body.name:
 		kill()
 		
+# when dialogue done
+func _on_example_balloon_tree_exited() -> void:
+	print("done with dialogue")
+	toggle_pause()
