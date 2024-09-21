@@ -11,9 +11,12 @@ var dialogue_active:bool = false
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
+#@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
-
+#var example_balloon:CanvasLayer
 func _ready():
+	#example_balloon = balloon_scene.instantiate()
+	print(example_balloon)
 	pass
 	# Set the player's collision layer and mask
 	# collision_layer = 1
