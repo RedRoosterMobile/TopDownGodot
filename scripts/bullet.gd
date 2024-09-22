@@ -11,7 +11,7 @@ func _on_area_2d_body_entered(body):
 		handle_impact()
 
 func handle_impact():
-	Messenger.screenshake.emit()
+	
 	bullet_rigid_body_2d.queue_free()
 	impact_anim.position = bullet_rigid_body_2d.position
 	impact_anim.rotation = bullet_rigid_body_2d.rotation
@@ -32,6 +32,7 @@ func handle_impact():
 	
 func handle_explosion():
 	if randi_range(1,5) == 1:
+		Messenger.screenshake.emit(3)
 		explosion_anim.position = bullet_rigid_body_2d.position
 		explosion_anim.rotation = bullet_rigid_body_2d.rotation
 		explosion_anim.scale *= randf_range(1, 2)
@@ -39,4 +40,6 @@ func handle_explosion():
 		explosion_anim.stop()
 		explosion_anim.play()
 		explosion_anim.visible = true
+	else:
+		Messenger.screenshake.emit(1)
 	

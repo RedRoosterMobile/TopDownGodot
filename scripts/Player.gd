@@ -19,8 +19,9 @@ var dialogue_active:bool = false
 
 
 # region Screenshake
-@export var shake_duration = 0.2
-@export var shake_intensity = 50.0
+@export var shake_duration:float = 0.2
+@export var shake_intensity:float = 50.0
+@export var shake_cooldown_intensity:float = 0.5
 
 var shake_timer = 0.0
 var current_intensity = 0.0
@@ -34,33 +35,36 @@ func _ready():
 	Messenger.connect("screenshake", screenshake)
 	original_position = $Camera2D.position
 
-func screenshake():
+func screenshake(strength:int):
 	# Stackable intensity
 	current_intensity += shake_intensity
 	shake_timer = shake_duration
 
 	# Start the shake (or continue if already shaking)
-	_start_shaking()
+	_start_shaking(strength)
 
-func _start_shaking():
+func _start_shaking(strength:int):
 	if shake_timer > 0:
 		# Create the tween on the fly
 		var tween = get_tree().create_tween()
-		var offset = Vector2(randf_range(-current_intensity, current_intensity), randf_range(-current_intensity, current_intensity))
+		var offset = Vector2(randf_range(-current_intensity*strength, current_intensity*strength), randf_range(-current_intensity, current_intensity))
 		# Tween the camera position to a random offset and back
 		tween.tween_property(camera_2d, "position", original_position + offset, shake_duration / 10).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		# After moving to offset, shake back to original position
 		tween.tween_property(camera_2d, "position", original_position, shake_duration / 10).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		# When the tween completes, reduce the intensity and check if more shaking is needed
 		tween.tween_callback(_on_shake_complete)
+		tween.tween_callback(func():
+			_on_shake_complete(strength)
+		)
 
-func _on_shake_complete():
+func _on_shake_complete(strength:int):
 	shake_timer -= shake_duration / 10
 	#current_intensity *= 0.9  # Reduce intensity gradually
-	current_intensity=lerpf(current_intensity,0,0.45)
+	current_intensity = lerpf(current_intensity*1, 0, shake_cooldown_intensity)
 
 	if shake_timer > 0:
-		_start_shaking()  # Continue shaking
+		_start_shaking(strength)  # Continue shaking
 	else:
 		camera_2d.position = original_position  # Reset to the original position
 		current_intensity = 0
