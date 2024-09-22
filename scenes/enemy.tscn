@@ -15,7 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://g8mo7a1ho5a1" path="res://assets/sprites/enemy/enemy1.png" id="14_bqxwp"]
 [ext_resource type="Texture2D" uid="uid://coknc8x25v432" path="res://assets/sprites/enemy/enemy2.png" id="15_k201j"]
 [ext_resource type="Texture2D" uid="uid://cbdohqpnpbxxh" path="res://assets/sprites/sprElectricity1.png" id="15_tcrkf"]
-[ext_resource type="Script" path="res://scenes/sprite_2d.gd" id="16_0qwgh"]
+[ext_resource type="Script" path="res://scripts/sprite_2d.gd" id="16_0qwgh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ejwtv"]
 size = Vector2(12, 30)

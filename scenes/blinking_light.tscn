@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dap1odxixcgyx"]
 
 [ext_resource type="Texture2D" uid="uid://x5h4mcymp8dx" path="res://assets/sprites/light.png" id="1_54nl3"]
-[ext_resource type="Script" path="res://scenes/blinking_light.gd" id="2_s48hp"]
+[ext_resource type="Script" path="res://scripts/blinking_light.gd" id="2_s48hp"]
 
 [node name="BlinkingLight" type="PointLight2D"]
 position = Vector2(1198, 84)

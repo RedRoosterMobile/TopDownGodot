@@ -1,10 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://dfw83ggoi7gi"]
+[gd_scene load_steps=13 format=3 uid="uid://dfw83ggoi7gi"]
 
 [ext_resource type="Script" path="res://scripts/bullet.gd" id="1_d1ubq"]
 [ext_resource type="Texture2D" uid="uid://gk7s4fp7x5g0" path="res://assets/sprites/sprBullet2_1.png" id="2_ob6uo"]
 [ext_resource type="Texture2D" uid="uid://x5h4mcymp8dx" path="res://assets/sprites/light.png" id="3_anxvs"]
 [ext_resource type="Texture2D" uid="uid://b1xm2rnxst27p" path="res://assets/sprites/sprBulletHit_0.png" id="4_32cj5"]
+[ext_resource type="Texture2D" uid="uid://dj4t4cm1ado8" path="res://assets/sprites/sprExplosion_0.png" id="5_j1u2c"]
 [ext_resource type="Texture2D" uid="uid://0i2kv2v6v0ux" path="res://assets/sprites/sprBulletHit_1.png" id="5_pnlx5"]
+[ext_resource type="Texture2D" uid="uid://fj034rllarmf" path="res://assets/sprites/sprExplosion_1.png" id="6_j0285"]
 [ext_resource type="Texture2D" uid="uid://dbbuor46a4hdb" path="res://assets/sprites/sprBulletHit_2.png" id="6_jgmlj"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4rmvk"]
@@ -24,6 +26,20 @@ animations = [{
 "speed": 7.0
 }]
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_vk1dj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_j1u2c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_j0285")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ys307"]
 size = Vector2(90, 30)
 
@@ -34,10 +50,17 @@ size = Vector2(80, 26)
 script = ExtResource("1_d1ubq")
 
 [node name="ImpactAnim" type="AnimatedSprite2D" parent="."]
+visible = false
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_4rmvk")
 frame = 2
 frame_progress = 1.0
+
+[node name="ExplosionAnim" type="AnimatedSprite2D" parent="."]
+visible = false
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_vk1dj")
+frame_progress = 0.381622
 
 [node name="BulletRigidBody2D" type="RigidBody2D" parent="."]
 

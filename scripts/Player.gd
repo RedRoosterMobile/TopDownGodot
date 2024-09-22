@@ -13,14 +13,57 @@ var dialogue_active:bool = false
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
 #@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
+
+@onready var camera_2d: Camera2D = $Camera2D
+
+
+
+# region Screenshake
+@export var shake_duration = 0.2
+@export var shake_intensity = 50.0
+
+var shake_timer = 0.0
+var current_intensity = 0.0
+var original_position = Vector2.ZERO
+
 #var example_balloon:CanvasLayer
 func _ready():
 	#example_balloon = balloon_scene.instantiate()
 	print(example_balloon)
-	pass
-	# Set the player's collision layer and mask
-	# collision_layer = 1
-	# collision_mask = 1 | 4  # Ignore layer 2 (bullet), interact with other layers (e.g., enemies on layer 4)
+	
+	Messenger.connect("screenshake", screenshake)
+	original_position = $Camera2D.position
+
+func screenshake():
+	# Stackable intensity
+	current_intensity += shake_intensity
+	shake_timer = shake_duration
+
+	# Start the shake (or continue if already shaking)
+	_start_shaking()
+
+func _start_shaking():
+	if shake_timer > 0:
+		# Create the tween on the fly
+		var tween = get_tree().create_tween()
+		var offset = Vector2(randf_range(-current_intensity, current_intensity), randf_range(-current_intensity, current_intensity))
+		# Tween the camera position to a random offset and back
+		tween.tween_property(camera_2d, "position", original_position + offset, shake_duration / 10).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		# After moving to offset, shake back to original position
+		tween.tween_property(camera_2d, "position", original_position, shake_duration / 10).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		# When the tween completes, reduce the intensity and check if more shaking is needed
+		tween.tween_callback(_on_tween_complete)
+
+func _on_tween_complete():
+	shake_timer -= shake_duration / 10
+	current_intensity *= 0.9  # Reduce intensity gradually
+
+	if shake_timer > 0:
+		_start_shaking()  # Continue shaking
+	else:
+		camera_2d.position = original_position  # Reset to the original position
+		current_intensity = 0
+
 
 func _process(delta):
 	pass
