@@ -3,7 +3,6 @@ extends Node2D
 @onready var bullet_rigid_body_2d: RigidBody2D = $BulletRigidBody2D
 @onready var explosion_anim: AnimatedSprite2D = $ExplosionAnim
 
-
 func _on_area_2d_body_entered(body):
 	# hit the wall
 	if "CosmicLilacLayer" in body.name:

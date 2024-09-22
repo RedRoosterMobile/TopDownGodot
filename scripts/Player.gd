@@ -52,11 +52,12 @@ func _start_shaking():
 		# After moving to offset, shake back to original position
 		tween.tween_property(camera_2d, "position", original_position, shake_duration / 10).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		# When the tween completes, reduce the intensity and check if more shaking is needed
-		tween.tween_callback(_on_tween_complete)
+		tween.tween_callback(_on_shake_complete)
 
-func _on_tween_complete():
+func _on_shake_complete():
 	shake_timer -= shake_duration / 10
-	current_intensity *= 0.9  # Reduce intensity gradually
+	#current_intensity *= 0.9  # Reduce intensity gradually
+	current_intensity=lerpf(current_intensity,0,0.45)
 
 	if shake_timer > 0:
 		_start_shaking()  # Continue shaking
