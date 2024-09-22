@@ -6,6 +6,7 @@ shader_type canvas_item;
 // https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/canvas_item_shader.html
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 uniform sampler2D noise_texture : repeat_enable;
+uniform float curvature : hint_range(0.0, 1.0, 0.0);
 // TODO: make it configurable: curvature, color messing
 
 // Loosely based on postprocessing shader by inigo quilez, License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
@@ -14,10 +15,11 @@ vec2 curve(vec2 uv)
 {
 	uv = (uv - 0.5) * 2.0;
 	uv *= 1.1;
-	uv.x *= 1.0 + pow((abs(uv.y) / 5.0), 2.0);
-	uv.y *= 1.0 + pow((abs(uv.x) / 4.0), 2.0);
+	uv.x *= 1.0 + pow((abs(uv.y) / 5.0), 2.0+curvature);
+	uv.y *= 1.0 + pow((abs(uv.x) / 4.0), 2.0+curvature);
 	uv  = (uv / 2.0) + 0.5;
 	uv =  uv *0.92 + 0.04;
+	// uv =  uv *0.92 + 0.04;
 	return uv;
 }
 void fragment(  )
