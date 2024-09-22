@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 # original tutorial https://www.youtube.com/watch?v=HycyFNQfqI0
 
-var movespeed:float = 500
+var movespeed:float = 700
 @export var bullet_speed:float = 3000
 @export var bullet_accuracy:float = 0.05
 var bullet = preload("res://scenes/bullet.tscn")
@@ -13,24 +13,24 @@ var dialogue_active:bool = false
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
 #@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
-
 @onready var camera_2d: Camera2D = $Camera2D
 
-var knockback_velocity: Vector2 = Vector2.ZERO  # Track knockback velocity
-
-# region Screenshake
+#region Screenshake
 @export var shake_duration:float = 0.2
 @export var shake_intensity:float = 50.0
 @export var shake_cooldown_intensity:float = 0.5
-
-
-var knockback_force=300
-var knockback_decreaser=20
 
 var shake_timer = 0.0
 var current_intensity = 0.0
 var original_position = Vector2.ZERO
 
+#region Knockback
+
+var knockback_velocity: Vector2 = Vector2.ZERO  # Track knockback velocity
+var knockback_force=300
+var knockback_decreaser=20
+
+#region functions
 #var example_balloon:CanvasLayer
 func _ready():
 	#example_balloon = balloon_scene.instantiate()
