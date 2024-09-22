@@ -50,7 +50,7 @@ func _physics_process(delta):
 	if is_dead:
 		return
 	
-	if player.position.distance_to(self.position) < 400:
+	if player and player.position.distance_to(self.position) < 400:
 		# todo: only walk if the path is clear (raycast the motion vector)
 		motion = (player.position - position) / randf_range(55, 85) * speed
 		

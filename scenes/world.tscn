@@ -1,9 +1,10 @@
-[gd_scene load_steps=44 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=45 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Texture2D" uid="uid://b56x2nqhh8vo1" path="res://assets/sprites/pink.png" id="1_v0cjd"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
 [ext_resource type="Texture2D" uid="uid://dhpd8xll4o21" path="res://assets/sprites/player.png" id="3_d2r83"]
+[ext_resource type="Script" path="res://scripts/breeder_light.gd" id="4_43y7n"]
 [ext_resource type="Texture2D" uid="uid://x5h4mcymp8dx" path="res://assets/sprites/light.png" id="4_as6n4"]
 [ext_resource type="PackedScene" uid="uid://73jm5qjy52vq" path="res://dialogue/balloon.tscn" id="4_hgol1"]
 [ext_resource type="PackedScene" uid="uid://dap1odxixcgyx" path="res://scenes/blinking_light.tscn" id="4_p8lqx"]
@@ -249,8 +250,7 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hf8xc"]
-size = Vector2(48, 112)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xr8nv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x0ods"]
 size = Vector2(63, 124)
@@ -292,9 +292,10 @@ tile_set = SubResource("TileSet_3udj4")
 
 [node name="LevelLights" type="Node2D" parent="."]
 
-[node name="PointLight2D" type="PointLight2D" parent="LevelLights"]
+[node name="BreederLight" type="PointLight2D" parent="LevelLights"]
 position = Vector2(2354, 1368)
 texture = ExtResource("4_as6n4")
+script = ExtResource("4_43y7n")
 
 [node name="BlinkingLight" parent="LevelLights" instance=ExtResource("4_p8lqx")]
 
@@ -318,7 +319,8 @@ scale = Vector2(8, 8)
 texture = ExtResource("3_d2r83")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-shape = SubResource("RectangleShape2D_hf8xc")
+scale = Vector2(2.72, 3.72002)
+shape = SubResource("CapsuleShape2D_xr8nv")
 
 [node name="Area2D" type="Area2D" parent="Player"]
 
