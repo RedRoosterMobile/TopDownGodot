@@ -16,12 +16,16 @@ var dialogue_active:bool = false
 
 @onready var camera_2d: Camera2D = $Camera2D
 
-
+var knockback_velocity: Vector2 = Vector2.ZERO  # Track knockback velocity
 
 # region Screenshake
 @export var shake_duration:float = 0.2
 @export var shake_intensity:float = 50.0
 @export var shake_cooldown_intensity:float = 0.5
+
+
+var knockback_force=300
+var knockback_decreaser=20
 
 var shake_timer = 0.0
 var current_intensity = 0.0
@@ -69,10 +73,6 @@ func _on_shake_complete():
 		camera_2d.position = original_position  # Reset to the original position
 		current_intensity = 0
 
-
-func _process(delta):
-	pass
-
 func _physics_process(delta):
 	var motion = Vector2()
 
@@ -105,6 +105,13 @@ func _physics_process(delta):
 	# Apply the movement with movespeed
 	velocity = motion * movespeed
 	
+	# Apply knockback force to velocity
+	velocity += knockback_velocity
+	
+	# Gradually reduce the knockback effect
+	knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_force * delta*knockback_decreaser)
+
+	
 	# Leg animation handling
 	if velocity.length() > 0:
 		anim_legs.play()
@@ -114,6 +121,7 @@ func _physics_process(delta):
 	
 	# Use move_and_slide without arguments
 	move_and_slide()
+	
 
 	# Character looks towards the mouse position
 	look_at(get_global_mouse_position())
@@ -137,6 +145,9 @@ func fire():
 	var direction := Vector2(1, 0).rotated(rotation+accuracy)
 	bullet_rigid_body.linear_velocity = direction * bullet_speed
 	
+	 # Knockback effect: apply knockback to the player in the opposite direction of the bullet
+	knockback_velocity += direction * -knockback_force
+
 	# Set the bullet's collision layer and mask
 	# bullet_rigid_body.collision_layer = 2
 	# bullet_rigid_body.collision_mask = 1 | 4  # Ignore layer 1 (player), interact with other layers (e.g., enemies on layer 4)

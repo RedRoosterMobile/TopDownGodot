@@ -345,7 +345,6 @@ texture_scale = 0.43
 
 [node name="SfxShot" type="AudioStreamPlayer2D" parent="Player"]
 stream = ExtResource("6_frdab")
-bus = &"SFX"
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
 position = Vector2(2330, 397)
@@ -366,7 +365,6 @@ grow_vertical = 2
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("9_26m4r")
 autoplay = true
-bus = &"MUSIC"
 parameters/looping = true
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]

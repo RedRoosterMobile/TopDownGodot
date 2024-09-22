@@ -101,7 +101,6 @@ frame_progress = 0.0490792
 
 [node name="SfxZombieGrowl" type="AudioStreamPlayer2D" parent="AnimZombie"]
 stream = ExtResource("3_fyqbl")
-bus = &"SFX"
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
 visible = false
