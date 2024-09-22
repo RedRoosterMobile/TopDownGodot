@@ -293,7 +293,8 @@ tile_set = SubResource("TileSet_3udj4")
 [node name="LevelLights" type="Node2D" parent="."]
 
 [node name="BreederLight" type="PointLight2D" parent="LevelLights"]
-position = Vector2(2354, 1368)
+position = Vector2(2329, 1357)
+color = Color(0.921155, 0.821449, 0.812847, 1)
 texture = ExtResource("4_as6n4")
 script = ExtResource("4_43y7n")
 
@@ -301,7 +302,7 @@ script = ExtResource("4_43y7n")
 
 [node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(814, 1626)
-floor_stop_on_slope = false
+floor_block_on_wall = false
 script = ExtResource("2_c88fv")
 
 [node name="ExampleBalloon" parent="Player" instance=ExtResource("4_hgol1")]

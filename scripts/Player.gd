@@ -27,6 +27,8 @@ func _process(delta):
 
 func _physics_process(delta):
 	var motion = Vector2()
+
+	# Movement input
 	if Input.is_action_pressed("up"):
 		motion.y -= 1
 	if Input.is_action_pressed("down"):
@@ -35,38 +37,37 @@ func _physics_process(delta):
 		motion.x += 1
 	if Input.is_action_pressed("left"):
 		motion.x -= 1
-		
+	
+	# Interact with dialogue
 	if Input.is_action_just_pressed("interact"):
-		# https://youtu.be/UhPFk8FSbd8?si=-AI9E1rRgZJXa5di&t=162
 		if not dialogue_active:
 			var resource = load("res://dialogue/main.dialogue")
-			example_balloon.start(resource,"start")
+			example_balloon.start(resource, "start")
 			dialogue_active = true
 			toggle_pause()
-		
-		# wroking but bare bones..
-		
-		#var dialogue_line = await DialogueManager.get_next_dialogue_line(resource, "start")
-		#print(dialogue_line)
-		# DialogueManager.show_example_dialogue_balloon(load("res://dialogue/main.dialogue"), "start")
-	
+
+	# Shoot action
 	if Input.is_action_just_pressed("shoot"):
 		fire()
-	# Normalize the motion vector to prevent faster diagonal movement
+
+	# Normalize motion to prevent faster diagonal movement
 	if motion.length() > 0:
 		motion = motion.normalized()
-	
-	# Apply the movement
+
+	# Apply the movement with movespeed
 	velocity = motion * movespeed
 	
-	# leg animation
-	if(velocity.length() > 0):
+	# Leg animation handling
+	if velocity.length() > 0:
 		anim_legs.play()
 		anim_legs.rotation = velocity.angle() - rotation
 	else:
 		anim_legs.stop()
-
+	
+	# Use move_and_slide without arguments
 	move_and_slide()
+
+	# Character looks towards the mouse position
 	look_at(get_global_mouse_position())
 
 # check https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html
