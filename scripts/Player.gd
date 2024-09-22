@@ -35,7 +35,7 @@ func _ready():
 	Messenger.connect("screenshake", screenshake)
 	original_position = $Camera2D.position
 
-func screenshake(strength:int):
+func screenshake(strength:int = 1):
 	# Stackable intensity
 	current_intensity += shake_intensity
 	shake_timer = shake_duration
@@ -55,16 +55,16 @@ func _start_shaking(strength:int):
 		# When the tween completes, reduce the intensity and check if more shaking is needed
 		tween.tween_callback(_on_shake_complete)
 		tween.tween_callback(func():
-			_on_shake_complete(strength)
+			_on_shake_complete()
 		)
 
-func _on_shake_complete(strength:int):
+func _on_shake_complete():
 	shake_timer -= shake_duration / 10
 	#current_intensity *= 0.9  # Reduce intensity gradually
 	current_intensity = lerpf(current_intensity*1, 0, shake_cooldown_intensity)
 
 	if shake_timer > 0:
-		_start_shaking(strength)  # Continue shaking
+		_start_shaking(1)  # Continue shaking
 	else:
 		camera_2d.position = original_position  # Reset to the original position
 		current_intensity = 0

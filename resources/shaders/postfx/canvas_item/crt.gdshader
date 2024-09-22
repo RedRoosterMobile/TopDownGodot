@@ -6,6 +6,7 @@ shader_type canvas_item;
 // https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/canvas_item_shader.html
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 uniform sampler2D noise_texture : repeat_enable;
+// TODO: make it configurable: curvature, color messing
 
 // Loosely based on postprocessing shader by inigo quilez, License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 

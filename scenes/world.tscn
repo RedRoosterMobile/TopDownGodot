@@ -250,7 +250,7 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xr8nv"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_gpvh7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x0ods"]
 size = Vector2(63, 124)
@@ -320,8 +320,8 @@ scale = Vector2(8, 8)
 texture = ExtResource("3_d2r83")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-scale = Vector2(2.72, 3.72002)
-shape = SubResource("CapsuleShape2D_xr8nv")
+scale = Vector2(3.96, 3.96)
+shape = SubResource("CircleShape2D_gpvh7")
 
 [node name="Area2D" type="Area2D" parent="Player"]
 
@@ -353,7 +353,6 @@ scale = Vector2(4, 4)
 player = NodePath("../Player")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
 material = SubResource("ShaderMaterial_tiey2")
@@ -367,6 +366,7 @@ grow_vertical = 2
 stream = ExtResource("9_26m4r")
 autoplay = true
 bus = &"MUSIC"
+parameters/looping = true
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
 visible = false
