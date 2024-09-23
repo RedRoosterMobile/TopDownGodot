@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 # original tutorial https://www.youtube.com/watch?v=HycyFNQfqI0
-
+@export var subviewport:SubViewport
 var movespeed:float = 700
 @export var bullet_speed:float = 3000
 @export var bullet_accuracy:float = 0.05
@@ -100,7 +100,23 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("shoot"):
 		fire()
 
-	# Normalize motion to prevent faster diagonal movement
+	if Input.is_action_just_pressed("paint"):
+		print("paint")
+		var node_:Node2D = subviewport.get_node("Node2D")
+		var bullet_instance:Node2D = bullet.instantiate()
+		#var blood:Sprite2D = node_.get_node("Blood")
+		#blood.position = Vector2(randi_range(0,500),randi_range(0,500))
+		bullet_instance.rotation_degrees = randf_range(0,90)
+		node_.add_child(bullet_instance)
+		#bullet_instance.call_deferred("queue_free")
+		get_tree().create_timer(0.25).timeout.connect(func():
+			bullet_instance.queue_free()
+		)
+		
+		print(node_.get_child_count())
+		
+
+	# Normalize motion to prevpent faster diagonal movement
 	if motion.length() > 0:
 		motion = motion.normalized()
 

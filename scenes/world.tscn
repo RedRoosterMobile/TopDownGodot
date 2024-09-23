@@ -1,7 +1,6 @@
-[gd_scene load_steps=46 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=47 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
-[ext_resource type="Texture2D" uid="uid://b56x2nqhh8vo1" path="res://assets/sprites/pink.png" id="1_v0cjd"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
 [ext_resource type="Texture2D" uid="uid://dhpd8xll4o21" path="res://assets/sprites/player.png" id="3_d2r83"]
 [ext_resource type="Script" path="res://scripts/breeder_light.gd" id="4_43y7n"]
@@ -10,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dap1odxixcgyx" path="res://scenes/blinking_light.tscn" id="4_p8lqx"]
 [ext_resource type="PackedScene" uid="uid://dg2icd6fsnaur" path="res://scenes/enemy.tscn" id="5_fhhcs"]
 [ext_resource type="AudioStream" uid="uid://j1cl564fgau4" path="res://assets/sounds/sfx/sndFireBass.wav" id="6_frdab"]
+[ext_resource type="Texture2D" uid="uid://dhy3uu6fhxt2j" path="res://assets/sprites/blood/tile_blood_32_0.png" id="7_6504t"]
 [ext_resource type="Texture2D" uid="uid://by7xima65d7uh" path="res://assets/sprites/legs/sprWaiterLegs_0.png" id="7_tmm25"]
 [ext_resource type="Texture2D" uid="uid://buwwoumx8nltd" path="res://assets/sprites/legs/sprWaiterLegs_1.png" id="8_hwoig"]
 [ext_resource type="AudioStream" uid="uid://vm2xo6m2jejv" path="res://assets/sounds/music/music.ogg" id="9_26m4r"]
@@ -195,6 +195,9 @@ physics_layer_0/collision_layer = 1
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_6fmsa")
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_wdujj"]
+viewport_path = NodePath("SubViewport")
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_3rdmb"]
 animations = [{
 "frames": [{
@@ -273,13 +276,6 @@ gravity = Vector3(0, 98, 0)
 
 [node name="world" type="Node2D"]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-modulate = Color(0.138637, 0.138637, 0.138637, 1)
-position = Vector2(1893, 1438)
-scale = Vector2(1293.73, 1000)
-texture = ExtResource("1_v0cjd")
-
 [node name="Tiles" type="Node2D" parent="."]
 
 [node name="CosmicLilacLayer" type="TileMapLayer" parent="Tiles"]
@@ -292,6 +288,11 @@ scale = Vector2(10, 10)
 tile_map_data = PackedByteArray("AAD/////AAAAAAAAAAAPAAkAAAAKAAIAAAAOAAkAAAAKAAIAAAANAAkAAAAKAAIAAAANAAgAAAAKAAEAAAAOAAgAAAAKAAEAAAAPAAgAAAAKAAEAAAAHAAAAAAAGAAAAAAA=")
 tile_set = SubResource("TileSet_3udj4")
 
+[node name="drawing" type="Sprite2D" parent="Tiles/InteractableLayer"]
+position = Vector2(116.2, 172.2)
+scale = Vector2(0.8, 0.8)
+texture = SubResource("ViewportTexture_wdujj")
+
 [node name="LevelLights" type="Node2D" parent="."]
 
 [node name="BreederLight" type="PointLight2D" parent="LevelLights"]
@@ -302,10 +303,31 @@ script = ExtResource("4_43y7n")
 
 [node name="BlinkingLight" parent="LevelLights" instance=ExtResource("4_p8lqx")]
 
-[node name="Player" type="CharacterBody2D" parent="."]
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1024, 1024)
+render_target_clear_mode = 1
+render_target_update_mode = 4
+
+[node name="Node2D" type="Node2D" parent="SubViewport"]
+
+[node name="Man" type="Sprite2D" parent="SubViewport/Node2D"]
+scale = Vector2(2, 2)
+texture = ExtResource("3_d2r83")
+
+[node name="Camera2D" type="Camera2D" parent="SubViewport/Node2D"]
+zoom = Vector2(0.5, 0.5)
+
+[node name="Blood" type="Sprite2D" parent="SubViewport/Node2D"]
+texture = ExtResource("7_6504t")
+
+[node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("subviewport")]
 position = Vector2(814, 1626)
 floor_block_on_wall = false
 script = ExtResource("2_c88fv")
+subviewport = NodePath("../SubViewport")
 
 [node name="ExampleBalloon" parent="Player" instance=ExtResource("4_hgol1")]
 process_mode = 3
