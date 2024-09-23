@@ -39,7 +39,7 @@ func _ready():
 	print(example_balloon)
 	
 	Messenger.connect("screenshake", screenshake)
-	original_position = $Camera2D.position
+	original_position = camera_2d.position
 
 func screenshake(strength:int = 1):
 	# Stackable intensity
@@ -132,6 +132,19 @@ func _physics_process(delta):
 	cursor.rotation = -rotation
 	var scale_factor = 3.0 + sin(time * 10.0) * 0.5  # Adjust the speed and amplitude of the sine wave
 	cursor.scale = Vector2(scale_factor, scale_factor)  # Set the cursor scale
+	
+	# camera
+	var viewport_size = get_viewport().get_visible_rect().size
+	# var half_width = viewport_size.x * 0.381
+	var half_height = viewport_size.x * 0.381
+	var clamped_cursor_position = Vector2(
+		clamp(cursor.position.x,-half_height,half_height),
+		clamp(cursor.position.y,-half_height,half_height)
+	)
+	# Calculate the midpoint between the player and the clamped cursor position
+	# var midpoint = (position+clamped_cursor_position)/2
+	# Lerp the camera position for smooth movement
+	camera_2d.position = camera_2d.position.slerp(clamped_cursor_position, 0.005)
 	
 	time += delta
 	
