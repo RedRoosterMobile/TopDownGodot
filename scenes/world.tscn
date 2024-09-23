@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=49 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dap1odxixcgyx" path="res://scenes/blinking_light.tscn" id="4_p8lqx"]
 [ext_resource type="PackedScene" uid="uid://dg2icd6fsnaur" path="res://scenes/enemy.tscn" id="5_fhhcs"]
 [ext_resource type="AudioStream" uid="uid://j1cl564fgau4" path="res://assets/sounds/sfx/sndFireBass.wav" id="6_frdab"]
+[ext_resource type="Script" path="res://scripts/sub_node_2d.gd" id="6_ikt22"]
 [ext_resource type="Texture2D" uid="uid://dhy3uu6fhxt2j" path="res://assets/sprites/blood/tile_blood_32_0.png" id="7_6504t"]
 [ext_resource type="Texture2D" uid="uid://by7xima65d7uh" path="res://assets/sprites/legs/sprWaiterLegs_0.png" id="7_tmm25"]
 [ext_resource type="Texture2D" uid="uid://buwwoumx8nltd" path="res://assets/sprites/legs/sprWaiterLegs_1.png" id="8_hwoig"]
@@ -31,6 +32,7 @@
 [ext_resource type="Texture2D" uid="uid://51iqlh473x75" path="res://assets/aseprite/monkey_island_cursor.png" id="26_1bgn4"]
 [ext_resource type="Texture2D" uid="uid://dj4t4cm1ado8" path="res://assets/sprites/sprExplosion_0.png" id="26_t410r"]
 [ext_resource type="PackedScene" uid="uid://x6ps2oxfbtva" path="res://scenes/actionable.tscn" id="27_5r2v5"]
+[ext_resource type="PackedScene" uid="uid://d3n65vxxksodj" path="res://scenes/blood_path.tscn" id="32_0q14q"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_rwtds"]
 polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
@@ -314,6 +316,7 @@ render_target_clear_mode = 1
 render_target_update_mode = 4
 
 [node name="Node2D" type="Node2D" parent="SubViewport"]
+script = ExtResource("6_ikt22")
 
 [node name="Man" type="Sprite2D" parent="SubViewport/Node2D"]
 position = Vector2(814, 1626)
@@ -380,6 +383,18 @@ rotation = -3.10742
 scale = Vector2(4, 4)
 player = NodePath("../Player")
 
+[node name="Enemy2" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+position = Vector2(1097, 1851)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="Enemy3" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+position = Vector2(293, 1492)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 visible = false
 
@@ -409,6 +424,8 @@ visible = false
 stream = ExtResource("9_26m4r")
 autoplay = true
 bus = &"MUSIC"
+
+[node name="BloodPath" parent="." instance=ExtResource("32_0q14q")]
 
 [connection signal="tree_exited" from="Player/ExampleBalloon" to="Player" method="_on_example_balloon_tree_exited"]
 [connection signal="body_entered" from="Player/Area2D" to="Player" method="_on_area_2d_body_entered"]

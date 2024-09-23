@@ -230,7 +230,22 @@ func _on_example_balloon_tree_exited() -> void:
 func draw_me(arg:Node2D):
 	# the order is killing me here!! lol
 	arg.reparent(node_)
-
 	get_tree().create_timer(1).timeout.connect(func():
 		arg.queue_free()
 	)
+
+func draw_me_add(arg:Node2D):
+	# the order is killing me here!! lol
+	node_.add_child(arg)
+	
+	get_tree().create_timer(1).timeout.connect(func():
+		arg.queue_free()
+	)
+
+func draw_blood_line(sprite_pos, random_pos, line_color, line_width):
+	node_.draw_blood_line(sprite_pos, random_pos, line_color, line_width)
+	
+	
+	
+	
+	
