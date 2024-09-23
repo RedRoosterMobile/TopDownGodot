@@ -103,11 +103,22 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("paint"):
 		print("paint")
 		var node_:Node2D = subviewport.get_node("Node2D")
+		#var cam_:Camera2D = node_.get_node("Camera2D")
 		var bullet_instance:Node2D = bullet.instantiate()
 		#var blood:Sprite2D = node_.get_node("Blood")
 		#blood.position = Vector2(randi_range(0,500),randi_range(0,500))
-		bullet_instance.rotation_degrees = randf_range(0,90)
+		#cam_.position=camera_2d.position
+		#bullet_instance.position=Vector2(50,50)
+		var divisor= 4
+		print(global_position/divisor)
+		bullet_instance.position = global_position
+		# bullet_instance.scale=Vector2(0.1,0.1)
+		#bullet_instance.rotation_degrees = randf_range(0,180)
 		node_.add_child(bullet_instance)
+		
+		var bullet_instance2:Node2D = bullet.instantiate()
+		bullet_instance2.position = global_position
+		get_tree().get_root().call_deferred("add_child", bullet_instance2)
 		#bullet_instance.call_deferred("queue_free")
 		get_tree().create_timer(0.25).timeout.connect(func():
 			bullet_instance.queue_free()
