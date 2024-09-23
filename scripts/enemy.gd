@@ -13,6 +13,8 @@ var speed:float = 1.0
 # https://www.youtube.com/watch?v=yT22SXYpoYM
 @onready var ray_cast_2d: RayCast2D = $RayCast2D
 
+signal draw_me
+
 var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/1.wav",
 	"res://assets/sounds/sfx/zombie/2.wav",
@@ -81,6 +83,12 @@ func _on_timer_timeout():
 	start_random_timer()
 
 func _on_anim_zombie_animation_finished():
-	print("done")
+	print("draw me")
+	animated_sprite_2d.pause()
+	sprite_2d.queue_free()
+	$CollisionShape2D.queue_free()
+	$Area2D.queue_free()
+	player.draw_me(self)
 	# draw to renderr texture?
-	queue_free()
+	# queue_free()
+	

@@ -34,12 +34,15 @@ var knockback_decreaser=20
 
 #region functions
 #var example_balloon:CanvasLayer
+
+var node_:Node2D
 func _ready():
 	#example_balloon = balloon_scene.instantiate()
 	print(example_balloon)
 	
 	Messenger.connect("screenshake", screenshake)
 	original_position = camera_2d.position
+	node_ = subviewport.get_node("Node2D")
 
 func screenshake(strength:int = 1):
 	# Stackable intensity
@@ -102,22 +105,18 @@ func _physics_process(delta):
 
 	if Input.is_action_just_pressed("paint"):
 		print("paint")
-		var node_:Node2D = subviewport.get_node("Node2D")
+		
 		#var cam_:Camera2D = node_.get_node("Camera2D")
 		var bullet_instance:Node2D = bullet.instantiate()
 		#var blood:Sprite2D = node_.get_node("Blood")
 		#blood.position = Vector2(randi_range(0,500),randi_range(0,500))
-		#cam_.position=camera_2d.position
-		#bullet_instance.position=Vector2(50,50)
-		var divisor= 4
-		print(global_position/divisor)
 		bullet_instance.position = global_position
-		# bullet_instance.scale=Vector2(0.1,0.1)
-		#bullet_instance.rotation_degrees = randf_range(0,180)
-		node_.add_child(bullet_instance)
 		
+		node_.add_child(bullet_instance)
 		var bullet_instance2:Node2D = bullet.instantiate()
 		bullet_instance2.position = global_position
+		bullet_instance2.position.y+=50
+		
 		get_tree().get_root().call_deferred("add_child", bullet_instance2)
 		#bullet_instance.call_deferred("queue_free")
 		get_tree().create_timer(0.25).timeout.connect(func():
@@ -227,3 +226,11 @@ func _on_area_2d_body_entered(body):
 func _on_example_balloon_tree_exited() -> void:
 	print("done with dialogue")
 	toggle_pause()
+	
+func draw_me(arg:Node2D):
+	# the order is killing me here!! lol
+	arg.reparent(node_)
+
+	get_tree().create_timer(1).timeout.connect(func():
+		arg.queue_free()
+	)

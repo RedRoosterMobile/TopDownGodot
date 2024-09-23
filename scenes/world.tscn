@@ -375,7 +375,7 @@ scale = Vector2(3, 3)
 texture = ExtResource("26_1bgn4")
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
-position = Vector2(2330, 397)
+position = Vector2(301, 1824)
 rotation = -3.10742
 scale = Vector2(4, 4)
 player = NodePath("../Player")
