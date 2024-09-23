@@ -7,6 +7,7 @@ var movespeed:float = 700
 @export var bullet_accuracy:float = 0.05
 var bullet = preload("res://scenes/bullet.tscn")
 var dialogue_active:bool = false
+var time: float = 0.0
 @onready var sfx_shot := $SfxShot
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
@@ -14,6 +15,7 @@ var dialogue_active:bool = false
 #@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
 @onready var camera_2d: Camera2D = $Camera2D
+@onready var cursor: Sprite2D = $Cursor
 
 #region Screenshake
 @export var shake_duration:float = 0.2
@@ -122,9 +124,17 @@ func _physics_process(delta):
 	# Use move_and_slide without arguments
 	move_and_slide()
 	
-
 	# Character looks towards the mouse position
 	look_at(get_global_mouse_position())
+	
+	# cursor
+	cursor.position = get_local_mouse_position()
+	cursor.rotation = -rotation
+	var scale_factor = 3.0 + sin(time * 10.0) * 0.5  # Adjust the speed and amplitude of the sine wave
+	cursor.scale = Vector2(scale_factor, scale_factor)  # Set the cursor scale
+	
+	time += delta
+	
 
 # check https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html
 func toggle_pause():
