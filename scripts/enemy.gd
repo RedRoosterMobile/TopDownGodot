@@ -9,7 +9,8 @@ var speed:float = 0.5
 @export var health: int = 3
 @export var awareness_circle:int = 800
 
-
+@export var target: Node2D = null
+@onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 
 @onready var sfx_zombie_growl := $AnimZombie/SfxZombieGrowl
 @onready var sfx_gore_splash: AudioStreamPlayer2D = $AnimZombie/SndGoreSplash
@@ -63,6 +64,15 @@ func _ready():
 	start_random_timer()
 	animated_sprite_2d.play("walk")
 	ray_cast_2d.target_position.x = awareness_circle
+	call_deferred("nav_setup")
+	
+	
+func nav_setup():
+	await get_tree().physics_frame
+	if target:
+		print("set up")
+		navigation_agent_2d.target_position=player.global_position
+	pass
 
 const blood_spawn_interval = 0.01  # Interval in seconds
 var blood_spawn_timer = blood_spawn_interval
@@ -88,6 +98,22 @@ func _physics_process(delta) -> void:
 		move_and_slide()
 		return
 	
+	#region pathfinding
+	if target:
+		navigation_agent_2d.target_position = player.global_position
+		animated_sprite_2d.play("fly")
+	if navigation_agent_2d.is_navigation_finished():
+		target = null
+		return
+	
+	motion = global_position.direction_to(navigation_agent_2d.get_next_path_position())*speed*7.5
+	move_and_collide(motion)
+	look_at(player.position)
+	
+	# for now..  come up with a cool configurable movement logic
+	return
+	
+	#region awareness
 	if player and player.position.distance_to(self.position) < awareness_circle:
 		# todo: only walk if the path is clear (raycast the motion vector)
 		motion = (player.position - position) / randf_range(55, 85) * speed
@@ -114,7 +140,10 @@ func slowly_turn_towards(target_angle, turn_speed = 0.02) -> void:
 func _on_area_2d_body_entered(body) -> void:
 	if "BulletRigidBody2D" in body.name:
 		# kill bullet
-		body.get_parent().queue_free()
+		# body.get_parent().queue_free()
+		var bullet_global_position:Vector2 = body.global_position
+		body.queue_free()
+		
 		
 		health -= 1
 		if health <= 0:
@@ -139,15 +168,12 @@ func _on_area_2d_body_entered(body) -> void:
 		play_growl(randi_range(8,11)-1)
 		
 		# no effect when hurt only
-		var bb:RigidBody2D = body as RigidBody2D
 		# Calculate the impact direction
-		# just take the bullet direction..
-		print(global_position.direction_to(body.global_position))
 		
 		# the next three lines are the same
-		#var impact_direction:Vector2 = (global_position - body.global_position).normalized()
-		#var impact_direction:Vector2 = global_position.direction_to(body.global_position)*-1
-		var impact_direction:Vector2 = body.global_position.direction_to(global_position)
+		#var impact_direction:Vector2 = (global_position - bullet_global_position).normalized()
+		#var impact_direction:Vector2 = global_position.direction_to(bullet_global_position)*-1
+		var impact_direction:Vector2 = bullet_global_position.direction_to(global_position)
 		anim_impact.rotation += position.angle_to(player.position)
 		anim_impact.visible = true
 		anim_impact.speed_scale = randf_range(0.5, 1.2)

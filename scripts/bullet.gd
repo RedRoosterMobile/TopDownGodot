@@ -12,10 +12,9 @@ func _on_area_2d_body_entered(body):
 		handle_impact()
 
 func handle_impact():
-	
-	bullet_rigid_body_2d.queue_free()
 	impact_anim.position = bullet_rigid_body_2d.position
 	impact_anim.rotation = bullet_rigid_body_2d.rotation
+	bullet_rigid_body_2d.queue_free()
 	impact_anim.scale *= randf_range(1, 2)
 	impact_anim.stop()
 	impact_anim.play()
