@@ -36,7 +36,7 @@ var sound_files: Array[String] = [
 ]
 
 func play_random_growl_sound():
-	var random_index:int = randi() % sound_files.size()
+	var random_index:int = randi_range(1,5)-1
 	play_growl(random_index)
 
 func play_growl(index:int):
@@ -179,7 +179,7 @@ func blood_line():
 # try this inside the the subviewport
 func line2dexample():
 	# Get the Line2D node
-	var line:Line2D = $Line2D
+	var line:Line2D = $Line2D # Line2D.new
 	
 	# Define the points for the line
 	var points = [
@@ -188,10 +188,14 @@ func line2dexample():
 		Vector2(300, 100),
 		Vector2(400, 200)
 	]
+	# line.texture_mode = Line2D.LINE_TEXTURE_TILE
 	
 	# Set the points to the Line2D
 	line.points = points
+	# line.add_point(Vector2(0,0))
 	
 	# Optional: Adjust other properties
 	line.width = 4
 	line.default_color = Color(1, 0, 0)  # Red color
+	
+	# add_child(line)

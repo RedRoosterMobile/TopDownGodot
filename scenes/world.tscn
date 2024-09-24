@@ -319,6 +319,7 @@ render_target_update_mode = 4
 script = ExtResource("6_ikt22")
 
 [node name="Man" type="Sprite2D" parent="SubViewport/Node2D"]
+visible = false
 position = Vector2(814, 1626)
 scale = Vector2(8, 8)
 texture = ExtResource("3_d2r83")
