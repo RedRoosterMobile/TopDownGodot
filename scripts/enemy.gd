@@ -19,7 +19,7 @@ var speed:float = 1.0
 
  # 1-5  normal
  # 6-7  attack
- # 8-12 die
+ # 8-11 die
 var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/1.wav",
 	"res://assets/sounds/sfx/zombie/2.wav",
@@ -32,7 +32,6 @@ var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/9.wav",
 	"res://assets/sounds/sfx/zombie/10.wav",
 	"res://assets/sounds/sfx/zombie/11.wav",
-	"res://assets/sounds/sfx/zombie/12.wav"
 ]
 
 func play_random_growl_sound():
@@ -127,9 +126,8 @@ func _on_area_2d_body_entered(body):
 		sfx_gore_splash.pitch_scale = randf_range(0.7,1)
 		sfx_gore_splash.play()
 		
-		# 8-12 die
-		play_growl(randi_range(8,12)-1)
-		
+		# 8-11 die
+		play_growl(randi_range(8,11)-1)
 		
 		# no effect when hurt only
 		var bb:RigidBody2D = body as RigidBody2D
