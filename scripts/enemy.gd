@@ -2,10 +2,12 @@ extends CharacterBody2D
 
 var motion := Vector2()
 var is_dead := false
-var speed:float = 1.0
+var was_hit := false
+var speed:float = 0.5
 
 @export var player: Node2D;
 @export var health: int = 3
+@export var awareness_circle:int = 800
 
 @onready var sfx_zombie_growl := $AnimZombie/SfxZombieGrowl
 @onready var sfx_gore_splash: AudioStreamPlayer2D = $AnimZombie/SndGoreSplash
@@ -16,6 +18,7 @@ var speed:float = 1.0
 # https://www.youtube.com/watch?v=yT22SXYpoYM
 @onready var ray_cast_2d: RayCast2D = $RayCast2D
 @onready var blood_path_scene = preload("res://scenes/blood_path.tscn")
+@onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
  # 1-5  normal
  # 6-7  attack
@@ -45,7 +48,7 @@ func play_growl(index:int):
 	sfx_zombie_growl.play()
 
 func start_random_timer():
-	var random_interval := randf_range(1.0, 5.0) # Random interval between 1 and 5 seconds
+	var random_interval := randf_range(2.0, 5.0) # Random interval between 1 and 5 seconds
 	timer.wait_time = random_interval
 	timer.start()
 
@@ -54,12 +57,7 @@ func _ready():
 	play_random_growl_sound()
 	start_random_timer()
 	animated_sprite_2d.play("walk")
-	
-	
-	#queue_redraw()
-	print("drawe line ready")
-#func _draw():
-	#blood_line()
+	ray_cast_2d.target_position.x = awareness_circle
 
 const blood_spawn_interval = 0.01  # Interval in seconds
 var blood_spawn_timer = blood_spawn_interval
@@ -72,25 +70,25 @@ func _physics_process(delta):
 			blood_path.position = global_position
 			if (blood_path_start_pos==Vector2.ZERO):
 				blood_path_start_pos=global_position
-			blood_path.rotation_degrees = randi_range(1,4)*90
-			print(blood_path.rotation_degrees)
+			#blood_path.rotation_degrees = randi_range(1,4)*90
+			blood_path.rotation = blood_path.rotation + get_angle_to(player.global_position)
 			blood_path.scale = Vector2(4,4)*randi_range(1,1)
 			blood_path.modulate.a = randf_range(0.5,1)
 			blood_path.modulate.h = randf_range(0.5,0.9)
 			
 			player.draw_me_add(blood_path)
 			blood_spawn_timer = blood_spawn_interval + 0.1
-			
 		else:
 			blood_spawn_timer -= delta
 		move_and_slide()
 		return
 	
-	if player and player.position.distance_to(self.position) < 400:
+	if player and player.position.distance_to(self.position) < awareness_circle:
 		# todo: only walk if the path is clear (raycast the motion vector)
 		motion = (player.position - position) / randf_range(55, 85) * speed
 		
-		look_at(player.position)
+		#look_at(player.position)
+		slowly_turn_towards(get_angle_to(player.position))
 		if ray_cast_2d.is_colliding():
 			# player in plain sight?
 			if ray_cast_2d.get_collider() == player:
@@ -105,21 +103,27 @@ func _physics_process(delta):
 	#else:
 	#	motion = Vector2.ZERO
 
+func slowly_turn_towards(target_angle, turn_speed = 0.02):
+	rotation = lerp_angle(rotation, rotation + target_angle, turn_speed)
+
 func _on_area_2d_body_entered(body):
 	if "BulletRigidBody2D" in body.name:
 		# kill bullet
 		body.get_parent().queue_free()
 		
 		health -= 1
-		if health<=0:
+		if health <= 0:
 			is_dead = true
 			timer.stop()
 			animated_sprite_2d.play("die")
 		else:
-			# need to make the zombie move, when hit
-			is_dead=true
+			was_hit = true
 			get_tree().create_timer(0.2).timeout.connect(func():
-				is_dead=false
+				was_hit = false
+				# turn around towards player..
+				# same as look_at()
+				var target_angle = get_angle_to(player.position)
+				rotation = rotation + target_angle
 			)
 			
 		# todo: spawn some blood particle

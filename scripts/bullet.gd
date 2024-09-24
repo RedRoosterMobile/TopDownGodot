@@ -2,6 +2,7 @@ extends Node2D
 @onready var impact_anim: AnimatedSprite2D = $ImpactAnim
 @onready var bullet_rigid_body_2d: RigidBody2D = $BulletRigidBody2D
 @onready var explosion_anim: AnimatedSprite2D = $ExplosionAnim
+@onready var snd_explosion: AudioStreamPlayer2D = $sndExplosion
 
 func _on_area_2d_body_entered(body):
 	# hit the wall
@@ -32,6 +33,8 @@ func handle_impact():
 	
 func handle_explosion():
 	if randi_range(1,5) == 1:
+		snd_explosion.pitch_scale=randf_range(0.5,1)
+		snd_explosion.play()
 		Messenger.screenshake.emit(3)
 		explosion_anim.position = bullet_rigid_body_2d.position
 		explosion_anim.rotation = bullet_rigid_body_2d.rotation

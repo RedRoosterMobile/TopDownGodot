@@ -113,6 +113,7 @@ visible = false
 occluder = SubResource("OccluderPolygon2D_q0p46")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
 texture = ExtResource("15_tcrkf")
 hframes = 19
 vframes = 9
@@ -133,7 +134,7 @@ metadata/_aseprite_wizard_config_ = {
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
-target_position = Vector2(200, 0)
+target_position = Vector2(0, 0)
 
 [node name="Line2D" type="Line2D" parent="."]
 

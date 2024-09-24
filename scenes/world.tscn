@@ -325,6 +325,7 @@ scale = Vector2(8, 8)
 texture = ExtResource("3_d2r83")
 
 [node name="Blood" type="Sprite2D" parent="SubViewport/Node2D"]
+visible = false
 texture = ExtResource("7_6504t")
 
 [node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("subviewport")]
