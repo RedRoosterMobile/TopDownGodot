@@ -9,16 +9,20 @@ var speed:float = 0.5
 @export var health: int = 3
 @export var awareness_circle:int = 800
 
+
+
 @onready var sfx_zombie_growl := $AnimZombie/SfxZombieGrowl
 @onready var sfx_gore_splash: AudioStreamPlayer2D = $AnimZombie/SndGoreSplash
 @onready var timer:Timer = $Timer
-@onready var animated_sprite_2d = $AnimZombie
+@onready var animated_sprite_2d: AnimatedSprite2D = $AnimZombie
+@onready var anim_impact: AnimatedSprite2D = $AnimImpact
 @onready var sprite_2d: Sprite2D = $Sprite2D
 # pathfinding
 # https://www.youtube.com/watch?v=yT22SXYpoYM
 @onready var ray_cast_2d: RayCast2D = $RayCast2D
 @onready var blood_path_scene = preload("res://scenes/blood_path.tscn")
 @onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var enemy_collider: CollisionShape2D = $EnemyCollider
 
  # 1-5  normal
  # 6-7  attack
@@ -37,22 +41,23 @@ var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/11.wav",
 ]
 
-func play_random_growl_sound():
+func play_random_growl_sound() -> void:
 	var random_index:int = randi_range(1,5)-1
 	play_growl(random_index)
 
-func play_growl(index:int):
+func play_growl(index:int) -> void:
 	var sound_path:String = sound_files[index]
 	var sound := load(sound_path) as AudioStream
 	sfx_zombie_growl.stream = sound
 	sfx_zombie_growl.play()
 
-func start_random_timer():
+func start_random_timer() -> void:
 	var random_interval := randf_range(2.0, 5.0) # Random interval between 1 and 5 seconds
 	timer.wait_time = random_interval
 	timer.start()
 
 func _ready():
+	anim_impact.visible = false
 	randomize() # Ensure randomness each time the game runs
 	play_random_growl_sound()
 	start_random_timer()
@@ -63,7 +68,7 @@ const blood_spawn_interval = 0.01  # Interval in seconds
 var blood_spawn_timer = blood_spawn_interval
 var blood_timer_enabled = true
 var blood_path_start_pos=Vector2.ZERO
-func _physics_process(delta):
+func _physics_process(delta) -> void:
 	if is_dead:
 		if(blood_spawn_timer<=0 and blood_timer_enabled):
 			var blood_path:Node2D = blood_path_scene.instantiate()
@@ -103,10 +108,10 @@ func _physics_process(delta):
 	#else:
 	#	motion = Vector2.ZERO
 
-func slowly_turn_towards(target_angle, turn_speed = 0.02):
+func slowly_turn_towards(target_angle, turn_speed = 0.02) -> void:
 	rotation = lerp_angle(rotation, rotation + target_angle, turn_speed)
 
-func _on_area_2d_body_entered(body):
+func _on_area_2d_body_entered(body) -> void:
 	if "BulletRigidBody2D" in body.name:
 		# kill bullet
 		body.get_parent().queue_free()
@@ -136,14 +141,26 @@ func _on_area_2d_body_entered(body):
 		# no effect when hurt only
 		var bb:RigidBody2D = body as RigidBody2D
 		# Calculate the impact direction
-		var impact_direction = (global_position - body.global_position).normalized()
+		# just take the bullet direction..
+		print(global_position.direction_to(body.global_position))
+		
+		# the next three lines are the same
+		#var impact_direction:Vector2 = (global_position - body.global_position).normalized()
+		#var impact_direction:Vector2 = global_position.direction_to(body.global_position)*-1
+		var impact_direction:Vector2 = body.global_position.direction_to(global_position)
+		anim_impact.rotation += position.angle_to(player.position)
+		anim_impact.visible = true
+		anim_impact.speed_scale = randf_range(0.5, 1.2)
+		anim_impact.play()
 		# Apply impact force
-		var impact_force = randf_range(150,200)  # Adjust this value as needed
-		velocity = impact_direction * impact_force
-		#$CollisionShape2D.queue_free()
+		var impact_force = randf_range(150,190)
+		velocity += impact_direction * impact_force
 		
 		
-func _on_timer_timeout():
+func _on_anim_impact_animation_finished() -> void:
+	anim_impact.visible = false
+
+func _on_timer_timeout() -> void:
 	play_random_growl_sound()
 	start_random_timer()
 
@@ -151,7 +168,7 @@ func _on_timer_timeout():
 
 func _on_anim_zombie_frame_changed() -> void:
 	blood_line()
-func _on_anim_zombie_animation_finished():
+func _on_anim_zombie_animation_finished() -> void:
 	print("draw me")	
 	
 	blood_timer_enabled=false
@@ -164,7 +181,7 @@ func _on_anim_zombie_animation_finished():
 	# draw to renderr texture?, yes!!
 	#queue_free()
 	
-func blood_line():
+func blood_line() -> void:
 	# path
 	if(blood_path_start_pos):
 		var sprite_pos = global_position
@@ -179,7 +196,7 @@ func blood_line():
 		blood_path_start_pos = sprite_pos
 
 # try this inside the the subviewport
-func line2dexample():
+func line2dexample() -> void:
 	# Get the Line2D node
 	var line:Line2D = $Line2D # Line2D.new
 	

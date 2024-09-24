@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dg2icd6fsnaur"]
+[gd_scene load_steps=34 format=3 uid="uid://dg2icd6fsnaur"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bcf45"]
 [ext_resource type="AudioStream" uid="uid://byic1s2ye1oge" path="res://assets/sounds/sfx/zombie/1.wav" id="3_fyqbl"]
@@ -17,6 +17,17 @@
 [ext_resource type="Texture2D" uid="uid://coknc8x25v432" path="res://assets/sprites/enemy/enemy2.png" id="15_k201j"]
 [ext_resource type="Texture2D" uid="uid://cbdohqpnpbxxh" path="res://assets/sprites/sprElectricity1.png" id="15_tcrkf"]
 [ext_resource type="Script" path="res://scripts/sprite_2d.gd" id="16_0qwgh"]
+[ext_resource type="Texture2D" uid="uid://bwwoj8wblhirh" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_0.png" id="18_2lh8j"]
+[ext_resource type="Texture2D" uid="uid://dmxpnfmct4c1q" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_1.png" id="19_8be12"]
+[ext_resource type="Texture2D" uid="uid://c8q00fu8wdp1i" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_2.png" id="20_q3xak"]
+[ext_resource type="Texture2D" uid="uid://dwnmxl2bsg8c3" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_3.png" id="21_g4v1e"]
+[ext_resource type="Texture2D" uid="uid://die7pm11egj1g" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_4.png" id="22_ieqv1"]
+[ext_resource type="Texture2D" uid="uid://cdpu04v0tf0ao" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_5.png" id="23_van0c"]
+[ext_resource type="Texture2D" uid="uid://bxcskwq468fy0" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_6.png" id="24_nuifu"]
+[ext_resource type="Texture2D" uid="uid://bep8r83k4uhbx" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_7.png" id="25_gufx1"]
+[ext_resource type="Texture2D" uid="uid://bcsr4cc5nsia" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_8.png" id="26_iyalu"]
+[ext_resource type="Texture2D" uid="uid://bw6b4rwnhdkb6" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_9.png" id="27_ymaut"]
+[ext_resource type="Texture2D" uid="uid://8d63fpsa51ia" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_10.png" id="28_eq6fo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ejwtv"]
 size = Vector2(12, 30)
@@ -81,10 +92,51 @@ animations = [{
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_q0p46"]
 polygon = PackedVector2Array(-6, -15, 6, -15, 6, 15, -6, 15)
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_wjvnx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_2lh8j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_8be12")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_q3xak")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_g4v1e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_ieqv1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_van0c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_nuifu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_gufx1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_iyalu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_ymaut")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_eq6fo")
+}],
+"loop": false,
+"name": &"default",
+"speed": 20.0
+}]
+
 [node name="Enemy" type="CharacterBody2D"]
 script = ExtResource("1_bcf45")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="EnemyCollider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ejwtv")
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -98,7 +150,7 @@ shape = SubResource("RectangleShape2D_t2ff6")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_g1f26")
 animation = &"fly"
-frame_progress = 0.0490792
+frame_progress = 0.235106
 
 [node name="SfxZombieGrowl" type="AudioStreamPlayer2D" parent="AnimZombie"]
 stream = ExtResource("3_fyqbl")
@@ -138,7 +190,17 @@ target_position = Vector2(0, 0)
 
 [node name="Line2D" type="Line2D" parent="."]
 
+[node name="AnimImpact" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(-19.48, -3.47)
+rotation = 3.14159
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_wjvnx")
+frame = 10
+frame_progress = 1.0
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="animation_finished" from="AnimZombie" to="." method="_on_anim_zombie_animation_finished"]
 [connection signal="frame_changed" from="AnimZombie" to="." method="_on_anim_zombie_frame_changed"]
+[connection signal="animation_finished" from="AnimImpact" to="." method="_on_anim_impact_animation_finished"]
