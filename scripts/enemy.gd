@@ -2,19 +2,24 @@ extends CharacterBody2D
 
 var motion := Vector2()
 var is_dead := false
+var speed:float = 1.0
+
+@export var player: Node2D;
+@export var health: int = 3
+
 @onready var sfx_zombie_growl := $AnimZombie/SfxZombieGrowl
+@onready var sfx_gore_splash: AudioStreamPlayer2D = $AnimZombie/SndGoreSplash
 @onready var timer:Timer = $Timer
 @onready var animated_sprite_2d = $AnimZombie
-var speed:float = 1.0
-# will be set in the editor, like in Unity
-@export var player: Node2D;
 @onready var sprite_2d: Sprite2D = $Sprite2D
 # pathfinding
 # https://www.youtube.com/watch?v=yT22SXYpoYM
 @onready var ray_cast_2d: RayCast2D = $RayCast2D
-
 @onready var blood_path_scene = preload("res://scenes/blood_path.tscn")
 
+ # 1-5  normal
+ # 6-7  attack
+ # 8-12 die
 var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/1.wav",
 	"res://assets/sounds/sfx/zombie/2.wav",
@@ -30,10 +35,13 @@ var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/12.wav"
 ]
 
-func play_random_sound():
+func play_random_growl_sound():
 	var random_index:int = randi() % sound_files.size()
-	var random_sound_path:String = sound_files[random_index]
-	var sound := load(random_sound_path) as AudioStream
+	play_growl(random_index)
+
+func play_growl(index:int):
+	var sound_path:String = sound_files[index]
+	var sound := load(sound_path) as AudioStream
 	sfx_zombie_growl.stream = sound
 	sfx_zombie_growl.play()
 
@@ -44,7 +52,7 @@ func start_random_timer():
 
 func _ready():
 	randomize() # Ensure randomness each time the game runs
-	play_random_sound()
+	play_random_growl_sound()
 	start_random_timer()
 	animated_sprite_2d.play("walk")
 	
@@ -54,7 +62,7 @@ func _ready():
 #func _draw():
 	#blood_line()
 
-const blood_spawn_interval = 0.001  # Interval in seconds
+const blood_spawn_interval = 0.01  # Interval in seconds
 var blood_spawn_timer = blood_spawn_interval
 var blood_timer_enabled = true
 var blood_path_start_pos=Vector2.ZERO
@@ -63,11 +71,11 @@ func _physics_process(delta):
 		if(blood_spawn_timer<=0 and blood_timer_enabled):
 			var blood_path:Node2D = blood_path_scene.instantiate()
 			blood_path.position = global_position
-			if(blood_path_start_pos==Vector2.ZERO):
+			if (blood_path_start_pos==Vector2.ZERO):
 				blood_path_start_pos=global_position
-			#player.draw_blood_line()
 			blood_path.rotation_degrees = randi_range(1,4)*90
-			blood_path.scale = Vector2(4,4)*randi_range(1,2)
+			print(blood_path.rotation_degrees)
+			blood_path.scale = Vector2(4,4)*randi_range(1,1)
 			blood_path.modulate.a = randf_range(0.5,1)
 			blood_path.modulate.h = randf_range(0.5,0.9)
 			
@@ -88,38 +96,53 @@ func _physics_process(delta):
 			# player in plain sight?
 			if ray_cast_2d.get_collider() == player:
 				move_and_collide(motion)
-			else:
-				motion = Vector2.ZERO
+			#else:
+			#	motion = Vector2.ZERO
 		# todo: path-finding
 		# todo: think of some following logic:
 		# sound attraction? noise level?
 		# distract enemies? decoys?
 		
-	else:
-		motion = Vector2.ZERO
+	#else:
+	#	motion = Vector2.ZERO
 
 func _on_area_2d_body_entered(body):
 	if "BulletRigidBody2D" in body.name:
 		# kill bullet
 		body.get_parent().queue_free()
 		
-		is_dead = true
-		var bb:RigidBody2D = body as RigidBody2D
+		health -= 1
+		if health<=0:
+			is_dead = true
+			timer.stop()
+			animated_sprite_2d.play("die")
+		else:
+			# need to make the zombie move, when hit
+			is_dead=true
+			get_tree().create_timer(0.2).timeout.connect(func():
+				is_dead=false
+			)
+			
+		# todo: spawn some blood particle
+		sfx_gore_splash.pitch_scale = randf_range(0.7,1)
+		sfx_gore_splash.play()
 		
+		# 8-12 die
+		play_growl(randi_range(8,12)-1)
+		
+		
+		# no effect when hurt only
+		var bb:RigidBody2D = body as RigidBody2D
 		# Calculate the impact direction
 		var impact_direction = (global_position - body.global_position).normalized()
-
 		# Apply impact force
 		var impact_force = randf_range(150,200)  # Adjust this value as needed
 		velocity = impact_direction * impact_force
-
-
 		#$CollisionShape2D.queue_free()
-		timer.stop()
-		animated_sprite_2d.play("die")
+		
 		
 func _on_timer_timeout():
-	play_random_sound()
+	play_random_growl_sound()
 	start_random_timer()
 
 #region animation
@@ -143,12 +166,32 @@ func blood_line():
 	# path
 	if(blood_path_start_pos):
 		var sprite_pos = global_position
-		var random_x_offset = 0#randf_range(-30, 30)
-		var random_y_offset = 0#randf_range(-30, 30)
-		var random_pos = sprite_pos + Vector2(random_x_offset, random_y_offset)
+		#var random_x_offset = 0#randf_range(-30, 30)
+		#var random_y_offset = 0#randf_range(-30, 30)
+		#var random_pos = sprite_pos + Vector2(random_x_offset, random_y_offset)
 		var line_color = Color(1, 0, 0, randf_range(0.01,0.05))  # Equivalent to 0xaa0000 with alpha 0.1
 		var line_width = randf_range(50,70)
 		
 		# Draw the line
-		player.draw_blood_line(blood_path_start_pos, random_pos, line_color, line_width)
+		player.draw_blood_line(blood_path_start_pos, sprite_pos, line_color, line_width)
 		blood_path_start_pos = sprite_pos
+
+# try this inside the the subviewport
+func line2dexample():
+	# Get the Line2D node
+	var line:Line2D = $Line2D
+	
+	# Define the points for the line
+	var points = [
+		Vector2(100, 100),
+		Vector2(200, 200),
+		Vector2(300, 100),
+		Vector2(400, 200)
+	]
+	
+	# Set the points to the Line2D
+	line.points = points
+	
+	# Optional: Adjust other properties
+	line.width = 4
+	line.default_color = Color(1, 0, 0)  # Red color

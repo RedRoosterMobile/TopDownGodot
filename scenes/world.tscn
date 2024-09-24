@@ -396,7 +396,6 @@ scale = Vector2(4, 4)
 player = NodePath("../Player")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
 material = SubResource("ShaderMaterial_tiey2")
