@@ -1,7 +1,6 @@
-[gd_scene load_steps=46 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=49 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
-[ext_resource type="Texture2D" uid="uid://b56x2nqhh8vo1" path="res://assets/sprites/pink.png" id="1_v0cjd"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
 [ext_resource type="Texture2D" uid="uid://dhpd8xll4o21" path="res://assets/sprites/player.png" id="3_d2r83"]
 [ext_resource type="Script" path="res://scripts/breeder_light.gd" id="4_43y7n"]
@@ -10,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://dap1odxixcgyx" path="res://scenes/blinking_light.tscn" id="4_p8lqx"]
 [ext_resource type="PackedScene" uid="uid://dg2icd6fsnaur" path="res://scenes/enemy.tscn" id="5_fhhcs"]
 [ext_resource type="AudioStream" uid="uid://j1cl564fgau4" path="res://assets/sounds/sfx/sndFireBass.wav" id="6_frdab"]
+[ext_resource type="Script" path="res://scripts/sub_node_2d.gd" id="6_ikt22"]
+[ext_resource type="Texture2D" uid="uid://dhy3uu6fhxt2j" path="res://assets/sprites/blood/tile_blood_32_0.png" id="7_6504t"]
 [ext_resource type="Texture2D" uid="uid://by7xima65d7uh" path="res://assets/sprites/legs/sprWaiterLegs_0.png" id="7_tmm25"]
 [ext_resource type="Texture2D" uid="uid://buwwoumx8nltd" path="res://assets/sprites/legs/sprWaiterLegs_1.png" id="8_hwoig"]
 [ext_resource type="AudioStream" uid="uid://vm2xo6m2jejv" path="res://assets/sounds/music/music.ogg" id="9_26m4r"]
@@ -31,6 +32,7 @@
 [ext_resource type="Texture2D" uid="uid://51iqlh473x75" path="res://assets/aseprite/monkey_island_cursor.png" id="26_1bgn4"]
 [ext_resource type="Texture2D" uid="uid://dj4t4cm1ado8" path="res://assets/sprites/sprExplosion_0.png" id="26_t410r"]
 [ext_resource type="PackedScene" uid="uid://x6ps2oxfbtva" path="res://scenes/actionable.tscn" id="27_5r2v5"]
+[ext_resource type="PackedScene" uid="uid://d3n65vxxksodj" path="res://scenes/blood_path.tscn" id="32_0q14q"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_rwtds"]
 polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
@@ -195,6 +197,9 @@ physics_layer_0/collision_layer = 1
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_6fmsa")
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_wdujj"]
+viewport_path = NodePath("SubViewport")
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_3rdmb"]
 animations = [{
 "frames": [{
@@ -273,19 +278,18 @@ gravity = Vector3(0, 98, 0)
 
 [node name="world" type="Node2D"]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-modulate = Color(0.138637, 0.138637, 0.138637, 1)
-position = Vector2(1893, 1438)
-scale = Vector2(1293.73, 1000)
-texture = ExtResource("1_v0cjd")
-
 [node name="Tiles" type="Node2D" parent="."]
 
 [node name="CosmicLilacLayer" type="TileMapLayer" parent="Tiles"]
 scale = Vector2(10, 10)
 tile_map_data = PackedByteArray("AAABAAAAAAAHAAEAAAACAAAAAAAHAAEAAAADAAAAAAAHAAEAAAACAAEAAAAHAAMAAAACAAIAAAAHAAMAAAADAAIAAAAHAAMAAAAEAAIAAAAGAAMAAAAFAAIAAAAGAAMAAAAGAAIAAAAGAAMAAAAHAAIAAAAGAAMAAAAIAAIAAAAGAAMAAAAJAAIAAAAHAAMAAAAKAAIAAAAGAAMAAAALAAIAAAAGAAMAAAAMAAIAAAAGAAMAAAANAAIAAAAHAAMAAAAOAAIAAAALAAMAAAANAAEAAAAHAAEAAAAMAAEAAAAHAAEAAAALAAEAAAAHAAEAAAAKAAEAAAAHAAEAAAAJAAEAAAAHAAEAAAAIAAEAAAAHAAEAAAAHAAEAAAAHAAEAAAAGAAEAAAAHAAEAAAAEAAEAAAAGAAIAAAADAAEAAAAGAAMAAAAFAAEAAAAHAAEAAAAKAAMAAAAGAAMAAAAJAAMAAAAGAAMAAAAIAAMAAAAGAAMAAAABAP//AAACAAAAAAACAP//AAACAAAAAAADAP//AAACAAAAAAAEAP//AAADAAAAAAAEAAAAAAAFAAEAAAAFAAAAAAACAAAAAAAGAAAAAAACAAAAAAAHAAAAAAACAAAAAAAIAAAAAAACAAAAAAAJAAAAAAACAAAAAAAKAAAAAAACAAAAAAALAAAAAAACAAAAAAAMAAAAAAACAAAAAAANAAAAAAACAAAAAAACAAMAAAABAAMAAAADAAMAAAABAAMAAAAEAAMAAAABAAMAAAAFAAMAAAABAAMAAAAGAAMAAAABAAMAAAAHAAMAAAAFAAMAAAAHAAQAAAAAAAEAAAAJAAQAAAAEAAMAAAAKAAQAAAABAAMAAAALAAQAAAADAAMAAAALAAMAAAAEAAMAAAAMAAMAAAABAAMAAAANAAMAAAABAAMAAAAOAAMAAAABAAMAAAAPAAMAAAADAAMAAAAPAAEAAAADAAAAAAAOAAEAAAAFAAEAAAAOAAAAAAADAAAAAAAIAAQAAAAGAAMAAAABAAEAAAAHAAMAAAABAAIAAAAIAAMAAAAAAAIAAAACAAIAAAAAAAEAAAACAAIAAAAAAAAAAAACAAIAAAD/////AAAAAAAAAAAAAP//AAABAAAAAAD//wAAAAAAAAEAAAD//wEAAAAAAAEAAAD//wIAAAAAAAEAAAABAAMAAAACAAMAAAAAAAMAAAACAAMAAAD//wMAAAAAAAMAAAAHAAUAAAAAAAIAAAAHAAYAAAAAAAIAAAAHAAcAAAAAAAIAAAAJAAUAAAADAAIAAAAJAAYAAAADAAIAAAAJAAcAAAADAAIAAAAIAAUAAAAHAAMAAAAIAAYAAAAIAAMAAAAIAAcAAAAGAAMAAAAPAAIAAAADAAEAAAAHAAgAAAAEAAEAAAAJAAgAAAAFAAEAAAAKAAgAAAABAAAAAAALAAgAAAABAAAAAAAMAAgAAAABAAAAAAANAAgAAAABAAAAAAAOAAgAAAABAAAAAAAPAAgAAAABAAAAAAAGAAgAAAACAAAAAAAFAAgAAAACAAAAAAAEAAgAAAACAAAAAAADAAgAAAACAAAAAAACAAgAAAACAAAAAAABAAgAAAACAAAAAAAAAAgAAAACAAAAAAD//wgAAAAAAAAAAAD//wkAAAAAAAEAAAD//woAAAAAAAEAAAD//wsAAAAAAAEAAAD//wwAAAAAAAEAAAD//w0AAAAAAAMAAAAAAA0AAAABAAMAAAABAA0AAAABAAMAAAACAA0AAAABAAMAAAADAA0AAAABAAMAAAAEAA0AAAABAAMAAAAFAA0AAAABAAMAAAAGAA0AAAABAAMAAAAHAA0AAAABAAMAAAAIAA0AAAABAAMAAAAJAA0AAAABAAMAAAAKAA0AAAABAAMAAAALAA0AAAABAAMAAAAMAA0AAAABAAMAAAANAA0AAAABAAMAAAAOAA0AAAABAAMAAAAPAA0AAAABAAMAAAAAAAkAAAAGAAMAAAABAAkAAAAGAAMAAAACAAkAAAAGAAMAAAADAAkAAAAHAAMAAAAEAAkAAAAHAAMAAAAFAAkAAAAHAAMAAAAGAAkAAAAHAAMAAAAHAAkAAAAHAAMAAAAIAAkAAAAHAAMAAAAJAAkAAAAHAAMAAAAKAAkAAAAHAAMAAAALAAkAAAAHAAMAAAAMAAkAAAAHAAMAAAANAAkAAAAHAAMAAAAOAAkAAAAHAAMAAAAPAAkAAAAGAAMAAAAPAAoAAAAHAAMAAAAOAAoAAAAHAAMAAAAOAAsAAAAHAAMAAAANAAsAAAAGAAMAAAAMAAsAAAAHAAMAAAALAAsAAAAGAAMAAAAKAAsAAAAHAAMAAAAJAAsAAAAHAAMAAAAIAAsAAAAKAAUAAAAHAAsAAAAHAAMAAAAGAAsAAAAIAAMAAAAFAAsAAAAHAAMAAAAEAAsAAAAHAAMAAAADAAsAAAAIAAMAAAACAAsAAAAHAAMAAAABAAsAAAAHAAMAAAAAAAsAAAAHAAMAAAAAAAoAAAAHAAMAAAABAAoAAAAHAAMAAAACAAoAAAAHAAMAAAADAAoAAAADAAQAAAAMAAoAAAAHAAMAAAANAAoAAAAIAAMAAAALAAoAAAAHAAMAAAAKAAoAAAABAAEAAAAJAAoAAAAHAAMAAAAIAAoAAAABAAEAAAAHAAoAAAAHAAMAAAAGAAoAAAABAAEAAAAFAAoAAAAGAAMAAAAEAAoAAAAGAAMAAAAAAAwAAAAHAAMAAAABAAwAAAAGAAMAAAACAAwAAAAHAAMAAAADAAwAAAAHAAMAAAAEAAwAAAAHAAMAAAAFAAwAAAAHAAMAAAAGAAwAAAAHAAMAAAAHAAwAAAAHAAMAAAAMAAwAAAAIAAMAAAANAAwAAAAHAAMAAAAOAAwAAAAHAAMAAAAPAAwAAAAHAAMAAAAPAAsAAAAHAAMAAAALAAwAAAAHAAMAAAAKAAwAAAAHAAMAAAAJAAwAAAAHAAMAAAAIAAwAAAAHAAMAAAAIAAgAAAALAAMAAAAQAAgAAAADAAAAAAAQAAkAAAADAAEAAAAQAAoAAAADAAEAAAAQAAsAAAADAAEAAAAQAAwAAAADAAEAAAAQAA0AAAADAAMAAAA=")
 tile_set = SubResource("TileSet_3udj4")
+
+[node name="drawing" type="Sprite2D" parent="Tiles"]
+texture_filter = 1
+texture_repeat = 1
+texture = SubResource("ViewportTexture_wdujj")
+offset = Vector2(1440, 1440)
 
 [node name="InteractableLayer" type="TileMapLayer" parent="Tiles"]
 scale = Vector2(10, 10)
@@ -302,10 +306,31 @@ script = ExtResource("4_43y7n")
 
 [node name="BlinkingLight" parent="LevelLights" instance=ExtResource("4_p8lqx")]
 
-[node name="Player" type="CharacterBody2D" parent="."]
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(2880, 2880)
+render_target_clear_mode = 1
+render_target_update_mode = 4
+
+[node name="Node2D" type="Node2D" parent="SubViewport"]
+script = ExtResource("6_ikt22")
+
+[node name="Man" type="Sprite2D" parent="SubViewport/Node2D"]
+position = Vector2(814, 1626)
+scale = Vector2(8, 8)
+texture = ExtResource("3_d2r83")
+
+[node name="Blood" type="Sprite2D" parent="SubViewport/Node2D"]
+texture = ExtResource("7_6504t")
+
+[node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("subviewport")]
 position = Vector2(814, 1626)
 floor_block_on_wall = false
 script = ExtResource("2_c88fv")
+subviewport = NodePath("../SubViewport")
 
 [node name="ExampleBalloon" parent="Player" instance=ExtResource("4_hgol1")]
 process_mode = 3
@@ -353,7 +378,19 @@ scale = Vector2(3, 3)
 texture = ExtResource("26_1bgn4")
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
-position = Vector2(2330, 397)
+position = Vector2(301, 1824)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="Enemy2" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+position = Vector2(1097, 1851)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="Enemy3" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+position = Vector2(293, 1492)
 rotation = -3.10742
 scale = Vector2(4, 4)
 player = NodePath("../Player")
@@ -386,6 +423,8 @@ visible = false
 stream = ExtResource("9_26m4r")
 autoplay = true
 bus = &"MUSIC"
+
+[node name="BloodPath" parent="." instance=ExtResource("32_0q14q")]
 
 [connection signal="tree_exited" from="Player/ExampleBalloon" to="Player" method="_on_example_balloon_tree_exited"]
 [connection signal="body_entered" from="Player/Area2D" to="Player" method="_on_area_2d_body_entered"]
