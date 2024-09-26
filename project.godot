@@ -26,6 +26,8 @@ general/balloon_path="res://dialogue/balloon.tscn"
 
 [display]
 
+window/size/viewport_width=800
+window/size/viewport_height=600
 window/dpi/allow_hidpi=false
 
 [editor]

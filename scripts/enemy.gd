@@ -3,7 +3,7 @@ extends CharacterBody2D
 var motion := Vector2()
 var is_dead := false
 var was_hit := false
-var speed:float = 0.5
+var speed:float = 5
 
 @export var player: Node2D;
 @export var health: int = 3
@@ -77,6 +77,7 @@ func nav_setup():
 const blood_spawn_interval = 0.01  # Interval in seconds
 var blood_spawn_timer = blood_spawn_interval
 var blood_timer_enabled = true
+# used in path and line
 var blood_path_start_pos=Vector2.ZERO
 func _physics_process(delta) -> void:
 	if is_dead:
@@ -96,43 +97,44 @@ func _physics_process(delta) -> void:
 		else:
 			blood_spawn_timer -= delta
 		move_and_slide()
+		# reduce velocity over time
+		velocity = velocity.move_toward(Vector2.ZERO, 1000 * delta)
 		return
 	
+	var is_pathfinding = false
 	#region pathfinding
 	if target:
-		navigation_agent_2d.target_position = player.global_position
-		animated_sprite_2d.play("fly")
+		# TODO: add all circles, done
+		if player.position.distance_to(self.position) < awareness_circle:
+			navigation_agent_2d.target_position = player.global_position
+			animated_sprite_2d.play("fly")
+			look_at(player.position)
+			# next two lines are the same
+			#motion = (navigation_agent_2d.get_next_path_position()- position).normalized() * speed
+			motion = position.direction_to(navigation_agent_2d.get_next_path_position())*speed
+			move_and_collide(motion)
+		else:
+			animated_sprite_2d.play("walk")
 	if navigation_agent_2d.is_navigation_finished():
 		target = null
-		return
-	
-	motion = global_position.direction_to(navigation_agent_2d.get_next_path_position())*speed*7.5
-	move_and_collide(motion)
-	look_at(player.position)
-	
-	# for now..  come up with a cool configurable movement logic
-	return
+		#return
 	
 	#region awareness
+	return
+	# legacy code?
 	if player and player.position.distance_to(self.position) < awareness_circle:
 		# todo: only walk if the path is clear (raycast the motion vector)
 		motion = (player.position - position) / randf_range(55, 85) * speed
 		
 		#look_at(player.position)
-		slowly_turn_towards(get_angle_to(player.position))
+		if is_pathfinding:
+			look_at(player.position)
+		else:
+			slowly_turn_towards(get_angle_to(player.position))
 		if ray_cast_2d.is_colliding():
 			# player in plain sight?
 			if ray_cast_2d.get_collider() == player:
 				move_and_collide(motion)
-			#else:
-			#	motion = Vector2.ZERO
-		# todo: path-finding
-		# todo: think of some following logic:
-		# sound attraction? noise level?
-		# distract enemies? decoys?
-		
-	#else:
-	#	motion = Vector2.ZERO
 
 func slowly_turn_towards(target_angle, turn_speed = 0.02) -> void:
 	rotation = lerp_angle(rotation, rotation + target_angle, turn_speed)
@@ -143,7 +145,6 @@ func _on_area_2d_body_entered(body) -> void:
 		# body.get_parent().queue_free()
 		var bullet_global_position:Vector2 = body.global_position
 		body.queue_free()
-		
 		
 		health -= 1
 		if health <= 0:
@@ -176,15 +177,11 @@ func _on_area_2d_body_entered(body) -> void:
 		var impact_direction:Vector2 = bullet_global_position.direction_to(global_position)
 		anim_impact.rotation += position.angle_to(player.position)
 		anim_impact.visible = true
-		anim_impact.speed_scale = randf_range(0.5, 1.2)
+		anim_impact.speed_scale = sfx_gore_splash.pitch_scale
 		anim_impact.play()
 		# Apply impact force
 		var impact_force = randf_range(150,190)
 		velocity += impact_direction * impact_force
-		
-		
-func _on_anim_impact_animation_finished() -> void:
-	anim_impact.visible = false
 
 func _on_timer_timeout() -> void:
 	play_random_growl_sound()
@@ -196,7 +193,7 @@ func _on_anim_zombie_frame_changed() -> void:
 	blood_line()
 func _on_anim_zombie_animation_finished() -> void:
 	print("draw me")	
-	
+	anim_impact.pause()
 	blood_timer_enabled=false
 	velocity = Vector2.ZERO
 	animated_sprite_2d.pause()
@@ -204,16 +201,11 @@ func _on_anim_zombie_animation_finished() -> void:
 	
 	$Area2D.queue_free()
 	player.draw_me(self)
-	# draw to renderr texture?, yes!!
-	#queue_free()
 	
 func blood_line() -> void:
 	# path
 	if(blood_path_start_pos):
 		var sprite_pos = global_position
-		#var random_x_offset = 0#randf_range(-30, 30)
-		#var random_y_offset = 0#randf_range(-30, 30)
-		#var random_pos = sprite_pos + Vector2(random_x_offset, random_y_offset)
 		var line_color = Color(1, 0, 0, randf_range(0.01,0.05))  # Equivalent to 0xaa0000 with alpha 0.1
 		var line_width = randf_range(50,70)
 		
