@@ -487,12 +487,11 @@ bus = &"SFX"
 scale = Vector2(3, 3)
 texture = ExtResource("26_1bgn4")
 
-[node name="Enemy" parent="." node_paths=PackedStringArray("player", "target") instance=ExtResource("5_fhhcs")]
+[node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
 position = Vector2(352, 1924)
 rotation = -3.10742
 scale = Vector2(4, 4)
 player = NodePath("../Player")
-target = NodePath("../Player")
 
 [node name="Enemy4" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
 position = Vector2(205, 248)

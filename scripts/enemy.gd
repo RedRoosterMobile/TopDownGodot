@@ -7,12 +7,14 @@ var speed:float = 5
 
 var fov_angle: float = 90.0  # Field of view angle in degrees
 
-enum STH { ONE, TWO, THREE }
+enum EnemyState { IDLE, JUMP, VISUAL, NOISE, DEAD, HIT, ATTACHED }
+var enemy_state:EnemyState = EnemyState.IDLE
 
-@export var player: Node2D;
+@export var player: Node2D
+@export var debug_cirlces: bool = false
 @export var health: int = 3
-@export var noise_awareness_circle:int = 800
-@export var visual_awareness_circle:int = 600
+@export var noise_awareness_circle:int = 600
+@export var visual_awareness_circle:int = 450
 @export var jump_circle:int = 250
 
 @export var target: Node2D = null
@@ -47,6 +49,15 @@ var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/10.wav",
 	"res://assets/sounds/sfx/zombie/11.wav",
 ]
+
+func _draw():
+	if not is_dead and debug_cirlces:
+		# Draw Noise Awareness Circle (Red)
+		draw_circle(Vector2.ZERO, noise_awareness_circle/scale.x, Color(1, 0, 0, 0.3))
+		# Draw Visual Awareness Circle (Green)
+		draw_circle(Vector2.ZERO, visual_awareness_circle/scale.x, Color(0, 1, 0, 0.3))
+		# Draw Jump Circle (Blue)
+		draw_circle(Vector2.ZERO, jump_circle/scale.x, Color(0, 0, 1, 0.3))
 
 func play_random_growl_sound() -> void:
 	var random_index:int = randi_range(1,5)-1
@@ -109,6 +120,9 @@ func _physics_process(delta) -> void:
 	#region pathfinding
 	# set target if not set
 	
+	# find target
+	aquire_target()
+	
 	if target:
 		# TODO: add all circles, done
 		var distance_to_player:float = player.position.distance_to(self.position)
@@ -129,6 +143,7 @@ func _physics_process(delta) -> void:
 		print("---")
 		
 		if is_in_visual_awareness_zone:
+			enemy_state = EnemyState.VISUAL
 			navigation_agent_2d.target_position = player.global_position
 			animated_sprite_2d.play("fly")
 			look_at(player.position)
@@ -136,21 +151,33 @@ func _physics_process(delta) -> void:
 			#motion = (navigation_agent_2d.get_next_path_position()- position).normalized() * speed
 			motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed
 			move_and_collide(motion)
+		elif is_in_jump_zone:
+			if enemy_state != EnemyState.JUMP:
+				play_growl(11-1)
+			enemy_state = EnemyState.JUMP
+			navigation_agent_2d.target_position = player.global_position
+			animated_sprite_2d.play("fly")
+			look_at(player.position)
+			# next two lines are the same
+			motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed*2
+			move_and_collide(motion)
 		elif is_in_noise_awareness_zone:
+			enemy_state = EnemyState.NOISE
 			navigation_agent_2d.target_position = player.global_position
 			animated_sprite_2d.play("walk")
 			look_at(player.position)
-			# next two lines are the same
-			#motion = (navigation_agent_2d.get_next_path_position()- position).normalized() * speed
 			motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed/2
 			move_and_collide(motion)
-		
+			slowly_turn_towards(get_angle_to(player.position))
 		else:
-			
+			enemy_state = EnemyState.IDLE
 			animated_sprite_2d.play("walk")
+	else:
+		enemy_state = EnemyState.IDLE
 	if navigation_agent_2d.is_navigation_finished():
 		target = null
 		#return
+	
 	
 	#region awareness
 	return
@@ -167,6 +194,40 @@ func _physics_process(delta) -> void:
 
 func slowly_turn_towards(target_angle, turn_speed = 0.02) -> void:
 	rotation = lerp_angle(rotation, rotation + target_angle, turn_speed)
+
+func aquire_target():
+	var distance_to_player:float = player.position.distance_to(self.position)
+		
+	var is_in_jump_zone:bool = distance_to_player <= jump_circle
+	var is_in_visual_awareness_zone:bool = (distance_to_player > jump_circle) and (distance_to_player <= visual_awareness_circle)
+	var is_in_noise_awareness_zone:bool = (distance_to_player > visual_awareness_circle) and (distance_to_player <= noise_awareness_circle)
+
+	print("---")
+	# always works
+	print("jump   ", is_in_jump_zone)
+	# only works if in fov (needs to turn)
+	print("visual ", is_in_visual_awareness_zone)
+	# always works (on any target), needs to turn first if not in fov
+	print("noise  ", is_in_noise_awareness_zone)
+	
+	print("fov    ", is_player_in_fov())
+	print("---")
+	
+	# check if target empty
+	if (not target):
+		if is_in_visual_awareness_zone:
+			#enemy_state = EnemyState.VISUAL
+			target = player
+		elif is_in_noise_awareness_zone:
+			#enemy_state = EnemyState.NOISE
+			target = player
+		elif is_in_jump_zone:
+			#enemy_state = EnemyState.JUMP
+			target = player
+		else:
+			#enemy_state = EnemyState.IDLE
+			target = null
+	
 
 func is_player_in_fov() -> bool:
 	var to_player = (player.global_position - global_position).normalized()
