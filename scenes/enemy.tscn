@@ -186,7 +186,7 @@ metadata/_aseprite_wizard_config_ = {
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
-target_position = Vector2(0, 0)
+target_position = Vector2(50, 0)
 
 [node name="Line2D" type="Line2D" parent="."]
 
@@ -200,6 +200,7 @@ frame = 10
 frame_progress = 1.0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_max_distance = 200.0
 path_postprocessing = 1
 avoidance_enabled = true
 radius = 50.0

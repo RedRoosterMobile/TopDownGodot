@@ -5,9 +5,15 @@ var is_dead := false
 var was_hit := false
 var speed:float = 5
 
+var fov_angle: float = 90.0  # Field of view angle in degrees
+
+enum STH { ONE, TWO, THREE }
+
 @export var player: Node2D;
 @export var health: int = 3
-@export var awareness_circle:int = 800
+@export var noise_awareness_circle:int = 800
+@export var visual_awareness_circle:int = 600
+@export var jump_circle:int = 250
 
 @export var target: Node2D = null
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
@@ -63,34 +69,32 @@ func _ready():
 	play_random_growl_sound()
 	start_random_timer()
 	animated_sprite_2d.play("walk")
-	ray_cast_2d.target_position.x = awareness_circle
+	ray_cast_2d.target_position.x = visual_awareness_circle
 	call_deferred("nav_setup")
-	
 	
 func nav_setup():
 	await get_tree().physics_frame
 	if target:
 		print("set up")
-		navigation_agent_2d.target_position=player.global_position
-	pass
+		navigation_agent_2d.target_position = player.global_position
 
 const blood_spawn_interval = 0.01  # Interval in seconds
 var blood_spawn_timer = blood_spawn_interval
 var blood_timer_enabled = true
 # used in path and line
-var blood_path_start_pos=Vector2.ZERO
+var blood_path_start_pos = Vector2.ZERO
 func _physics_process(delta) -> void:
 	if is_dead:
 		if(blood_spawn_timer<=0 and blood_timer_enabled):
 			var blood_path:Node2D = blood_path_scene.instantiate()
 			blood_path.position = global_position
-			if (blood_path_start_pos==Vector2.ZERO):
-				blood_path_start_pos=global_position
+			if (blood_path_start_pos == Vector2.ZERO):
+				blood_path_start_pos = global_position
 			#blood_path.rotation_degrees = randi_range(1,4)*90
 			blood_path.rotation = blood_path.rotation + get_angle_to(player.global_position)
-			blood_path.scale = Vector2(4,4)*randi_range(1,1)
-			blood_path.modulate.a = randf_range(0.5,1)
-			blood_path.modulate.h = randf_range(0.5,0.9)
+			blood_path.scale = Vector2(4,4)*randi_range(1, 1)
+			blood_path.modulate.a = randf_range(0.5, 1)
+			blood_path.modulate.h = randf_range(0.5, 0.9)
 			
 			player.draw_me_add(blood_path)
 			blood_spawn_timer = blood_spawn_interval + 0.1
@@ -103,17 +107,46 @@ func _physics_process(delta) -> void:
 	
 	var is_pathfinding = false
 	#region pathfinding
+	# set target if not set
+	
 	if target:
 		# TODO: add all circles, done
-		if player.position.distance_to(self.position) < awareness_circle:
+		var distance_to_player:float = player.position.distance_to(self.position)
+		
+		var is_in_jump_zone:bool = distance_to_player <= jump_circle
+		var is_in_visual_awareness_zone:bool = (distance_to_player > jump_circle) and (distance_to_player <= visual_awareness_circle)
+		var is_in_noise_awareness_zone:bool = (distance_to_player > visual_awareness_circle) and (distance_to_player <= noise_awareness_circle)
+
+		print("---")
+		# always works
+		print("jump   ", is_in_jump_zone)
+		# only works if in fov (needs to turn)
+		print("visual ", is_in_visual_awareness_zone)
+		# always works (on any target), needs to turn first if not in fov
+		print("noise  ", is_in_noise_awareness_zone)
+		
+		print("fov    ", is_player_in_fov())
+		print("---")
+		
+		if is_in_visual_awareness_zone:
 			navigation_agent_2d.target_position = player.global_position
 			animated_sprite_2d.play("fly")
 			look_at(player.position)
 			# next two lines are the same
 			#motion = (navigation_agent_2d.get_next_path_position()- position).normalized() * speed
-			motion = position.direction_to(navigation_agent_2d.get_next_path_position())*speed
+			motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed
 			move_and_collide(motion)
+		elif is_in_noise_awareness_zone:
+			navigation_agent_2d.target_position = player.global_position
+			animated_sprite_2d.play("walk")
+			look_at(player.position)
+			# next two lines are the same
+			#motion = (navigation_agent_2d.get_next_path_position()- position).normalized() * speed
+			motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed/2
+			move_and_collide(motion)
+		
 		else:
+			
 			animated_sprite_2d.play("walk")
 	if navigation_agent_2d.is_navigation_finished():
 		target = null
@@ -122,15 +155,11 @@ func _physics_process(delta) -> void:
 	#region awareness
 	return
 	# legacy code?
-	if player and player.position.distance_to(self.position) < awareness_circle:
+	if player and player.position.distance_to(self.position) < visual_awareness_circle:
 		# todo: only walk if the path is clear (raycast the motion vector)
 		motion = (player.position - position) / randf_range(55, 85) * speed
-		
-		#look_at(player.position)
-		if is_pathfinding:
-			look_at(player.position)
-		else:
-			slowly_turn_towards(get_angle_to(player.position))
+
+		slowly_turn_towards(get_angle_to(player.position))
 		if ray_cast_2d.is_colliding():
 			# player in plain sight?
 			if ray_cast_2d.get_collider() == player:
@@ -138,6 +167,14 @@ func _physics_process(delta) -> void:
 
 func slowly_turn_towards(target_angle, turn_speed = 0.02) -> void:
 	rotation = lerp_angle(rotation, rotation + target_angle, turn_speed)
+
+func is_player_in_fov() -> bool:
+	var to_player = (player.global_position - global_position).normalized()
+	var facing_direction = Vector2.RIGHT.rotated(global_rotation)
+	var dot_product = facing_direction.dot(to_player)
+	var angle_to_player = acos(dot_product)
+	var half_fov_rad = deg_to_rad(fov_angle) / 2.0
+	return angle_to_player < half_fov_rad
 
 func _on_area_2d_body_entered(body) -> void:
 	if "BulletRigidBody2D" in body.name:
