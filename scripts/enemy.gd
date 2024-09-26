@@ -11,9 +11,9 @@ enum EnemyState { IDLE, JUMP, VISUAL, NOISE, DEAD, HIT, ATTACHED }
 var enemy_state:EnemyState = EnemyState.IDLE
 
 @export var player: Node2D
-@export var debug_cirlces: bool = false
+@export var debug_cirlces: bool = true
 @export var health: int = 3
-@export var noise_awareness_circle:int = 600
+@export var noise_awareness_circle:int = 700
 @export var visual_awareness_circle:int = 450
 @export var jump_circle:int = 250
 
@@ -60,8 +60,9 @@ func _draw():
 		draw_circle(Vector2.ZERO, jump_circle/scale.x, Color(0, 0, 1, 0.3))
 
 func play_random_growl_sound() -> void:
-	var random_index:int = randi_range(1,5)-1
-	play_growl(random_index)
+	if not is_dead and enemy_state != EnemyState.JUMP:
+		var random_index:int = randi_range(1,5)-1
+		play_growl(random_index)
 
 func play_growl(index:int) -> void:
 	var sound_path:String = sound_files[index]
@@ -130,17 +131,6 @@ func _physics_process(delta) -> void:
 		var is_in_jump_zone:bool = distance_to_player <= jump_circle
 		var is_in_visual_awareness_zone:bool = (distance_to_player > jump_circle) and (distance_to_player <= visual_awareness_circle)
 		var is_in_noise_awareness_zone:bool = (distance_to_player > visual_awareness_circle) and (distance_to_player <= noise_awareness_circle)
-
-		print("---")
-		# always works
-		print("jump   ", is_in_jump_zone)
-		# only works if in fov (needs to turn)
-		print("visual ", is_in_visual_awareness_zone)
-		# always works (on any target), needs to turn first if not in fov
-		print("noise  ", is_in_noise_awareness_zone)
-		
-		print("fov    ", is_player_in_fov())
-		print("---")
 		
 		if is_in_visual_awareness_zone:
 			enemy_state = EnemyState.VISUAL
@@ -163,17 +153,28 @@ func _physics_process(delta) -> void:
 			move_and_collide(motion)
 		elif is_in_noise_awareness_zone:
 			enemy_state = EnemyState.NOISE
-			navigation_agent_2d.target_position = player.global_position
+			
+			var angle:float = get_angle_to(player.position)
 			animated_sprite_2d.play("walk")
-			look_at(player.position)
-			motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed/2
-			move_and_collide(motion)
-			slowly_turn_towards(get_angle_to(player.position))
+			# print(player.get_real_velocity().length_squared() > 400)
+			# turn around first, before walking
+			if abs(angle) >= 0.1:
+				slowly_turn_towards(angle)
+				target = null
+			else:
+				navigation_agent_2d.target_position = player.global_position
+				look_at(player.position)
+				motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed/2
+				move_and_collide(motion)
+			
 		else:
+			# never happens?
 			enemy_state = EnemyState.IDLE
 			animated_sprite_2d.play("walk")
+			animated_sprite_2d.pause()
 	else:
 		enemy_state = EnemyState.IDLE
+		animated_sprite_2d.pause() # aka IDLE
 	if navigation_agent_2d.is_navigation_finished():
 		target = null
 		#return
@@ -201,17 +202,18 @@ func aquire_target():
 	var is_in_jump_zone:bool = distance_to_player <= jump_circle
 	var is_in_visual_awareness_zone:bool = (distance_to_player > jump_circle) and (distance_to_player <= visual_awareness_circle)
 	var is_in_noise_awareness_zone:bool = (distance_to_player > visual_awareness_circle) and (distance_to_player <= noise_awareness_circle)
-
-	print("---")
-	# always works
-	print("jump   ", is_in_jump_zone)
-	# only works if in fov (needs to turn)
-	print("visual ", is_in_visual_awareness_zone)
-	# always works (on any target), needs to turn first if not in fov
-	print("noise  ", is_in_noise_awareness_zone)
 	
-	print("fov    ", is_player_in_fov())
-	print("---")
+	if false:
+		print("---")
+		# always works
+		print("jump   ", is_in_jump_zone)
+		# only works if in fov (needs to turn)
+		print("visual ", is_in_visual_awareness_zone)
+		# always works (on any target), needs to turn first if not in fov
+		print("noise  ", is_in_noise_awareness_zone)
+		
+		print("fov    ", is_player_in_fov())
+		print("---")
 	
 	# check if target empty
 	if (not target):

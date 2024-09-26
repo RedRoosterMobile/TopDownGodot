@@ -209,7 +209,6 @@ func draw_me(arg:Node2D):
 
 func draw_me_add(arg:Node2D):
 	rt_node.add_child(arg)
-	
 	get_tree().create_timer(1).timeout.connect(func():
 		arg.queue_free()
 	)
