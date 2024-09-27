@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Enemy
 
 var motion := Vector2()
 var is_dead := false
@@ -7,11 +8,10 @@ var speed:float = 5
 
 var fov_angle: float = 90.0  # Field of view angle in degrees
 
-enum EnemyState { IDLE, JUMP, VISUAL, NOISE, DEAD, HIT, ATTACHED }
-var enemy_state:EnemyState = EnemyState.IDLE
+var enemy_state:Enums.EnemyState = Enums.EnemyState.IDLE
 
-@export var player: Node2D
-@export var debug_cirlces: bool = true
+@export var player: Player
+@export var debug_cirlces: bool = false
 @export var health: int = 3
 @export var noise_awareness_circle:int = 700
 @export var visual_awareness_circle:int = 450
@@ -60,7 +60,7 @@ func _draw():
 		draw_circle(Vector2.ZERO, jump_circle/scale.x, Color(0, 0, 1, 0.3))
 
 func play_random_growl_sound() -> void:
-	if not is_dead and enemy_state != EnemyState.JUMP:
+	if not is_dead and enemy_state != Enums.EnemyState.JUMP:
 		var random_index:int = randi_range(1,5)-1
 		play_growl(random_index)
 
@@ -104,7 +104,7 @@ func _physics_process(delta) -> void:
 				blood_path_start_pos = global_position
 			#blood_path.rotation_degrees = randi_range(1,4)*90
 			blood_path.rotation = blood_path.rotation + get_angle_to(player.global_position)
-			blood_path.scale = Vector2(4,4)*randi_range(1, 1)
+			blood_path.scale = Vector2(4,4)
 			blood_path.modulate.a = randf_range(0.5, 1)
 			blood_path.modulate.h = randf_range(0.5, 0.9)
 			
@@ -115,6 +115,13 @@ func _physics_process(delta) -> void:
 		move_and_slide()
 		# reduce velocity over time
 		velocity = velocity.move_toward(Vector2.ZERO, 1000 * delta)
+		return
+	
+	if enemy_state == Enums.EnemyState.ATTACHED:
+		var distance = player.position.distance_to(position)
+		velocity = velocity.move_toward(position.direction_to(player.position)*distance, 10000 * delta)
+		# remove collision layers?
+		move_and_slide()
 		return
 	
 	var is_pathfinding = false
@@ -133,7 +140,7 @@ func _physics_process(delta) -> void:
 		var is_in_noise_awareness_zone:bool = (distance_to_player > visual_awareness_circle) and (distance_to_player <= noise_awareness_circle)
 		
 		if is_in_visual_awareness_zone:
-			enemy_state = EnemyState.VISUAL
+			enemy_state = Enums.EnemyState.VISUAL
 			navigation_agent_2d.target_position = player.global_position
 			animated_sprite_2d.play("fly")
 			look_at(player.position)
@@ -142,9 +149,9 @@ func _physics_process(delta) -> void:
 			motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed
 			move_and_collide(motion)
 		elif is_in_jump_zone:
-			if enemy_state != EnemyState.JUMP:
+			if enemy_state != Enums.EnemyState.JUMP:
 				play_growl(11-1)
-			enemy_state = EnemyState.JUMP
+			enemy_state = Enums.EnemyState.JUMP
 			navigation_agent_2d.target_position = player.global_position
 			animated_sprite_2d.play("fly")
 			look_at(player.position)
@@ -152,7 +159,7 @@ func _physics_process(delta) -> void:
 			motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed*2
 			move_and_collide(motion)
 		elif is_in_noise_awareness_zone:
-			enemy_state = EnemyState.NOISE
+			enemy_state = Enums.EnemyState.NOISE
 			
 			var angle:float = get_angle_to(player.position)
 			animated_sprite_2d.play("walk")
@@ -169,11 +176,11 @@ func _physics_process(delta) -> void:
 			
 		else:
 			# never happens?
-			enemy_state = EnemyState.IDLE
+			enemy_state = Enums.EnemyState.IDLE
 			animated_sprite_2d.play("walk")
 			animated_sprite_2d.pause()
 	else:
-		enemy_state = EnemyState.IDLE
+		enemy_state = Enums.EnemyState.IDLE
 		animated_sprite_2d.pause() # aka IDLE
 	if navigation_agent_2d.is_navigation_finished():
 		target = null

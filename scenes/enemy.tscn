@@ -132,6 +132,8 @@ animations = [{
 }]
 
 [node name="Enemy" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 58
 motion_mode = 1
 script = ExtResource("1_bcf45")
 
@@ -139,6 +141,8 @@ script = ExtResource("1_bcf45")
 shape = SubResource("CircleShape2D_8eruq")
 
 [node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 58
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 scale = Vector2(1.1, 1.1)

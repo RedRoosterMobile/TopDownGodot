@@ -1,5 +1,5 @@
 extends CharacterBody2D
-
+class_name Player
 # original tutorial https://www.youtube.com/watch?v=HycyFNQfqI0
 @export var subviewport:SubViewport
 var movespeed:float = 700
@@ -25,6 +25,8 @@ var time: float = 0.0
 var shake_timer = 0.0
 var current_intensity = 0.0
 var original_position = Vector2.ZERO
+
+var attached_enemies:Array = []
 
 #region Knockback
 
@@ -192,9 +194,22 @@ func kill():
 
 func _on_area_2d_body_entered(body):
 	if "Enemy" in body.name:
-		if not body.is_dead:
+		var enemy = body as Enemy
+		if not enemy.is_dead and enemy.enemy_state == Enums.EnemyState.JUMP:
+			#enemy.enemy_state = Enums.EnemyState.ATTACHED
+			#attached_enemies.push_back(enemy)
+			#print(attached_enemies.size())
 			kill()
-		
+		elif not enemy.is_dead and enemy.enemy_state == Enums.EnemyState.ATTACHED:
+			#enemy.enemy_state = Enums.EnemyState.ATTACHED
+			#attached_enemies.push_back(enemy)
+			#print(attached_enemies.size())
+			print("bite?")
+			pass
+		elif not body.is_dead:
+			#kill()
+			return
+	
 # when dialogue done
 func _on_example_balloon_tree_exited() -> void:
 	print("done with dialogue")

@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
 Messenger="*res://scripts/messenger.gd"
+Enums="*res://scripts/enums.gd"
 
 [dialogue_manager]
 
@@ -26,8 +27,8 @@ general/balloon_path="res://dialogue/balloon.tscn"
 
 [display]
 
-window/size/viewport_width=800
-window/size/viewport_height=600
+window/size/viewport_width=1280
+window/size/viewport_height=720
 window/dpi/allow_hidpi=false
 
 [editor]
@@ -89,6 +90,15 @@ paint={
 [internationalization]
 
 locale/translations_pot_files=PackedStringArray("res://dialogue/main.dialogue")
+
+[layer_names]
+
+2d_physics/layer_1="Everything (legacy)"
+2d_physics/layer_2="Player"
+2d_physics/layer_3="Enemies"
+2d_physics/layer_4="Walls"
+2d_physics/layer_5="Objects"
+2d_physics/layer_6="PlayerBullets"
 
 [physics]
 
