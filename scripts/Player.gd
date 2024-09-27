@@ -92,6 +92,11 @@ func _physics_process(delta):
 	
 	# Interact with dialogue
 	if Input.is_action_just_pressed("interact"):
+		print("flamethrower")
+		# particle effect
+		# somehow make it physics active
+		return
+		pass
 		if not dialogue_active:
 			var resource = load("res://dialogue/main.dialogue")
 			example_balloon.start(resource, "start")
