@@ -5,6 +5,9 @@ var blood_line_start = Vector2.ZERO
 var blood_line_end = Vector2.ZERO
 var blood_line_color = Color(1, 0, 0, 1)  # Red color
 var blood_line_width = 50.0  # Adjust as needed
+
+var free_interval:float = 2
+var free_timer:float=free_interval
 # @onready var sv:SubViewport = $".."
 # try Line2D with a texture or gradient here?
 
@@ -21,9 +24,16 @@ func draw_blood_line(sprite_pos, random_pos, line_color, line_width):
 	blood_line_width = line_width
 	should_draw_blood_line = true
 	queue_redraw()
-# func _frame_post_draw():
-	
+
 func _process(delta: float) -> void:
+	return
 	# whatever gets here, free it
-	if(get_child_count()):
-		get_child(0).queue_free()
+	if(free_timer <= 0 and get_child_count()):
+		var fc:Node = get_child(0)
+		# hack..
+		if (fc.name != "BloodPath"):
+			fc.queue_free()
+			print("interval hit")
+			free_timer = free_interval
+	free_timer -= delta
+	pass

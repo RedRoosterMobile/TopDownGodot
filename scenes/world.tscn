@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=76 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -34,6 +34,7 @@
 [ext_resource type="PackedScene" uid="uid://x6ps2oxfbtva" path="res://scenes/actionable.tscn" id="27_5r2v5"]
 [ext_resource type="Texture2D" uid="uid://fj034rllarmf" path="res://assets/sprites/sprExplosion_1.png" id="28_u0jqy"]
 [ext_resource type="PackedScene" uid="uid://d3n65vxxksodj" path="res://scenes/blood_path.tscn" id="32_0q14q"]
+[ext_resource type="Texture2D" uid="uid://cdfgaiub122m4" path="res://assets/sprites/sprSmoke_0.png" id="35_gse2c"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_0d3ph"]
 
@@ -425,6 +426,10 @@ shader_parameter/noise_texture = SubResource("NoiseTexture2D_dl3bm")
 particle_flag_disable_z = true
 gravity = Vector3(0, 98, 0)
 
+[sub_resource type="Curve" id="Curve_u2np6"]
+_data = [Vector2(0, 0.619759), 0.0, 6.13217, 0, 0, Vector2(0.360656, 0.647502), 0.0, 2.36832, 0, 0, Vector2(0.783905, 0.882501), 0.0, 0.0, 0, 0]
+point_count = 3
+
 [node name="world" type="Node2D"]
 
 [node name="Tiles" type="Node2D" parent="."]
@@ -631,6 +636,14 @@ autoplay = true
 bus = &"MUSIC"
 
 [node name="BloodPath" parent="." instance=ExtResource("32_0q14q")]
+
+[node name="Line2D" type="Line2D" parent="."]
+visible = false
+points = PackedVector2Array(0, 0, 2545, 635)
+width = 50.0
+width_curve = SubResource("Curve_u2np6")
+texture = ExtResource("35_gse2c")
+texture_mode = 1
 
 [connection signal="tree_exited" from="Player/ExampleBalloon" to="Player" method="_on_example_balloon_tree_exited"]
 [connection signal="body_entered" from="Player/Area2D" to="Player" method="_on_area_2d_body_entered"]

@@ -222,15 +222,22 @@ func _on_example_balloon_tree_exited() -> void:
 
 func draw_me(arg:Node2D):
 	arg.reparent(rt_node)
+	#rt_node.draw_me(arg)
 	# Connect to rt_node's after_draw signal with a one-shot connection
-	
+	get_tree().create_timer(1).timeout.connect(func():
+		if(arg):
+			print("freeing old shool")
+			arg.queue_free()
+	)
 	#rt_node.after_draw.connect(_on_rt_node_after_draw.bind(arg), flags=Callable.FLAG_ONE_SHOT)
 
 func draw_me_add(arg:Node2D):
 	rt_node.add_child(arg)
-	#get_tree().create_timer(1).timeout.connect(func():
-	#	arg.queue_free()
-	#)
+	get_tree().create_timer(1).timeout.connect(func():
+		if(arg):
+			print("freeing")
+			arg.queue_free()
+	)
 
 func draw_blood_line(sprite_pos, random_pos, line_color, line_width):
 	rt_node.draw_blood_line(sprite_pos, random_pos, line_color, line_width)

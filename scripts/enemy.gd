@@ -84,6 +84,7 @@ func _ready():
 	animated_sprite_2d.play("walk")
 	ray_cast_2d.target_position.x = visual_awareness_circle
 	call_deferred("nav_setup")
+	# line2dexample()
 	
 func nav_setup():
 	await get_tree().physics_frame

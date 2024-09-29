@@ -193,6 +193,8 @@ metadata/_aseprite_wizard_config_ = {
 target_position = Vector2(50, 0)
 
 [node name="Line2D" type="Line2D" parent="."]
+visible = false
+texture_mode = 1
 
 [node name="AnimImpact" type="AnimatedSprite2D" parent="."]
 modulate = Color(1, 0, 0, 1)
