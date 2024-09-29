@@ -5,6 +5,7 @@ var motion := Vector2()
 var is_dead := false
 var was_hit := false
 var speed:float = 5
+var rt_node:Node2D
 
 var fov_angle: float = 90.0  # Field of view angle in degrees
 
@@ -299,16 +300,13 @@ func _on_timer_timeout() -> void:
 func _on_anim_zombie_frame_changed() -> void:
 	blood_line()
 func _on_anim_zombie_animation_finished() -> void:
-	print("draw me")	
+	print("draw me")
 	anim_impact.pause()
-	blood_timer_enabled=false
+	blood_timer_enabled = false
 	velocity = Vector2.ZERO
 	animated_sprite_2d.pause()
-	sprite_2d.queue_free()
-	
-	$Area2D.queue_free()
 	player.draw_me(self)
-	
+
 func blood_line() -> void:
 	# path
 	if(blood_path_start_pos):

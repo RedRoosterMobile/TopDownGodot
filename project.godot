@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
 Messenger="*res://scripts/messenger.gd"
 Enums="*res://scripts/enums.gd"
+Helpers="*res://scripts/helpers.gd"
 
 [dialogue_manager]
 
