@@ -40,6 +40,10 @@ script/search_in_file_extensions=PackedStringArray("gd", "gdshader", "dlg")
 
 enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/dialogue_manager/plugin.cfg")
 
+[global_group]
+
+shrapnel=""
+
 [input]
 
 up={

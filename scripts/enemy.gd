@@ -291,7 +291,8 @@ func _on_area_2d_body_entered(body) -> void:
 		# Apply impact force
 		var impact_force = randf_range(150,190)
 		velocity += impact_direction * impact_force
-
+	if body.is_in_group("shrapnel"):
+		print("TODO: enemy hit by a shrapnel")
 func _on_timer_timeout() -> void:
 	play_random_growl_sound()
 	start_random_timer()

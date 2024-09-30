@@ -12,6 +12,7 @@ var time: float = 0.0
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
+@onready var grenade_scene = preload("res://scenes/grenade.tscn")
 #@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
 @onready var camera_2d: Camera2D = $Camera2D
@@ -92,7 +93,13 @@ func _physics_process(delta):
 	
 	# Interact with dialogue
 	if Input.is_action_just_pressed("interact"):
-		print("flamethrower")
+		print("grenade")
+		var grenade = grenade_scene.instantiate()
+		var direction := Vector2(1, 0).rotated(rotation)
+		grenade.position = global_position
+		grenade.set_direction(direction)
+		get_tree().get_root().call_deferred("add_child", grenade)
+		
 		# particle effect
 		# somehow make it physics active
 		return

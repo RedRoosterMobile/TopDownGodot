@@ -611,6 +611,7 @@ scale_amount_curve = SubResource("Curve_pasho")
 color_ramp = SubResource("Gradient_etkq7")
 
 [node name="FlameThrowerGpu" type="GPUParticles2D" parent="Player"]
+visible = false
 material = SubResource("CanvasItemMaterial_m5x6c")
 position = Vector2(71, 1)
 scale = Vector2(1e-05, 1e-05)
