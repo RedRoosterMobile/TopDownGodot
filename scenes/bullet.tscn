@@ -67,8 +67,12 @@ sprite_frames = SubResource("SpriteFrames_vk1dj")
 frame_progress = 0.381622
 
 [node name="BulletRigidBody2D" type="RigidBody2D" parent="."]
+collision_layer = 32
+collision_mask = 28
 
 [node name="Area2D" type="Area2D" parent="BulletRigidBody2D"]
+collision_layer = 32
+collision_mask = 28
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BulletRigidBody2D/Area2D"]
 visible = false

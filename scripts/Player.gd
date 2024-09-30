@@ -1,5 +1,5 @@
 extends CharacterBody2D
-
+class_name Player
 # original tutorial https://www.youtube.com/watch?v=HycyFNQfqI0
 @export var subviewport:SubViewport
 var movespeed:float = 700
@@ -12,6 +12,7 @@ var time: float = 0.0
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
+@onready var grenade_scene = preload("res://scenes/grenade.tscn")
 #@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
 @onready var camera_2d: Camera2D = $Camera2D
@@ -26,23 +27,25 @@ var shake_timer = 0.0
 var current_intensity = 0.0
 var original_position = Vector2.ZERO
 
+var attached_enemies:Array = []
+
 #region Knockback
 
 var knockback_velocity: Vector2 = Vector2.ZERO  # Track knockback velocity
-var knockback_force=300
-var knockback_decreaser=20
+var knockback_force = 300
+var knockback_decreaser = 20
 
 #region functions
 #var example_balloon:CanvasLayer
 
-var node_:Node2D
+var rt_node:Node2D
 func _ready():
 	#example_balloon = balloon_scene.instantiate()
 	print(example_balloon)
 	
 	Messenger.connect("screenshake", screenshake)
 	original_position = camera_2d.position
-	node_ = subviewport.get_node("Node2D")
+	rt_node = subviewport.get_node("Node2D")
 
 func screenshake(strength:int = 1):
 	# Stackable intensity
@@ -63,9 +66,6 @@ func _start_shaking(strength:int):
 		tween.tween_property(camera_2d, "position", original_position, shake_duration / 10).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		# When the tween completes, reduce the intensity and check if more shaking is needed
 		tween.tween_callback(_on_shake_complete)
-		tween.tween_callback(func():
-			_on_shake_complete()
-		)
 
 func _on_shake_complete():
 	shake_timer -= shake_duration / 10
@@ -93,6 +93,17 @@ func _physics_process(delta):
 	
 	# Interact with dialogue
 	if Input.is_action_just_pressed("interact"):
+		print("grenade")
+		var grenade = grenade_scene.instantiate()
+		var direction := Vector2(1, 0).rotated(rotation)
+		grenade.position = global_position
+		grenade.set_direction(direction)
+		get_tree().get_root().call_deferred("add_child", grenade)
+		
+		# particle effect
+		# somehow make it physics active
+		return
+		pass
 		if not dialogue_active:
 			var resource = load("res://dialogue/main.dialogue")
 			example_balloon.start(resource, "start")
@@ -102,29 +113,6 @@ func _physics_process(delta):
 	# Shoot action
 	if Input.is_action_just_pressed("shoot"):
 		fire()
-
-	if Input.is_action_just_pressed("paint"):
-		print("paint")
-		
-		#var cam_:Camera2D = node_.get_node("Camera2D")
-		var bullet_instance:Node2D = bullet.instantiate()
-		#var blood:Sprite2D = node_.get_node("Blood")
-		#blood.position = Vector2(randi_range(0,500),randi_range(0,500))
-		bullet_instance.position = global_position
-		
-		node_.add_child(bullet_instance)
-		var bullet_instance2:Node2D = bullet.instantiate()
-		bullet_instance2.position = global_position
-		bullet_instance2.position.y+=50
-		
-		get_tree().get_root().call_deferred("add_child", bullet_instance2)
-		#bullet_instance.call_deferred("queue_free")
-		get_tree().create_timer(0.25).timeout.connect(func():
-			bullet_instance.queue_free()
-		)
-		
-		print(node_.get_child_count())
-		
 
 	# Normalize motion to prevpent faster diagonal movement
 	if motion.length() > 0:
@@ -137,8 +125,7 @@ func _physics_process(delta):
 	velocity += knockback_velocity
 	
 	# Gradually reduce the knockback effect
-	knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_force * delta*knockback_decreaser)
-
+	knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_force * delta * knockback_decreaser)
 	
 	# Leg animation handling
 	if velocity.length() > 0:
@@ -219,33 +206,45 @@ func kill():
 
 func _on_area_2d_body_entered(body):
 	if "Enemy" in body.name:
-		if not body.is_dead:
+		var enemy = body as Enemy
+		if not enemy.is_dead and enemy.enemy_state == Enums.EnemyState.JUMP:
+			#enemy.enemy_state = Enums.EnemyState.ATTACHED
+			#attached_enemies.push_back(enemy)
+			#print(attached_enemies.size())
 			kill()
-		
+		elif not enemy.is_dead and enemy.enemy_state == Enums.EnemyState.ATTACHED:
+			#enemy.enemy_state = Enums.EnemyState.ATTACHED
+			#attached_enemies.push_back(enemy)
+			#print(attached_enemies.size())
+			print("bite?")
+			pass
+		elif not body.is_dead:
+			#kill()
+			return
+	
 # when dialogue done
 func _on_example_balloon_tree_exited() -> void:
 	print("done with dialogue")
 	toggle_pause()
-	
+
 func draw_me(arg:Node2D):
-	# the order is killing me here!! lol
-	arg.reparent(node_)
+	arg.reparent(rt_node)
+	#rt_node.draw_me(arg)
+	# Connect to rt_node's after_draw signal with a one-shot connection
 	get_tree().create_timer(1).timeout.connect(func():
-		arg.queue_free()
+		if(arg):
+			print("freeing old shool")
+			arg.queue_free()
 	)
+	#rt_node.after_draw.connect(_on_rt_node_after_draw.bind(arg), flags=Callable.FLAG_ONE_SHOT)
 
 func draw_me_add(arg:Node2D):
-	# the order is killing me here!! lol
-	node_.add_child(arg)
-	
+	rt_node.add_child(arg)
 	get_tree().create_timer(1).timeout.connect(func():
-		arg.queue_free()
+		if(arg):
+			print("freeing")
+			arg.queue_free()
 	)
 
 func draw_blood_line(sprite_pos, random_pos, line_color, line_width):
-	node_.draw_blood_line(sprite_pos, random_pos, line_color, line_width)
-	
-	
-	
-	
-	
+	rt_node.draw_blood_line(sprite_pos, random_pos, line_color, line_width)
