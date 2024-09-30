@@ -244,7 +244,6 @@ func aquire_target():
 			#enemy_state = EnemyState.IDLE
 			target = null
 	
-
 func is_player_in_fov() -> bool:
 	var to_player = (player.global_position - global_position).normalized()
 	var facing_direction = Vector2.RIGHT.rotated(global_rotation)
@@ -297,11 +296,23 @@ func _on_area_2d_body_entered(body) -> void:
 		var impact_force = randf_range(150,190)
 		velocity += impact_direction * impact_force
 	elif body.is_in_group("shrapnel"):
-		was_hit = true
-		get_tree().create_timer(0.2).timeout.connect(func():
-			was_hit = false
-			slowly_turn_towards(randf_range(0,TAU),0.2)
-		)
+		Messenger.screenshake.emit(1)
+		#was_hit = true
+		#get_tree().create_timer(0.2).timeout.connect(func():
+		#	was_hit = false
+		#	slowly_turn_towards(randf_range(0,TAU),0.2)
+		#)
+		health -= 1
+		if health <= 0:
+			is_dead = true
+			timer.stop()
+			animated_sprite_2d.play("die")
+		else:
+			was_hit = true
+			get_tree().create_timer(0.2).timeout.connect(func():
+				was_hit = false
+				slowly_turn_towards(randf_range(0,TAU),0.2)
+			)
 		var bullet_global_position:Vector2 = body.global_position
 		var impact_direction:Vector2 = bullet_global_position.direction_to(global_position)
 		#anim_impact.rotation += position.angle_to(player.postition)

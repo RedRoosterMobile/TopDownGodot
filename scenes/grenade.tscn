@@ -1,9 +1,26 @@
-[gd_scene load_steps=4 format=3 uid="uid://cm8bteog724uj"]
+[gd_scene load_steps=8 format=3 uid="uid://cm8bteog724uj"]
 
 [ext_resource type="Script" path="res://scripts/grenade.gd" id="1_0aiai"]
 [ext_resource type="Texture2D" uid="uid://cdfgaiub122m4" path="res://assets/sprites/sprSmoke_0.png" id="2_xdsah"]
+[ext_resource type="Texture2D" uid="uid://dj4t4cm1ado8" path="res://assets/sprites/sprExplosion_0.png" id="3_ljq6l"]
+[ext_resource type="Texture2D" uid="uid://fj034rllarmf" path="res://assets/sprites/sprExplosion_1.png" id="4_xk5v0"]
+[ext_resource type="AudioStream" uid="uid://bklkrsnphul7a" path="res://assets/sounds/sfx/sndExplosion.wav" id="5_7to51"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c3nay"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cnnt1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_ljq6l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_xk5v0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="Grenade" type="Node2D"]
 script = ExtResource("1_0aiai")
@@ -20,7 +37,16 @@ texture = ExtResource("2_xdsah")
 scale = Vector2(3, 3)
 shape = SubResource("CircleShape2D_c3nay")
 
+[node name="ExplosionAnim" type="AnimatedSprite2D" parent="RigidBody2D"]
+visible = false
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_cnnt1")
+
 [node name="TriggerTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="sndExplosion" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_7to51")
+
+[connection signal="animation_looped" from="RigidBody2D/ExplosionAnim" to="." method="_on_explosion_anim_animation_looped"]
 [connection signal="timeout" from="TriggerTimer" to="." method="_on_timer_timeout"]

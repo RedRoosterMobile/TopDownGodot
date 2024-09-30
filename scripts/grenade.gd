@@ -3,6 +3,8 @@ extends Node2D
 @onready var rigid_body_2d: RigidBody2D = $RigidBody2D
 @onready var timer: Timer = $TriggerTimer
 @onready var shrapnel_scene = preload("res://scenes/shrapnel.tscn")
+@onready var explosion_anim: AnimatedSprite2D = $RigidBody2D/ExplosionAnim
+@onready var snd_explosion: AudioStreamPlayer2D = $sndExplosion
 var initial_direction: Vector2 = Vector2.RIGHT  # Default direction
 
 func set_direction(direction: Vector2) -> void:
@@ -40,6 +42,8 @@ func _on_timer_timeout() -> void:
 	# queue_free()
 func explode() -> void:
 	print("boom")
+	var explosion_position = $RigidBody2D/Sprite2D.global_position
+	
 	var shrapnel_count = 20
 	var shrapnel_speed = 1000  # Adjust as needed
 
@@ -48,7 +52,7 @@ func explode() -> void:
 		var direction = Vector2(cos(angle), sin(angle))
 
 		var shrapnel = shrapnel_scene.instantiate()
-		shrapnel.position = $RigidBody2D/Sprite2D.global_position  # Position at the grenade's location
+		shrapnel.position = explosion_position  # Position at the grenade's location
 		# Set the shrapnel's velocity
 		shrapnel.linear_velocity = direction * shrapnel_speed
 		# Add the shrapnel to the scene
@@ -56,13 +60,19 @@ func explode() -> void:
 		get_tree().get_root().call_deferred("add_child", shrapnel)
 
 	# Optionally, play explosion effects here (particles, sound, etc.)
+	Messenger.screenshake.emit(1)
+	snd_explosion.pitch_scale=randf_range(0.5, 1)
+	snd_explosion.play()
+	
+	explosion_anim.scale *= randf_range(1, 2)
+	explosion_anim.modulate.a = randf_range(0.5, 1)
+	explosion_anim.stop()
+	explosion_anim.play()
+	explosion_anim.visible = true
 
+func _on_explosion_anim_animation_looped() -> void:
 	# Remove the grenade
 	queue_free()
+
 # TODO:
 # shockwave shader
-# hurt enemies that are in range
-# push them in the opposite direction
-# physics?
-# accellerate a bunch of invisible particles outwards
-# remove kill them on first collision
