@@ -1,9 +1,10 @@
 extends Node2D
 
 @onready var rigid_body_2d: RigidBody2D = $RigidBody2D
-var initial_direction: Vector2 = Vector2.RIGHT  # Default direction
 @onready var timer: Timer = $TriggerTimer
 @onready var shrapnel_scene = preload("res://scenes/shrapnel.tscn")
+var initial_direction: Vector2 = Vector2.RIGHT  # Default direction
+
 func set_direction(direction: Vector2) -> void:
 	initial_direction = direction.normalized()
 
@@ -24,7 +25,7 @@ func adjust_physics_properties() -> void:
 	rigid_body_2d.physics_material_override = physics_material
 
 	# Optional: Adjust mass and damping
-	rigid_body_2d.mass = 0.5  # Lighter mass for more bounce
+	rigid_body_2d.mass = 15.5  # Lighter mass for more bounce
 	rigid_body_2d.linear_damp = 0.25  # No linear damping
 	rigid_body_2d.angular_damp = 0.15  # No angular damping
 	
@@ -40,7 +41,7 @@ func _on_timer_timeout() -> void:
 func explode() -> void:
 	print("boom")
 	var shrapnel_count = 20
-	var shrapnel_speed = 200  # Adjust as needed
+	var shrapnel_speed = 1000  # Adjust as needed
 
 	for i in range(shrapnel_count):
 		var angle = i * (TAU / shrapnel_count)  # Distribute evenly around a circle
