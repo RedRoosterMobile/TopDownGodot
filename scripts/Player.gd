@@ -139,6 +139,17 @@ func _physics_process(delta):
 	
 	# Character looks towards the mouse position
 	look_at(get_global_mouse_position())
+	#print("global ", get_global_mouse_position())
+	if false:
+		var position: Vector2 = get_window().get_mouse_position()
+		var size: Vector2 = get_window().size
+		var x = float(position.x)/float(size.x)
+		var y = float(position.y)/float(size.y)
+		Messenger.shockwave.emit(x,y)
+	
+	#print("screenspace ", size.x/position.x)
+	
+	#DisplayServer.screen_get_pixel()
 	
 	# cursor
 	cursor.position = get_local_mouse_position()
@@ -205,6 +216,10 @@ func kill():
 	get_tree().reload_current_scene()
 
 func _on_area_2d_body_entered(body):
+	
+	if body.is_in_group("shrapnel"):
+		print("ouch. fire in the hole!")
+		kill()
 	if "Enemy" in body.name:
 		var enemy = body as Enemy
 		if not enemy.is_dead and enemy.enemy_state == Enums.EnemyState.JUMP:
