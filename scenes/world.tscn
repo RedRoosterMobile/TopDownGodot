@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=82 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -404,11 +404,47 @@ particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 particles_anim_loop = false
 
+[sub_resource type="Curve" id="Curve_vjmy6"]
+max_value = 100.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.510998, 0.542397), 0.0, 732.076, 0, 0, Vector2(0.989848, 100), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_sba7h"]
+curve = SubResource("Curve_vjmy6")
+
+[sub_resource type="Curve" id="Curve_i606e"]
+max_value = 100.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.181049, 1.1847), 1.48193, 1.48193, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_8xwxm"]
+curve = SubResource("Curve_i606e")
+
+[sub_resource type="Curve" id="Curve_22u1a"]
+_data = [Vector2(0, 0), 0.0, -0.0279542, 0, 0, Vector2(0.285956, 0.923922), 7.71423, 0.365544, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_0unbv"]
+curve = SubResource("Curve_22u1a")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hhkdx"]
 particle_flag_disable_z = true
-gravity = Vector3(400, 0, 0)
+spread = 3.0
+initial_velocity_min = 380.0
+initial_velocity_max = 420.0
+orbit_velocity_min = -1.0
+orbit_velocity_max = 1.0
+radial_velocity_min = 8.99998
+radial_velocity_max = 11.0
+gravity = Vector3(-8, 0, 0)
+linear_accel_min = 380.0
+linear_accel_max = 420.0
+linear_accel_curve = SubResource("CurveTexture_8xwxm")
+damping_max = 100.0
+damping_curve = SubResource("CurveTexture_sba7h")
 scale_min = 8.0
-scale_max = 8.0
+scale_max = 16.0
+scale_curve = SubResource("CurveTexture_0unbv")
 collision_mode = 2
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_w4vx6"]
@@ -556,6 +592,7 @@ material = SubResource("CanvasItemMaterial_p6pw0")
 position = Vector2(65, 0)
 amount = 350
 lifetime = 2.0
+fixed_fps = 30
 spread = 3.0
 gravity = Vector2(-80, 0)
 initial_velocity_min = 380.0
@@ -574,11 +611,12 @@ scale_amount_curve = SubResource("Curve_pasho")
 color_ramp = SubResource("Gradient_etkq7")
 
 [node name="FlameThrowerGpu" type="GPUParticles2D" parent="Player"]
-visible = false
 material = SubResource("CanvasItemMaterial_m5x6c")
+position = Vector2(71, 1)
 scale = Vector2(1e-05, 1e-05)
 amount = 350
 process_material = SubResource("ParticleProcessMaterial_hhkdx")
+lifetime = 2.0
 collision_base_size = 12.9
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
