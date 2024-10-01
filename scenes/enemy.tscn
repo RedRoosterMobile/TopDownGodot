@@ -33,7 +33,7 @@
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qr2qq"]
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_y3oxf"]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5x5sl"]
 light_mode = 2
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_g1f26"]
@@ -156,7 +156,7 @@ shape = SubResource("CapsuleShape2D_qr2qq")
 [node name="AnimZombie" type="AnimatedSprite2D" parent="."]
 light_mask = 2
 visibility_layer = 2
-material = SubResource("CanvasItemMaterial_y3oxf")
+material = SubResource("CanvasItemMaterial_5x5sl")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_g1f26")
 animation = &"walk"

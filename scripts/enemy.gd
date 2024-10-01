@@ -253,7 +253,7 @@ func is_player_in_fov() -> bool:
 	return angle_to_player < half_fov_rad
 
 func _on_area_2d_body_entered(body) -> void:
-	if "BulletRigidBody2D" in body.name:
+	if body.is_in_group("bullet"):
 		# kill bullet
 		# body.get_parent().queue_free()
 		var bullet_global_position:Vector2 = body.global_position
@@ -338,6 +338,8 @@ func _on_anim_zombie_animation_finished() -> void:
 	velocity = Vector2.ZERO
 	animated_sprite_2d.pause()
 	
+	# don't do it for ALL, just for this one. make it unique
+	animated_sprite_2d.material = animated_sprite_2d.material.duplicate()
 	# make sure we don't do light only for drawing
 	var mat:CanvasItemMaterial = animated_sprite_2d.material
 	mat.light_mode = CanvasItemMaterial.LIGHT_MODE_NORMAL
