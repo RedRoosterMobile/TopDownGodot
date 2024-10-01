@@ -337,6 +337,10 @@ func _on_anim_zombie_animation_finished() -> void:
 	blood_timer_enabled = false
 	velocity = Vector2.ZERO
 	animated_sprite_2d.pause()
+	
+	# make sure we don't do light only for drawing
+	var mat:CanvasItemMaterial = animated_sprite_2d.material
+	mat.light_mode = CanvasItemMaterial.LIGHT_MODE_NORMAL
 	player.draw_me(self)
 
 func blood_line() -> void:
