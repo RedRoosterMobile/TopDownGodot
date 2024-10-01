@@ -54,29 +54,21 @@ func _on_timer_timeout() -> void:
 	# queue_free()
 func explode() -> void:
 	print("boom")
-	var explosion_position = $RigidBody2D/Grenade.global_position
-	
-	
-	var camera:Camera2D = get_viewport().get_camera_2d()
-	#var screen_position = camera.unproject_position(explosion_position)
-	#var screen_position = camera.get_screen_transform().xform(explosion_position)
-	var screen_position = get_viewport().get_screen_transform() * explosion_position
-	print(screen_position)
-	var size:Vector2i = DisplayServer.screen_get_size()
-	#world_to_screen
+	#region shochwave
+	# magic sauce: screen coorinates (aka on my screen in pixels)
+	var player_pos = $RigidBody2D/Grenade.get_global_transform_with_canvas()
+	var spawn_pos = player_pos.get_origin()
+	# from the window config
+	var size:Vector2i = get_window().size
+	# to uv
 	var uv_position = Vector2(
-		screen_position.x / size.x,
-		screen_position.y / size.y
-	)
+		spawn_pos.x / size.x,
+		spawn_pos.y / size.y
+	)	
 	Messenger.shockwave.emit(uv_position.x,uv_position.y)
-	# print(position.x," ", size.x)
-	# 0 if left of the window.. this only seems to work fullscreen
-	#var x = float(position.x)/float(size.x)
-	#var y = float(position.y)/float(size.y)
-	#print(float(position.x)/float(size.x))
 	
-	
-	
+	#region shrapnel
+	var explosion_position = $RigidBody2D/Grenade.global_position
 	var shrapnel_count = 20
 	var shrapnel_speed = 1000  # Adjust as needed
 
@@ -93,6 +85,7 @@ func explode() -> void:
 		get_tree().get_root().call_deferred("add_child", shrapnel)
 
 	# Optionally, play explosion effects here (particles, sound, etc.)
+	#region FX
 	Messenger.screenshake.emit(1)
 	snd_explosion.pitch_scale=randf_range(0.5, 1)
 	snd_explosion.play()
@@ -106,6 +99,3 @@ func explode() -> void:
 func _on_explosion_anim_animation_looped() -> void:
 	# Remove the grenade
 	queue_free()
-
-# TODO:
-# shockwave shader

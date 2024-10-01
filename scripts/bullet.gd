@@ -5,8 +5,7 @@ extends Node2D
 @onready var snd_explosion: AudioStreamPlayer2D = $sndExplosion
 
 func _on_area_2d_body_entered(body):
-	# hit the wall
-	if "CosmicLilacLayer" in body.name:
+	if body.is_in_group("wall"):
 		handle_impact()
 	elif "InteractableLayer" in body.name:
 		handle_impact()

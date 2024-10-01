@@ -43,6 +43,11 @@ enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addon
 [global_group]
 
 shrapnel=""
+player=""
+enemy=""
+bullet=""
+grenade=""
+wall=""
 
 [input]
 

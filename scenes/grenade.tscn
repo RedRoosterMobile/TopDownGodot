@@ -22,6 +22,21 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_7trfn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
 [sub_resource type="Animation" id="Animation_0l38q"]
 resource_name = "scale"
 length = 3.0
@@ -38,21 +53,6 @@ tracks/0/keys = {
 "values": [Vector2(1, 1), Vector2(5, 5), Vector2(1, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_7trfn"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(1, 1)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mrq43"]
 _data = {
 "RESET": SubResource("Animation_7trfn"),
@@ -62,7 +62,7 @@ _data = {
 [node name="Grenade" type="Node2D"]
 script = ExtResource("1_0aiai")
 
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
+[node name="RigidBody2D" type="RigidBody2D" parent="." groups=["grenade"]]
 collision_layer = 32
 collision_mask = 28
 

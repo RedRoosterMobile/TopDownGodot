@@ -216,11 +216,10 @@ func kill():
 	get_tree().reload_current_scene()
 
 func _on_area_2d_body_entered(body):
-	
 	if body.is_in_group("shrapnel"):
 		print("ouch. fire in the hole!")
 		kill()
-	if "Enemy" in body.name:
+	if body.is_in_group("enemy"):
 		var enemy = body as Enemy
 		if not enemy.is_dead and enemy.enemy_state == Enums.EnemyState.JUMP:
 			#enemy.enemy_state = Enums.EnemyState.ATTACHED
@@ -244,20 +243,16 @@ func _on_example_balloon_tree_exited() -> void:
 
 func draw_me(arg:Node2D):
 	arg.reparent(rt_node)
-	#rt_node.draw_me(arg)
 	# Connect to rt_node's after_draw signal with a one-shot connection
 	get_tree().create_timer(1).timeout.connect(func():
 		if(arg):
-			print("freeing old shool")
 			arg.queue_free()
 	)
-	#rt_node.after_draw.connect(_on_rt_node_after_draw.bind(arg), flags=Callable.FLAG_ONE_SHOT)
 
 func draw_me_add(arg:Node2D):
 	rt_node.add_child(arg)
 	get_tree().create_timer(1).timeout.connect(func():
 		if(arg):
-			print("freeing")
 			arg.queue_free()
 	)
 
