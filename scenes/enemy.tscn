@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://dg2icd6fsnaur"]
+[gd_scene load_steps=35 format=3 uid="uid://dg2icd6fsnaur"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bcf45"]
 [ext_resource type="AudioStream" uid="uid://byic1s2ye1oge" path="res://assets/sounds/sfx/zombie/1.wav" id="3_fyqbl"]
@@ -32,6 +32,9 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_8eruq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qr2qq"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_y3oxf"]
+light_mode = 2
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_g1f26"]
 animations = [{
@@ -151,6 +154,9 @@ shape = SubResource("CapsuleShape2D_qr2qq")
 [node name="Timer" type="Timer" parent="."]
 
 [node name="AnimZombie" type="AnimatedSprite2D" parent="."]
+light_mask = 2
+visibility_layer = 2
+material = SubResource("CanvasItemMaterial_y3oxf")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_g1f26")
 animation = &"walk"

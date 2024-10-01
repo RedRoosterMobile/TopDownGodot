@@ -1,4 +1,4 @@
-[gd_scene load_steps=85 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=88 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -374,6 +374,18 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x0ods"]
 size = Vector2(63, 124)
 
+[sub_resource type="Gradient" id="Gradient_6rnn2"]
+offsets = PackedFloat32Array(0.998325, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fv0ar"]
+gradient = SubResource("Gradient_6rnn2")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.869658, 0.17735)
+
 [sub_resource type="Gradient" id="Gradient_373mx"]
 colors = PackedColorArray(1, 1, 1, 1, 0.337255, 0, 0, 1)
 
@@ -449,6 +461,16 @@ scale_max = 16.0
 scale_curve = SubResource("CurveTexture_0unbv")
 collision_mode = 2
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_6wv0r"]
+polygon = PackedVector2Array(5, -223, 5, -95, -43, -79, -75, -39, -83, 1, -67, 49, -27, 89, 13, 97, 117, 513, -349, 370, -340, -366, 53, -551)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kyaxc"]
+shader = ExtResource("31_jt1d6")
+shader_parameter/force = 0.0
+shader_parameter/size = 0.5
+shader_parameter/thickness = 0.1
+shader_parameter/center = Vector2(0.5, 0.5)
+
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_w4vx6"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dl3bm"]
@@ -459,13 +481,6 @@ noise = SubResource("FastNoiseLite_w4vx6")
 shader = ExtResource("1_mwh1s")
 shader_parameter/curvature = 0.5
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_dl3bm")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kyaxc"]
-shader = ExtResource("31_jt1d6")
-shader_parameter/force = 0.0
-shader_parameter/size = 0.5
-shader_parameter/thickness = 0.1
-shader_parameter/center = Vector2(0.5, 0.5)
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wd3uy"]
 particle_flag_disable_z = true
@@ -518,6 +533,7 @@ render_target_update_mode = 4
 script = ExtResource("6_ikt22")
 
 [node name="Man" type="Sprite2D" parent="SubViewport/Node2D"]
+visible = false
 position = Vector2(814, 1626)
 scale = Vector2(8, 8)
 texture = ExtResource("3_d2r83")
@@ -527,7 +543,7 @@ visible = false
 texture = ExtResource("7_6504t")
 
 [node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("subviewport") groups=["player"]]
-position = Vector2(1868, 295)
+position = Vector2(1355, 1519)
 collision_layer = 2
 collision_mask = 28
 floor_block_on_wall = false
@@ -564,7 +580,15 @@ shape = SubResource("RectangleShape2D_x0ods")
 zoom = Vector2(0.5, 0.5)
 position_smoothing_enabled = true
 
+[node name="NewPointLight2D" type="PointLight2D" parent="Player"]
+scale = Vector2(8, 8)
+blend_mode = 2
+range_item_cull_mask = 3
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_fv0ar")
+
 [node name="PointLight2D" type="PointLight2D" parent="Player"]
+visible = false
 position = Vector2(21, 21)
 scale = Vector2(1.97235, 1.97235)
 shadow_enabled = true
@@ -629,7 +653,13 @@ process_material = SubResource("ParticleProcessMaterial_hhkdx")
 lifetime = 2.0
 collision_base_size = 12.9
 
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Player"]
+modulate = Color(1, 1, 1, 0)
+occluder = SubResource("OccluderPolygon2D_6wv0r")
+
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+light_mask = 2
+visibility_layer = 2
 position = Vector2(352, 1924)
 rotation = -3.10742
 scale = Vector2(4, 4)
@@ -641,29 +671,9 @@ rotation = -3.10742
 scale = Vector2(4, 4)
 player = NodePath("../Player")
 
-[node name="Enemy2" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
-position = Vector2(1472, 1883)
-rotation = -3.10742
-scale = Vector2(4, 4)
-player = NodePath("../Player")
+[node name="Shockwave" type="CanvasLayer" parent="."]
 
-[node name="Enemy3" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
-position = Vector2(212, 1678)
-rotation = -3.10742
-scale = Vector2(4, 4)
-player = NodePath("../Player")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="Crt" type="ColorRect" parent="CanvasLayer"]
-material = SubResource("ShaderMaterial_tiey2")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Shockwave" type="ColorRect" parent="CanvasLayer"]
+[node name="Shockwave" type="ColorRect" parent="Shockwave"]
 material = SubResource("ShaderMaterial_kyaxc")
 anchors_preset = 15
 anchor_right = 1.0
@@ -671,6 +681,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("32_er0l3")
+
+[node name="Crt" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Crt" type="ColorRect" parent="Crt"]
+material = SubResource("ShaderMaterial_tiey2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
 visible = false
@@ -680,7 +701,11 @@ texture = ExtResource("26_t410r")
 lifetime = 4.0
 preprocess = 1.0
 
+[node name="NewCanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.264753, 0.264753, 0.264753, 1)
+
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
+visible = false
 color = Color(0.272047, 0.272047, 0.272047, 1)
 
 [node name="Actionable" parent="." instance=ExtResource("27_5r2v5")]
