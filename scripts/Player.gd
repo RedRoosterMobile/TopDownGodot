@@ -139,17 +139,6 @@ func _physics_process(delta):
 	
 	# Character looks towards the mouse position
 	look_at(get_global_mouse_position())
-	#print("global ", get_global_mouse_position())
-	if false:
-		var position: Vector2 = get_window().get_mouse_position()
-		var size: Vector2 = get_window().size
-		var x = float(position.x)/float(size.x)
-		var y = float(position.y)/float(size.y)
-		Messenger.shockwave.emit(x,y)
-	
-	#print("screenspace ", size.x/position.x)
-	
-	#DisplayServer.screen_get_pixel()
 	
 	# cursor
 	cursor.position = get_local_mouse_position()
