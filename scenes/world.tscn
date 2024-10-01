@@ -375,7 +375,7 @@ animations = [{
 size = Vector2(63, 124)
 
 [sub_resource type="Gradient" id="Gradient_6rnn2"]
-offsets = PackedFloat32Array(0.998325, 1)
+offsets = PackedFloat32Array(0.725293, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_fv0ar"]
@@ -559,6 +559,12 @@ modulate = Color(0.279357, 0.279357, 0.279357, 1)
 scale = Vector2(6, 6)
 sprite_frames = SubResource("SpriteFrames_3rdmb")
 animation = &"walk"
+frame_progress = 0.814561
+
+[node name="Footstep" type="Sprite2D" parent="Player/AnimLegs"]
+position = Vector2(-9.83334, 0.166672)
+scale = Vector2(0.25, 0.166667)
+texture = ExtResource("28_u0jqy")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 scale = Vector2(8, 8)
@@ -588,9 +594,9 @@ shadow_enabled = true
 texture = SubResource("GradientTexture2D_fv0ar")
 
 [node name="PointLight2D" type="PointLight2D" parent="Player"]
-visible = false
 position = Vector2(21, 21)
-scale = Vector2(1.97235, 1.97235)
+scale = Vector2(4.6, 4.6)
+color = Color(1, 1, 1, 0.505882)
 shadow_enabled = true
 shadow_filter = 2
 shadow_filter_smooth = 1.0

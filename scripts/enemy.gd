@@ -31,6 +31,7 @@ var enemy_state:Enums.EnemyState = Enums.EnemyState.IDLE
 # https://www.youtube.com/watch?v=yT22SXYpoYM
 @onready var ray_cast_2d: RayCast2D = $RayCast2D
 @onready var blood_path_scene = preload("res://scenes/blood_path.tscn")
+@onready var footstep_trigger_scene = preload("res://scenes/footstep_trigger.tscn")
 @onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var enemy_collider: CollisionShape2D = $EnemyCollider
 
@@ -131,7 +132,6 @@ func _physics_process(delta) -> void:
 		move_and_slide()
 		return
 	
-	var is_pathfinding = false
 	#region pathfinding
 	# set target if not set
 	
@@ -341,9 +341,20 @@ func _on_anim_zombie_animation_finished() -> void:
 	# don't do it for ALL, just for this one. make it unique
 	animated_sprite_2d.material = animated_sprite_2d.material.duplicate()
 	# make sure we don't do light only for drawing
-	var mat:CanvasItemMaterial = animated_sprite_2d.material
-	mat.light_mode = CanvasItemMaterial.LIGHT_MODE_NORMAL
+	animated_sprite_2d.material.light_mode = CanvasItemMaterial.LIGHT_MODE_NORMAL
+	
+	# spawn footstep trigger at global_position
+	# Messenger.spawn_footstep_trigger.emit(global_position)
+	spawn_footstep_trigger()
+	
 	player.draw_me(self)
+func spawn_footstep_trigger():
+	print("spawing")
+	# instantiate new trigger
+	var trigger : Node2D =footstep_trigger_scene.instantiate()
+	trigger.global_position=global_position
+	get_tree().get_root().add_child(trigger)
+	pass
 
 func blood_line() -> void:
 	# path

@@ -1,6 +1,7 @@
-[gd_scene load_steps=35 format=3 uid="uid://dg2icd6fsnaur"]
+[gd_scene load_steps=34 format=3 uid="uid://dg2icd6fsnaur"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bcf45"]
+[ext_resource type="Material" uid="uid://dvdyn48rp4wq2" path="res://resources/materials/light_cone_only_material.tres" id="2_ve2ds"]
 [ext_resource type="AudioStream" uid="uid://byic1s2ye1oge" path="res://assets/sounds/sfx/zombie/1.wav" id="3_fyqbl"]
 [ext_resource type="Texture2D" uid="uid://c142ch7r31wku" path="res://assets/sprites/enemy/enemy5.png" id="4_f177n"]
 [ext_resource type="Texture2D" uid="uid://bhy06hsu6aasb" path="res://assets/sprites/enemy/enemy6.png" id="5_1wch4"]
@@ -32,9 +33,6 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_8eruq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qr2qq"]
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5x5sl"]
-light_mode = 2
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_g1f26"]
 animations = [{
@@ -89,9 +87,6 @@ animations = [{
 "name": &"walk",
 "speed": 5.0
 }]
-
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_q0p46"]
-polygon = PackedVector2Array(-6, -15, 6, -15, 6, 15, -6, 15)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_wjvnx"]
 animations = [{
@@ -154,9 +149,7 @@ shape = SubResource("CapsuleShape2D_qr2qq")
 [node name="Timer" type="Timer" parent="."]
 
 [node name="AnimZombie" type="AnimatedSprite2D" parent="."]
-light_mask = 2
-visibility_layer = 2
-material = SubResource("CanvasItemMaterial_5x5sl")
+material = ExtResource("2_ve2ds")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_g1f26")
 animation = &"walk"
@@ -169,10 +162,6 @@ stream = ExtResource("3_fyqbl")
 stream = ExtResource("15_7igtv")
 volume_db = 0.5
 max_polyphony = 3
-
-[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
-visible = false
-occluder = SubResource("OccluderPolygon2D_q0p46")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 visible = false

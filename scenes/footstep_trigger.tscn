@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bfjil3s3lxm3a"]
+
+[ext_resource type="Script" path="res://scripts/footstep_trigger.gd" id="1_6yrvi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sdl18"]
+
+[node name="FootstepTrigger" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_6yrvi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(8, 8)
+shape = SubResource("CircleShape2D_sdl18")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -11,6 +11,13 @@ var time: float = 0.0
 @onready var sfx_shot := $SfxShot
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
+
+@onready var footprint: Sprite2D = $AnimLegs/Footstep
+var footprint_alpha = 0
+var footprint_step: bool = false
+const FOOTPRINT_COOLDOWN:float = 1
+var time_to_footprint: float = FOOTPRINT_COOLDOWN
+
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
 @onready var grenade_scene = preload("res://scenes/grenade.tscn")
 #@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
@@ -44,6 +51,7 @@ func _ready():
 	print(example_balloon)
 	
 	Messenger.connect("screenshake", screenshake)
+	Messenger.connect("bloody_footsteps", soak_shoes_in_blood)
 	original_position = camera_2d.position
 	rt_node = subviewport.get_node("Node2D")
 
@@ -51,9 +59,50 @@ func screenshake(strength:int = 1):
 	# Stackable intensity
 	current_intensity += shake_intensity
 	shake_timer = shake_duration
-
 	# Start the shake (or continue if already shaking)
 	_start_shaking(strength)
+
+func soak_shoes_in_blood():
+	print("shoes fully soaking with blood")
+	footprint_alpha = 1
+	
+func draw_footprints(delta):
+	var step:Sprite2D = footprint.duplicate()
+	
+	var offset:Vector2 = step.global_position
+	
+	# Define the array of colors
+	var color_array = [
+		Color8(255, 0, 0),   # 0xff0000
+		Color8(153, 0, 0),   # 0x990000
+		Color8(170, 0, 0),   # 0xaa0000
+		Color8(255, 16, 16)  # 0xff1010
+	]
+	
+	footprint_step = not footprint_step
+	var y_offset:float = 30.0
+	if footprint_step:
+		y_offset *= -1
+		
+	var o = Vector2(
+		 sin(rotation + anim_legs.rotation) * y_offset,
+		-cos(rotation + anim_legs.rotation) * y_offset
+	)
+
+	# Select a random tint color
+	var random_tint = color_array.pick_random()
+	# Apply the tint color
+	step.modulate = random_tint
+	# Set the alpha transparency
+	# FNORD: division by 10 makes NO sense, but works
+	step.modulate.a = footprint_alpha/10
+	step.position = global_position + offset + o
+	step.rotation = rotation + anim_legs.rotation
+	step.scale *= 6
+	step.visible = true
+	draw_me_add(step)
+	
+	pass
 
 func _start_shaking(strength:int):
 	if shake_timer > 0:
@@ -159,6 +208,14 @@ func _physics_process(delta):
 	# Lerp the camera position for smooth movement
 	camera_2d.position = camera_2d.position.slerp(clamped_cursor_position, 0.005)
 	
+	# $PointLight2D.position.y = sin(time/30)*20
+	if time_to_footprint <= 0:
+		draw_footprints(delta)
+		time_to_footprint = FOOTPRINT_COOLDOWN
+		footprint_alpha -= 0.1
+	else:
+		time_to_footprint -= 0.1
+	
 	time += delta
 	
 
@@ -230,6 +287,7 @@ func _on_example_balloon_tree_exited() -> void:
 	print("done with dialogue")
 	toggle_pause()
 
+# only works for non transparent stuff
 func draw_me(arg:Node2D):
 	arg.reparent(rt_node)
 	# Connect to rt_node's after_draw signal with a one-shot connection
@@ -238,9 +296,11 @@ func draw_me(arg:Node2D):
 			arg.queue_free()
 	)
 
+# works for transparent stuff
 func draw_me_add(arg:Node2D):
 	rt_node.add_child(arg)
-	get_tree().create_timer(1).timeout.connect(func():
+	
+	get_tree().create_timer(0.1).timeout.connect(func():
 		if(arg):
 			arg.queue_free()
 	)
