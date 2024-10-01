@@ -1,9 +1,7 @@
 extends Node
 
 signal screenshake
-signal explosion
+signal shockwave
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-	print("loaded")
+# unused
+signal explosion

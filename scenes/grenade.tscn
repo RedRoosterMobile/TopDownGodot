@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://cm8bteog724uj"]
+[gd_scene load_steps=11 format=3 uid="uid://cm8bteog724uj"]
 
 [ext_resource type="Script" path="res://scripts/grenade.gd" id="1_0aiai"]
-[ext_resource type="Texture2D" uid="uid://cdfgaiub122m4" path="res://assets/sprites/sprSmoke_0.png" id="2_xdsah"]
+[ext_resource type="Texture2D" uid="uid://1btll1ijp6sb" path="res://assets/sprites/grenade.png" id="2_irsls"]
 [ext_resource type="Texture2D" uid="uid://dj4t4cm1ado8" path="res://assets/sprites/sprExplosion_0.png" id="3_ljq6l"]
 [ext_resource type="Texture2D" uid="uid://fj034rllarmf" path="res://assets/sprites/sprExplosion_1.png" id="4_xk5v0"]
 [ext_resource type="AudioStream" uid="uid://bklkrsnphul7a" path="res://assets/sounds/sfx/sndExplosion.wav" id="5_7to51"]
@@ -22,16 +22,54 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_7trfn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_0l38q"]
+resource_name = "scale"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(0.659755, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(5, 5), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mrq43"]
+_data = {
+"RESET": SubResource("Animation_7trfn"),
+"scale": SubResource("Animation_0l38q")
+}
+
 [node name="Grenade" type="Node2D"]
 script = ExtResource("1_0aiai")
 
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
+[node name="RigidBody2D" type="RigidBody2D" parent="." groups=["grenade"]]
 collision_layer = 32
 collision_mask = 28
 
-[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
-scale = Vector2(4, 4)
-texture = ExtResource("2_xdsah")
+[node name="Grenade" type="Sprite2D" parent="RigidBody2D"]
+position = Vector2(-2, 0)
+scale = Vector2(2, 2)
+texture = ExtResource("2_irsls")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
 scale = Vector2(3, 3)
@@ -47,6 +85,12 @@ one_shot = true
 
 [node name="sndExplosion" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("5_7to51")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+callback_mode_process = 2
+libraries = {
+"": SubResource("AnimationLibrary_mrq43")
+}
 
 [connection signal="animation_looped" from="RigidBody2D/ExplosionAnim" to="." method="_on_explosion_anim_animation_looped"]
 [connection signal="timeout" from="TriggerTimer" to="." method="_on_timer_timeout"]

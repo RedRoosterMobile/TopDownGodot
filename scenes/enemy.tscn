@@ -131,7 +131,7 @@ animations = [{
 "speed": 20.0
 }]
 
-[node name="Enemy" type="CharacterBody2D"]
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 4
 collision_mask = 58
 motion_mode = 1
