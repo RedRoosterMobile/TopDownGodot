@@ -104,7 +104,7 @@ var blood_path_start_pos = Vector2.ZERO
 func _physics_process(delta) -> void:
 	
 	if is_dead:
-		if(blood_spawn_timer<=0 and blood_timer_enabled):
+		if(blood_spawn_timer<=0 and blood_timer_enabled and not is_burning):
 			var blood_path:Node2D = blood_path_scene.instantiate()
 			blood_path.position = global_position
 			if (blood_path_start_pos == Vector2.ZERO):
@@ -363,6 +363,7 @@ func _on_timer_timeout() -> void:
 
 func _on_anim_zombie_frame_changed() -> void:
 	blood_line()
+
 func _on_anim_zombie_animation_finished() -> void:
 	print("draw me")
 	anim_impact.pause()
@@ -377,7 +378,8 @@ func _on_anim_zombie_animation_finished() -> void:
 	
 	# spawn footstep trigger at global_position
 	# Messenger.spawn_footstep_trigger.emit(global_position)
-	spawn_footstep_trigger()
+	if not is_burning:
+		spawn_footstep_trigger()
 	
 	player.draw_me(self)
 func spawn_footstep_trigger():

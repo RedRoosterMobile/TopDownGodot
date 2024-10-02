@@ -1,6 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://60vgvjxwb56s"]
 
 [ext_resource type="Script" path="res://scripts/flame_thrower.gd" id="1_sjrhx"]
+[ext_resource type="Gradient" uid="uid://d3aja7ifwwrvu" path="res://resources/colors/color_ramp/fire2.tres" id="2_flo75"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_p6pw0"]
 blend_mode = 1
@@ -19,10 +20,6 @@ point_count = 3
 [sub_resource type="Curve" id="Curve_pasho"]
 _data = [Vector2(0, 0), 0.0, 1.17798, 0, 0, Vector2(0.222566, 0.988148), 0.464182, 0.0, 0, 0]
 point_count = 2
-
-[sub_resource type="Gradient" id="Gradient_etkq7"]
-offsets = PackedFloat32Array(0, 0.0916808, 0.266553, 0.706282, 0.864177, 0.923599)
-colors = PackedColorArray(1, 1, 0, 1, 1, 0.85, 0, 1, 1, 0.583333, 0, 1, 1, 0, 0, 1, 1, 0.260006, 0.200835, 1, 0.243732, 2.40654e-08, 0.111506, 0.439216)
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_m5x6c"]
 blend_mode = 1
@@ -98,7 +95,7 @@ damping_curve = SubResource("Curve_m0fqc")
 scale_amount_min = 8.0
 scale_amount_max = 16.0
 scale_amount_curve = SubResource("Curve_pasho")
-color_ramp = SubResource("Gradient_etkq7")
+color_ramp = ExtResource("2_flo75")
 
 [node name="FlameThrowerGpu" type="GPUParticles2D" parent="."]
 visible = false
