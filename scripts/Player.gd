@@ -8,6 +8,7 @@ var movespeed:float = 700
 var bullet = preload("res://scenes/bullet.tscn")
 var dialogue_active:bool = false
 var time: float = 0.0
+var time_rotation: float = 0.0
 @onready var sfx_shot := $SfxShot
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
@@ -133,10 +134,6 @@ func _on_shake_complete():
 
 func _physics_process(delta):
 	var motion = Vector2()
-	#
-	
-	
-	#
 
 	# Movement input
 	if Input.is_action_pressed("up"):
@@ -215,15 +212,18 @@ func _physics_process(delta):
 	# var midpoint = (position+clamped_cursor_position)/2
 	# Lerp the camera position for smooth movement
 	camera_2d.position = camera_2d.position.slerp(clamped_cursor_position, 0.005)
+	
+	# ignore player rotaion
+	camera_2d.rotation= -rotation
+	if (velocity.length_squared() > 0):
+		time_rotation += delta
+	camera_2d.rotation += sin(time_rotation*2) * 0.01
 	# ERTHQUAKE, or drunk effect!
 	#camera_2d.transform=camera_2d.transform.rotated(0.05)
 	
 	# IDLE effect?
 	#var rotation_trans = Transform2D(0.001, global_position.normalized())
 	#camera_2d.transform *= rotation_trans
-	
-	#Vector2.from_angle(PI/4)
-	#Vector2.from_angle(PI / 2)
 
 	#var rotation_trans = Transform2D(PI / 2, Vector2.from_angle(PI/4))
 	#camera_2d.transform *= rotation_trans
@@ -236,8 +236,8 @@ func _physics_process(delta):
 	#const FREQUENCY = 2.0  # Adjust as needed
 	#const AMPLITUDE = 0.5  # Adjust as needed (in radians)
 	# camera_2d.rotation= PI/4
-	# $PointLight2D.position.y = sin(time/30)*20
-	if time_to_footprint <= 0:
+
+	if time_to_footprint <= 0 and get_real_velocity().length_squared() > 0:
 		draw_footprints(delta)
 		time_to_footprint = FOOTPRINT_COOLDOWN
 		footprint_alpha -= 0.1
