@@ -1,12 +1,11 @@
 extends RigidBody2D
+@onready var sfx_shell: AudioStreamPlayer2D = $SfxShell
 
 var timer_ran_out = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	adjust_physics_properties()
 	get_tree().create_timer(1).timeout.connect(draw_on_next_frame)
-	print(z_index)
-	# z_index=-1
 	
 func _physics_process(delta: float) -> void:
 	if timer_ran_out and abs(linear_velocity.length()) < 1:
@@ -28,3 +27,7 @@ func adjust_physics_properties() -> void:
 
 func draw_on_next_frame():
 	timer_ran_out = true
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	sfx_shell.pitch_scale = randf_range(0.9, 1.1)
+	sfx_shell.play()

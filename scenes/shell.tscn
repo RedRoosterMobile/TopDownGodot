@@ -1,10 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://7fo5ykvguhd"]
+[gd_scene load_steps=6 format=3 uid="uid://7fo5ykvguhd"]
 
 [ext_resource type="Texture2D" uid="uid://r6digphhhdxv" path="res://assets/sprites/shell.png" id="1_nts11"]
 [ext_resource type="Script" path="res://scripts/shell.gd" id="1_wmxmc"]
+[ext_resource type="AudioStream" uid="uid://bjhcx44haec05" path="res://assets/sounds/sfx/sndShells.ogg" id="3_x15bc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6gcrh"]
-size = Vector2(77.197, 21.1506)
+size = Vector2(77.197, 18.5068)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xye38"]
+size = Vector2(42, 16)
 
 [node name="Shell" type="RigidBody2D"]
 collision_mask = 25
@@ -18,3 +22,15 @@ shape = SubResource("RectangleShape2D_6gcrh")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(5, 5)
 texture = ExtResource("1_nts11")
+
+[node name="SfxShell" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_x15bc")
+bus = &"SFX"
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_mask = 24
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_xye38")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
