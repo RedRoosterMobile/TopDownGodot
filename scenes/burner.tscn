@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3 uid="uid://cfidcnjdjahat"]
+
+[ext_resource type="Script" path="res://scripts/burner.gd" id="1_wipm8"]
+[ext_resource type="Texture2D" uid="uid://bw8fvej3i1t76" path="res://assets/sprites/Explosion3/0011.png" id="2_xo03d"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wdxgi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bp6vh"]
+
+[sub_resource type="Gradient" id="Gradient_j772q"]
+offsets = PackedFloat32Array(0, 0.701403)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2bh0c"]
+gradient = SubResource("Gradient_j772q")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="Burner" type="RigidBody2D"]
+script = ExtResource("1_wipm8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(2, 2)
+shape = SubResource("CircleShape2D_wdxgi")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+scale = Vector2(2.5, 2.5)
+shape = SubResource("CircleShape2D_bp6vh")
+
+[node name="debugimage" type="Sprite2D" parent="."]
+texture = ExtResource("2_xo03d")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+visible = false
+texture = SubResource("GradientTexture2D_2bh0c")
+texture_scale = 1.5

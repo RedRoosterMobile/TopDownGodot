@@ -1,0 +1,26 @@
+extends Node2D
+@onready var burner_scene = preload("res://scenes/burner.tscn")
+
+@export var is_active: bool = true
+@export var spawn_interval: float = 0.1  # Spawn every 2 seconds
+
+var time_passed: float = 0.0
+
+func _ready() -> void:
+	create_burner()
+
+func _process(delta: float) -> void:
+	# Increment time_passed by delta (the time between frames)
+	time_passed += delta
+	
+	# Check if enough time has passed to spawn another burner
+	if is_active and time_passed >= spawn_interval:
+		create_burner()
+		time_passed = 0.0  # Reset the timer
+
+func create_burner():
+	var burner_instance: RigidBody2D = burner_scene.instantiate()
+	burner_instance.position = global_position
+	
+	burner_instance.direction = Vector2.RIGHT.rotated(global_rotation)
+	get_tree().root.call_deferred("add_child", burner_instance)
