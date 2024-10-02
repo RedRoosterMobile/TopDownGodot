@@ -16,17 +16,21 @@ gradient = SubResource("Gradient_j772q")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
-[node name="Burner" type="RigidBody2D"]
+[node name="Burner" type="RigidBody2D" groups=["fire"]]
+collision_layer = 64
+collision_mask = 4
 script = ExtResource("1_wipm8")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["fire"]]
 scale = Vector2(2, 2)
 shape = SubResource("CircleShape2D_wdxgi")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." groups=["fire"]]
+collision_layer = 64
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-scale = Vector2(2.5, 2.5)
+scale = Vector2(2.1, 2.1)
 shape = SubResource("CircleShape2D_bp6vh")
 
 [node name="debugimage" type="Sprite2D" parent="."]

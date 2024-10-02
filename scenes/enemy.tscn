@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://dg2icd6fsnaur"]
+[gd_scene load_steps=39 format=3 uid="uid://dg2icd6fsnaur"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bcf45"]
 [ext_resource type="Material" uid="uid://dvdyn48rp4wq2" path="res://resources/materials/light_cone_only_material.tres" id="2_ve2ds"]
@@ -129,9 +129,42 @@ animations = [{
 "speed": 20.0
 }]
 
+[sub_resource type="Gradient" id="Gradient_8ltdk"]
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0, 0.117241, 0.606897, 0.777012, 0.910345, 1)
+colors = PackedColorArray(1, 0, 0, 1, 0.933333, 0.172549, 0.207843, 1, 0.990252, 0.357842, 0, 1, 0.776471, 0.737255, 0.0901961, 0.815686, 0.360784, 0.345098, 0.333333, 0.952941, 0, 0, 0, 0.290196)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6om4o"]
+gradient = SubResource("Gradient_8ltdk")
+
+[sub_resource type="Curve" id="Curve_etr2p"]
+min_value = 1.0
+max_value = 2.0
+_data = [Vector2(0.0020284, 1.02333), 0.0, 0.261833, 0, 0, Vector2(0.722109, 1.33105), 0.774164, 0.774164, 0, 0, Vector2(0.989858, 2), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_3i2ao"]
+curve = SubResource("Curve_etr2p")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xs62v"]
+lifetime_randomness = 0.04
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+linear_accel_min = 80.0
+linear_accel_max = 200.0
+radial_accel_min = -100.0
+radial_accel_max = -1.27
+tangential_accel_min = -35.87
+tangential_accel_max = 100.0
+scale_max = 8.0
+scale_curve = SubResource("CurveTexture_3i2ao")
+color_ramp = SubResource("GradientTexture1D_6om4o")
+turbulence_enabled = true
+turbulence_noise_strength = 7.04
+
 [node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 4
-collision_mask = 58
+collision_mask = 122
 motion_mode = 1
 script = ExtResource("1_bcf45")
 
@@ -140,7 +173,7 @@ shape = SubResource("CircleShape2D_8eruq")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 4
-collision_mask = 58
+collision_mask = 122
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 scale = Vector2(1.1, 1.1)
@@ -207,7 +240,14 @@ avoidance_enabled = true
 radius = 50.0
 debug_enabled = true
 
+[node name="Fire" type="GPUParticles2D" parent="."]
+visible = false
+scale = Vector2(30, 30)
+amount = 80
+process_material = SubResource("ParticleProcessMaterial_xs62v")
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="animation_changed" from="AnimZombie" to="." method="_on_anim_zombie_animation_changed"]
 [connection signal="animation_finished" from="AnimZombie" to="." method="_on_anim_zombie_animation_finished"]
 [connection signal="frame_changed" from="AnimZombie" to="." method="_on_anim_zombie_frame_changed"]
