@@ -1,4 +1,4 @@
-[gd_scene load_steps=88 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=89 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -30,6 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://qo25iv03ahv8" path="res://assets/sprites/legs/sprWaiterLegs_15.png" id="22_icxiy"]
 [ext_resource type="Texture2D" uid="uid://d3m0nt0hlqjwg" path="res://assets/sprites/tiles/CosmicLilac_Tiles_.png" id="24_ihbf3"]
 [ext_resource type="Texture2D" uid="uid://51iqlh473x75" path="res://assets/aseprite/monkey_island_cursor.png" id="26_1bgn4"]
+[ext_resource type="Texture2D" uid="uid://dh7ib88momm0w" path="res://assets/sprites/footprint_16.png" id="26_fb1i4"]
 [ext_resource type="Texture2D" uid="uid://dj4t4cm1ado8" path="res://assets/sprites/sprExplosion_0.png" id="26_t410r"]
 [ext_resource type="PackedScene" uid="uid://x6ps2oxfbtva" path="res://scenes/actionable.tscn" id="27_5r2v5"]
 [ext_resource type="Texture2D" uid="uid://fj034rllarmf" path="res://assets/sprites/sprExplosion_1.png" id="28_u0jqy"]
@@ -559,12 +560,14 @@ modulate = Color(0.279357, 0.279357, 0.279357, 1)
 scale = Vector2(6, 6)
 sprite_frames = SubResource("SpriteFrames_3rdmb")
 animation = &"walk"
-frame_progress = 0.814561
+frame_progress = 0.65216
 
 [node name="Footstep" type="Sprite2D" parent="Player/AnimLegs"]
-position = Vector2(-9.83334, 0.166672)
-scale = Vector2(0.25, 0.166667)
-texture = ExtResource("28_u0jqy")
+visible = false
+position = Vector2(-9.83332, 0.166672)
+rotation = 1.57756
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("26_fb1i4")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 scale = Vector2(8, 8)

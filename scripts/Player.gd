@@ -20,6 +20,7 @@ var time_to_footprint: float = FOOTPRINT_COOLDOWN
 
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
 @onready var grenade_scene = preload("res://scenes/grenade.tscn")
+@onready var shell_scene = preload("res://scenes/shell.tscn")
 #@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
 @onready var camera_2d: Camera2D = $Camera2D
@@ -52,6 +53,7 @@ func _ready():
 	
 	Messenger.connect("screenshake", screenshake)
 	Messenger.connect("bloody_footsteps", soak_shoes_in_blood)
+	Messenger.connect("draw_node", draw_me)
 	original_position = camera_2d.position
 	rt_node = subviewport.get_node("Node2D")
 
@@ -83,6 +85,7 @@ func draw_footprints(delta):
 	var y_offset:float = 30.0
 	if footprint_step:
 		y_offset *= -1
+		step.flip_h = true
 		
 	var o = Vector2(
 		 sin(rotation + anim_legs.rotation) * y_offset,
@@ -97,7 +100,7 @@ func draw_footprints(delta):
 	# FNORD: division by 10 makes NO sense, but works
 	step.modulate.a = footprint_alpha/10
 	step.position = global_position + offset + o
-	step.rotation = rotation + anim_legs.rotation
+	step.rotation = rotation + anim_legs.rotation + rad_to_deg(-90)
 	step.scale *= 6
 	step.visible = true
 	draw_me_add(step)
@@ -129,6 +132,10 @@ func _on_shake_complete():
 
 func _physics_process(delta):
 	var motion = Vector2()
+	#
+	
+	
+	#
 
 	# Movement input
 	if Input.is_action_pressed("up"):
@@ -207,7 +214,27 @@ func _physics_process(delta):
 	# var midpoint = (position+clamped_cursor_position)/2
 	# Lerp the camera position for smooth movement
 	camera_2d.position = camera_2d.position.slerp(clamped_cursor_position, 0.005)
+	# ERTHQUAKE, or drunk effect!
+	#camera_2d.transform=camera_2d.transform.rotated(0.05)
 	
+	# IDLE effect?
+	#var rotation_trans = Transform2D(0.001, global_position.normalized())
+	#camera_2d.transform *= rotation_trans
+	
+	#Vector2.from_angle(PI/4)
+	#Vector2.from_angle(PI / 2)
+
+	#var rotation_trans = Transform2D(PI / 2, Vector2.from_angle(PI/4))
+	#camera_2d.transform *= rotation_trans
+
+	
+	#camera_2d.rotation+=sin(time*300)*PI
+	# TODO rotate world instead?????
+	# get_parent().rotation=PI/4
+	# Define frequency and amplitude
+	#const FREQUENCY = 2.0  # Adjust as needed
+	#const AMPLITUDE = 0.5  # Adjust as needed (in radians)
+	# camera_2d.rotation= PI/4
 	# $PointLight2D.position.y = sin(time/30)*20
 	if time_to_footprint <= 0:
 		draw_footprints(delta)
@@ -230,7 +257,6 @@ func fire():
 	var bullet_rigid_body:RigidBody2D = bullet_instance.get_node("BulletRigidBody2D")
 	
 	bullet_rigid_body.position = get_global_position() + Vector2(120, 0).rotated(rotation)
-	# bullet_rigid_body.position = global_position
 	bullet_rigid_body.rotation = rotation
 
 	var accuracy:float = randf_range(-bullet_accuracy, bullet_accuracy)
@@ -249,6 +275,16 @@ func fire():
 	get_tree().get_root().call_deferred("add_child", bullet_instance)
 	# bullet_particles.restart()
 	# bullet_particles.emitting = true
+	
+	# shell
+	var shell:RigidBody2D = shell_scene.instantiate()
+	
+	shell.position = get_global_position() + Vector2(60, 0).rotated(rotation)
+	shell.rotation = rotation
+	var shell_accuracy: float = randf_range(-bullet_accuracy * 10, bullet_accuracy * 10)
+	var direction_shell := Vector2(1, 0).rotated(rotation + shell_accuracy + deg_to_rad(90))
+	shell.linear_velocity = direction_shell * bullet_speed/2
+	get_tree().get_root().call_deferred("add_child", shell)
 	
 	# Instance and add the particles
 	var bullet_particles_instance := bullet_particles_scene.instantiate()
