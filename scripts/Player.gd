@@ -48,6 +48,7 @@ var knockback_decreaser = 20
 
 var rt_node:Node2D
 func _ready():
+	z_index = 1
 	#example_balloon = balloon_scene.instantiate()
 	print(example_balloon)
 	
@@ -57,7 +58,7 @@ func _ready():
 	original_position = camera_2d.position
 	rt_node = subviewport.get_node("Node2D")
 
-func screenshake(strength:int = 1):
+func screenshake(strength:float = 1):
 	# Stackable intensity
 	current_intensity += shake_intensity
 	shake_timer = shake_duration
@@ -107,7 +108,7 @@ func draw_footprints(delta):
 	
 	pass
 
-func _start_shaking(strength:int):
+func _start_shaking(strength:float):
 	if shake_timer > 0:
 		# Create the tween on the fly
 		var tween = get_tree().create_tween()

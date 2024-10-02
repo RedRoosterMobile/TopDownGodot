@@ -5,6 +5,8 @@ var timer_ran_out = false
 func _ready() -> void:
 	adjust_physics_properties()
 	get_tree().create_timer(1).timeout.connect(draw_on_next_frame)
+	print(z_index)
+	# z_index=-1
 	
 func _physics_process(delta: float) -> void:
 	if timer_ran_out and abs(linear_velocity.length()) < 1:
