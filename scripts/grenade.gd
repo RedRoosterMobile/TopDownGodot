@@ -3,8 +3,10 @@ extends Node2D
 @onready var rigid_body_2d: RigidBody2D = $RigidBody2D
 @onready var timer: Timer = $TriggerTimer
 @onready var shrapnel_scene = preload("res://scenes/shrapnel.tscn")
-@onready var explosion_anim: AnimatedSprite2D = $RigidBody2D/ExplosionAnim
 @onready var snd_explosion: AudioStreamPlayer2D = $sndExplosion
+@onready var explosion: AnimatedSprite2D = $Explosion
+@onready var grenade: Sprite2D = $RigidBody2D/Grenade
+
 var initial_direction: Vector2 = Vector2.RIGHT  # Default direction
 # @onready var grenade: Sprite2D = $RigidBody2D/Grenade
 
@@ -56,7 +58,8 @@ func explode() -> void:
 	print("boom")
 	#region shochwave
 	# magic sauce: screen coorinates (aka on my screen in pixels)
-	var player_pos = $RigidBody2D/Grenade.get_global_transform_with_canvas()
+	var player_pos = grenade.get_global_transform_with_canvas()
+	grenade.queue_free()
 	var spawn_pos = player_pos.get_origin()
 	# from the window config
 	var size:Vector2i = get_window().size
@@ -67,8 +70,17 @@ func explode() -> void:
 	)	
 	Messenger.shockwave.emit(uv_position.x,uv_position.y)
 	
+	
+	#region explosion
+	var explosion_position = grenade.global_position
+	explosion.global_position=explosion_position
+	explosion.rotation = -rotation
+	explosion.scale *= randf_range(1, 2)
+	explosion.visible = true
+	explosion.play()
+	
 	#region shrapnel
-	var explosion_position = $RigidBody2D/Grenade.global_position
+	
 	var shrapnel_count = 20
 	var shrapnel_speed = 1000  # Adjust as needed
 
@@ -89,13 +101,6 @@ func explode() -> void:
 	Messenger.screenshake.emit(1)
 	snd_explosion.pitch_scale=randf_range(0.5, 1)
 	snd_explosion.play()
-	
-	explosion_anim.scale *= randf_range(1, 2)
-	explosion_anim.modulate.a = randf_range(0.5, 1)
-	explosion_anim.stop()
-	explosion_anim.play()
-	explosion_anim.visible = true
 
-func _on_explosion_anim_animation_looped() -> void:
-	# Remove the grenade
+func _on_explosion_animation_finished() -> void:
 	queue_free()

@@ -8,15 +8,25 @@ var movespeed:float = 700
 var bullet = preload("res://scenes/bullet.tscn")
 var dialogue_active:bool = false
 var time: float = 0.0
+var time_rotation: float = 0.0
 @onready var sfx_shot := $SfxShot
 @onready var spr_player = $Sprite2D
 @onready var anim_legs = $AnimLegs
+
+@onready var footprint: Sprite2D = $AnimLegs/Footstep
+var footprint_alpha = 0
+var footprint_step: bool = false
+const FOOTPRINT_COOLDOWN:float = 1
+var time_to_footprint: float = FOOTPRINT_COOLDOWN
+
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
 @onready var grenade_scene = preload("res://scenes/grenade.tscn")
+@onready var shell_scene = preload("res://scenes/shell.tscn")
 #@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var cursor: Sprite2D = $Cursor
+@onready var flame_thrower: Node2D = $FlameThrower
 
 #region Screenshake
 @export var shake_duration:float = 0.2
@@ -40,22 +50,68 @@ var knockback_decreaser = 20
 
 var rt_node:Node2D
 func _ready():
+	z_index = 1
+	flame_thrower.is_active = false
 	#example_balloon = balloon_scene.instantiate()
 	print(example_balloon)
 	
 	Messenger.connect("screenshake", screenshake)
+	Messenger.connect("bloody_footsteps", soak_shoes_in_blood)
+	Messenger.connect("draw_node", draw_me)
 	original_position = camera_2d.position
 	rt_node = subviewport.get_node("Node2D")
 
-func screenshake(strength:int = 1):
+func screenshake(strength:float = 1):
 	# Stackable intensity
 	current_intensity += shake_intensity
 	shake_timer = shake_duration
-
 	# Start the shake (or continue if already shaking)
 	_start_shaking(strength)
 
-func _start_shaking(strength:int):
+func soak_shoes_in_blood():
+	print("shoes fully soaking with blood")
+	footprint_alpha = 1
+	
+func draw_footprints(delta):
+	var step:Sprite2D = footprint.duplicate()
+	
+	var offset:Vector2 = step.global_position
+	
+	# Define the array of colors
+	var color_array = [
+		Color8(255, 0, 0),   # 0xff0000
+		Color8(153, 0, 0),   # 0x990000
+		Color8(170, 0, 0),   # 0xaa0000
+		Color8(255, 16, 16)  # 0xff1010
+	]
+	
+	footprint_step = not footprint_step
+	var y_offset:float = 30.0
+	if footprint_step:
+		y_offset *= -1
+		step.flip_h = true
+		
+	var o = Vector2(
+		 sin(rotation + anim_legs.rotation) * y_offset,
+		-cos(rotation + anim_legs.rotation) * y_offset
+	)
+
+	# Select a random tint color
+	var random_tint = color_array.pick_random()
+	# Apply the tint color
+	step.modulate = random_tint
+	# Set the alpha transparency
+	# FNORD: division by 10 makes NO sense, but works
+	step.modulate.a = footprint_alpha/10
+	step.position = global_position + offset + o
+	step.rotation = rotation + anim_legs.rotation + rad_to_deg(-90)
+	step.scale *= 6
+	step.visible = true
+	draw_me_add(step)
+	
+	pass
+
+func _start_shaking(strength:float):
 	if shake_timer > 0:
 		# Create the tween on the fly
 		var tween = get_tree().create_tween()
@@ -90,6 +146,8 @@ func _physics_process(delta):
 		motion.x += 1
 	if Input.is_action_pressed("left"):
 		motion.x -= 1
+		
+	flame_thrower.is_active = Input.is_action_pressed("flamethrower")
 	
 	# Interact with dialogue
 	if Input.is_action_just_pressed("interact"):
@@ -159,6 +217,37 @@ func _physics_process(delta):
 	# Lerp the camera position for smooth movement
 	camera_2d.position = camera_2d.position.slerp(clamped_cursor_position, 0.005)
 	
+	# ignore player rotaion
+	camera_2d.rotation= -rotation
+	if (velocity.length_squared() > 0):
+		time_rotation += delta
+	camera_2d.rotation += sin(time_rotation*2) * 0.01
+	# ERTHQUAKE, or drunk effect!
+	#camera_2d.transform=camera_2d.transform.rotated(0.05)
+	
+	# IDLE effect?
+	#var rotation_trans = Transform2D(0.001, global_position.normalized())
+	#camera_2d.transform *= rotation_trans
+
+	#var rotation_trans = Transform2D(PI / 2, Vector2.from_angle(PI/4))
+	#camera_2d.transform *= rotation_trans
+
+	
+	#camera_2d.rotation+=sin(time*300)*PI
+	# TODO rotate world instead?????
+	# get_parent().rotation=PI/4
+	# Define frequency and amplitude
+	#const FREQUENCY = 2.0  # Adjust as needed
+	#const AMPLITUDE = 0.5  # Adjust as needed (in radians)
+	# camera_2d.rotation= PI/4
+
+	if time_to_footprint <= 0 and get_real_velocity().length_squared() > 0:
+		draw_footprints(delta)
+		time_to_footprint = FOOTPRINT_COOLDOWN
+		footprint_alpha -= 0.1
+	else:
+		time_to_footprint -= 0.1
+	
 	time += delta
 	
 
@@ -173,7 +262,6 @@ func fire():
 	var bullet_rigid_body:RigidBody2D = bullet_instance.get_node("BulletRigidBody2D")
 	
 	bullet_rigid_body.position = get_global_position() + Vector2(120, 0).rotated(rotation)
-	# bullet_rigid_body.position = global_position
 	bullet_rigid_body.rotation = rotation
 
 	var accuracy:float = randf_range(-bullet_accuracy, bullet_accuracy)
@@ -193,6 +281,16 @@ func fire():
 	# bullet_particles.restart()
 	# bullet_particles.emitting = true
 	
+	# shell
+	var shell:RigidBody2D = shell_scene.instantiate()
+	
+	shell.position = get_global_position() + Vector2(60, 0).rotated(rotation)
+	shell.rotation = rotation
+	var shell_accuracy: float = randf_range(-bullet_accuracy * 10, bullet_accuracy * 10)
+	var direction_shell := Vector2(1, 0).rotated(rotation + shell_accuracy + deg_to_rad(90))
+	shell.linear_velocity = direction_shell * bullet_speed/2
+	get_tree().get_root().call_deferred("add_child", shell)
+	
 	# Instance and add the particles
 	var bullet_particles_instance := bullet_particles_scene.instantiate()
 	bullet_particles_instance.position = bullet_rigid_body.position # Adjust the position if needed
@@ -202,7 +300,8 @@ func fire():
 # https://youtu.be/HycyFNQfqI0?si=NJQaapwXdqKIyq7M&t=410
 func kill():
 	print("player died!")
-	get_tree().reload_current_scene()
+	if get_tree().current_scene:
+		get_tree().reload_current_scene()
 
 func _on_area_2d_body_entered(body):
 	if body.is_in_group("shrapnel"):
@@ -230,6 +329,7 @@ func _on_example_balloon_tree_exited() -> void:
 	print("done with dialogue")
 	toggle_pause()
 
+# only works for non transparent stuff
 func draw_me(arg:Node2D):
 	arg.reparent(rt_node)
 	# Connect to rt_node's after_draw signal with a one-shot connection
@@ -238,9 +338,11 @@ func draw_me(arg:Node2D):
 			arg.queue_free()
 	)
 
+# works for transparent stuff
 func draw_me_add(arg:Node2D):
 	rt_node.add_child(arg)
-	get_tree().create_timer(1).timeout.connect(func():
+	
+	get_tree().create_timer(0.1).timeout.connect(func():
 		if(arg):
 			arg.queue_free()
 	)

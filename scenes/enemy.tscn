@@ -1,6 +1,7 @@
-[gd_scene load_steps=34 format=3 uid="uid://dg2icd6fsnaur"]
+[gd_scene load_steps=38 format=3 uid="uid://dg2icd6fsnaur"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bcf45"]
+[ext_resource type="Material" uid="uid://dvdyn48rp4wq2" path="res://resources/materials/light_cone_only_material.tres" id="2_ve2ds"]
 [ext_resource type="AudioStream" uid="uid://byic1s2ye1oge" path="res://assets/sounds/sfx/zombie/1.wav" id="3_fyqbl"]
 [ext_resource type="Texture2D" uid="uid://c142ch7r31wku" path="res://assets/sprites/enemy/enemy5.png" id="4_f177n"]
 [ext_resource type="Texture2D" uid="uid://bhy06hsu6aasb" path="res://assets/sprites/enemy/enemy6.png" id="5_1wch4"]
@@ -28,6 +29,7 @@
 [ext_resource type="Texture2D" uid="uid://bcsr4cc5nsia" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_8.png" id="26_iyalu"]
 [ext_resource type="Texture2D" uid="uid://bw6b4rwnhdkb6" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_9.png" id="27_ymaut"]
 [ext_resource type="Texture2D" uid="uid://8d63fpsa51ia" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_10.png" id="28_eq6fo"]
+[ext_resource type="Gradient" uid="uid://d3aja7ifwwrvu" path="res://resources/colors/color_ramp/fire2.tres" id="30_rdwqd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8eruq"]
 
@@ -87,9 +89,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_q0p46"]
-polygon = PackedVector2Array(-6, -15, 6, -15, 6, 15, -6, 15)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_wjvnx"]
 animations = [{
 "frames": [{
@@ -131,9 +130,32 @@ animations = [{
 "speed": 20.0
 }]
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_6kov2"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6om4o"]
+gradient = ExtResource("30_rdwqd")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xs62v"]
+lifetime_randomness = 0.04
+particle_flag_disable_z = true
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 0.0840001
+gravity = Vector3(0, 0, 0)
+linear_accel_min = 160.0
+linear_accel_max = 400.0
+radial_accel_min = -100.0
+radial_accel_max = -1.27
+tangential_accel_min = -35.87
+tangential_accel_max = 100.0
+scale_min = 4.0
+scale_max = 12.0
+color_ramp = SubResource("GradientTexture1D_6om4o")
+turbulence_enabled = true
+turbulence_noise_strength = 7.04
+
 [node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 4
-collision_mask = 58
+collision_mask = 122
 motion_mode = 1
 script = ExtResource("1_bcf45")
 
@@ -142,7 +164,7 @@ shape = SubResource("CircleShape2D_8eruq")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 4
-collision_mask = 58
+collision_mask = 122
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 scale = Vector2(1.1, 1.1)
@@ -151,6 +173,7 @@ shape = SubResource("CapsuleShape2D_qr2qq")
 [node name="Timer" type="Timer" parent="."]
 
 [node name="AnimZombie" type="AnimatedSprite2D" parent="."]
+material = ExtResource("2_ve2ds")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_g1f26")
 animation = &"walk"
@@ -163,10 +186,6 @@ stream = ExtResource("3_fyqbl")
 stream = ExtResource("15_7igtv")
 volume_db = 0.5
 max_polyphony = 3
-
-[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
-visible = false
-occluder = SubResource("OccluderPolygon2D_q0p46")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 visible = false
@@ -212,7 +231,14 @@ avoidance_enabled = true
 radius = 50.0
 debug_enabled = true
 
+[node name="Fire" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_6kov2")
+amount = 80
+process_material = SubResource("ParticleProcessMaterial_xs62v")
+draw_order = 2
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="animation_changed" from="AnimZombie" to="." method="_on_anim_zombie_animation_changed"]
 [connection signal="animation_finished" from="AnimZombie" to="." method="_on_anim_zombie_animation_finished"]
 [connection signal="frame_changed" from="AnimZombie" to="." method="_on_anim_zombie_frame_changed"]
