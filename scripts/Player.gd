@@ -300,7 +300,8 @@ func fire():
 # https://youtu.be/HycyFNQfqI0?si=NJQaapwXdqKIyq7M&t=410
 func kill():
 	print("player died!")
-	get_tree().reload_current_scene()
+	if get_tree().current_scene:
+		get_tree().reload_current_scene()
 
 func _on_area_2d_body_entered(body):
 	if body.is_in_group("shrapnel"):

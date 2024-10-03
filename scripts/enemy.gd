@@ -35,7 +35,6 @@ var enemy_state:Enums.EnemyState = Enums.EnemyState.IDLE
 @onready var ray_cast_2d: RayCast2D = $RayCast2D
 @onready var blood_path_scene = preload("res://scenes/blood_path.tscn")
 @onready var footstep_trigger_scene = preload("res://scenes/footstep_trigger.tscn")
-@onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var enemy_collider: CollisionShape2D = $EnemyCollider
 
  # 1-5  normal

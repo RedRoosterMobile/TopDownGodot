@@ -22,9 +22,11 @@ func _physics_process(delta: float) -> void:
 	if is_active and not flame_thrower.emitting:
 		print("play ft sound")
 	elif is_active:
-		print("loop ft sound?")
+		#print("loop ft sound?")
+		pass
 	else:
-		print("stop ft sound")
+		#print("stop ft sound")
+		pass
 		
 	flame_thrower.emitting = is_active
 	
@@ -33,4 +35,4 @@ func create_burner():
 	burner_instance.position = global_position
 	
 	burner_instance.direction = Vector2.RIGHT.rotated(global_rotation)
-	get_tree().root.add_child( burner_instance)
+	get_tree().root.call_deferred("add_child", burner_instance)
