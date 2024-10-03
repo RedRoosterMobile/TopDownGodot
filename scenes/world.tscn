@@ -1,4 +1,4 @@
-[gd_scene load_steps=89 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=77 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -34,6 +34,7 @@
 [ext_resource type="Texture2D" uid="uid://dj4t4cm1ado8" path="res://assets/sprites/sprExplosion_0.png" id="26_t410r"]
 [ext_resource type="PackedScene" uid="uid://x6ps2oxfbtva" path="res://scenes/actionable.tscn" id="27_5r2v5"]
 [ext_resource type="Texture2D" uid="uid://fj034rllarmf" path="res://assets/sprites/sprExplosion_1.png" id="28_u0jqy"]
+[ext_resource type="PackedScene" uid="uid://60vgvjxwb56s" path="res://scenes/flame_thrower.tscn" id="30_7x1mh"]
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/shockwave.gdshader" id="31_jt1d6"]
 [ext_resource type="PackedScene" uid="uid://d3n65vxxksodj" path="res://scenes/blood_path.tscn" id="32_0q14q"]
 [ext_resource type="Script" path="res://scripts/shockwave.gd" id="32_er0l3"]
@@ -390,78 +391,6 @@ fill_to = Vector2(0.869658, 0.17735)
 [sub_resource type="Gradient" id="Gradient_373mx"]
 colors = PackedColorArray(1, 1, 1, 1, 0.337255, 0, 0, 1)
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_p6pw0"]
-blend_mode = 1
-
-[sub_resource type="Curve" id="Curve_b3wlp"]
-min_value = -200.0
-max_value = 500.0
-_data = [Vector2(0, 500), 0.0, 0.0, 0, 0, Vector2(0.119808, -144), -10166.2, -75.3893, 0, 0, Vector2(1, -200), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="Curve" id="Curve_m0fqc"]
-max_value = 100.0
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.498403, 0), 0.0, 719.604, 0, 0, Vector2(1, 100), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="Curve" id="Curve_pasho"]
-_data = [Vector2(0, 0), 0.0, 1.17798, 0, 0, Vector2(0.222566, 0.988148), 0.464182, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="Gradient" id="Gradient_etkq7"]
-offsets = PackedFloat32Array(0, 0.0916808, 0.266553, 0.706282, 0.864177, 0.923599)
-colors = PackedColorArray(1, 1, 0, 1, 1, 0.85, 0, 1, 1, 0.583333, 0, 1, 1, 0, 0, 1, 1, 0.260006, 0.200835, 1, 0.243732, 2.40654e-08, 0.111506, 0.439216)
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_m5x6c"]
-blend_mode = 1
-particles_animation = true
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
-
-[sub_resource type="Curve" id="Curve_vjmy6"]
-max_value = 100.0
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.510998, 0.542397), 0.0, 732.076, 0, 0, Vector2(0.989848, 100), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_sba7h"]
-curve = SubResource("Curve_vjmy6")
-
-[sub_resource type="Curve" id="Curve_i606e"]
-max_value = 100.0
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.181049, 1.1847), 1.48193, 1.48193, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_8xwxm"]
-curve = SubResource("Curve_i606e")
-
-[sub_resource type="Curve" id="Curve_22u1a"]
-_data = [Vector2(0, 0), 0.0, -0.0279542, 0, 0, Vector2(0.285956, 0.923922), 7.71423, 0.365544, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_0unbv"]
-curve = SubResource("Curve_22u1a")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hhkdx"]
-particle_flag_disable_z = true
-spread = 3.0
-initial_velocity_min = 380.0
-initial_velocity_max = 420.0
-orbit_velocity_min = -1.0
-orbit_velocity_max = 1.0
-radial_velocity_min = 8.99998
-radial_velocity_max = 11.0
-gravity = Vector3(-8, 0, 0)
-linear_accel_min = 380.0
-linear_accel_max = 420.0
-linear_accel_curve = SubResource("CurveTexture_8xwxm")
-damping_max = 100.0
-damping_curve = SubResource("CurveTexture_sba7h")
-scale_min = 8.0
-scale_max = 16.0
-scale_curve = SubResource("CurveTexture_0unbv")
-collision_mode = 2
-
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_6wv0r"]
 polygon = PackedVector2Array(5, -223, 5, -95, -43, -79, -75, -39, -83, 1, -67, 49, -27, 89, 13, 97, 117, 513, -349, 370, -340, -366, 53, -551)
 
@@ -591,6 +520,7 @@ zoom = Vector2(0.5, 0.5)
 position_smoothing_enabled = true
 
 [node name="NewPointLight2D" type="PointLight2D" parent="Player"]
+visible = false
 scale = Vector2(8, 8)
 blend_mode = 2
 range_item_cull_mask = 3
@@ -629,43 +559,11 @@ gravity = Vector2(200, 0)
 color = Color(1, 0.773333, 0.32, 1)
 color_ramp = SubResource("Gradient_373mx")
 
-[node name="FlameThrower" type="CPUParticles2D" parent="Player"]
-visible = false
-material = SubResource("CanvasItemMaterial_p6pw0")
-position = Vector2(65, 0)
-amount = 350
-lifetime = 2.0
-fixed_fps = 30
-spread = 3.0
-gravity = Vector2(-80, 0)
-initial_velocity_min = 380.0
-initial_velocity_max = 420.0
-orbit_velocity_min = -0.01
-orbit_velocity_max = 0.01
-linear_accel_min = 2.0
-linear_accel_max = 5.0
-linear_accel_curve = SubResource("Curve_b3wlp")
-radial_accel_min = 9.0
-radial_accel_max = 11.0
-damping_curve = SubResource("Curve_m0fqc")
-scale_amount_min = 8.0
-scale_amount_max = 16.0
-scale_amount_curve = SubResource("Curve_pasho")
-color_ramp = SubResource("Gradient_etkq7")
-
-[node name="FlameThrowerGpu" type="GPUParticles2D" parent="Player"]
-visible = false
-material = SubResource("CanvasItemMaterial_m5x6c")
-position = Vector2(71, 1)
-scale = Vector2(1e-05, 1e-05)
-amount = 350
-process_material = SubResource("ParticleProcessMaterial_hhkdx")
-lifetime = 2.0
-collision_base_size = 12.9
-
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Player"]
 modulate = Color(1, 1, 1, 0)
 occluder = SubResource("OccluderPolygon2D_6wv0r")
+
+[node name="FlameThrower" parent="Player" instance=ExtResource("30_7x1mh")]
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
 light_mask = 2

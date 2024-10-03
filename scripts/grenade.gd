@@ -59,6 +59,7 @@ func explode() -> void:
 	#region shochwave
 	# magic sauce: screen coorinates (aka on my screen in pixels)
 	var player_pos = grenade.get_global_transform_with_canvas()
+	grenade.queue_free()
 	var spawn_pos = player_pos.get_origin()
 	# from the window config
 	var size:Vector2i = get_window().size

@@ -26,6 +26,7 @@ var time_to_footprint: float = FOOTPRINT_COOLDOWN
 @onready var example_balloon: CanvasLayer = $ExampleBalloon
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var cursor: Sprite2D = $Cursor
+@onready var flame_thrower: Node2D = $FlameThrower
 
 #region Screenshake
 @export var shake_duration:float = 0.2
@@ -50,6 +51,7 @@ var knockback_decreaser = 20
 var rt_node:Node2D
 func _ready():
 	z_index = 1
+	flame_thrower.is_active = false
 	#example_balloon = balloon_scene.instantiate()
 	print(example_balloon)
 	
@@ -144,6 +146,8 @@ func _physics_process(delta):
 		motion.x += 1
 	if Input.is_action_pressed("left"):
 		motion.x -= 1
+		
+	flame_thrower.is_active = Input.is_action_pressed("flamethrower")
 	
 	# Interact with dialogue
 	if Input.is_action_just_pressed("interact"):
@@ -296,7 +300,8 @@ func fire():
 # https://youtu.be/HycyFNQfqI0?si=NJQaapwXdqKIyq7M&t=410
 func kill():
 	print("player died!")
-	get_tree().reload_current_scene()
+	if get_tree().current_scene:
+		get_tree().reload_current_scene()
 
 func _on_area_2d_body_entered(body):
 	if body.is_in_group("shrapnel"):

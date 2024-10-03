@@ -4,6 +4,8 @@ class_name Enemy
 var motion := Vector2()
 var is_dead := false
 var was_hit := false
+var is_burning := false
+var time_till_burnout:float = 3
 var speed:float = 5
 var rt_node:Node2D
 
@@ -17,6 +19,7 @@ var enemy_state:Enums.EnemyState = Enums.EnemyState.IDLE
 @export var noise_awareness_circle:int = 700
 @export var visual_awareness_circle:int = 450
 @export var jump_circle:int = 250
+@onready var fire: GPUParticles2D = $Fire
 
 @export var target: Node2D = null
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
@@ -32,7 +35,6 @@ var enemy_state:Enums.EnemyState = Enums.EnemyState.IDLE
 @onready var ray_cast_2d: RayCast2D = $RayCast2D
 @onready var blood_path_scene = preload("res://scenes/blood_path.tscn")
 @onready var footstep_trigger_scene = preload("res://scenes/footstep_trigger.tscn")
-@onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var enemy_collider: CollisionShape2D = $EnemyCollider
 
  # 1-5  normal
@@ -99,8 +101,9 @@ var blood_timer_enabled = true
 # used in path and line
 var blood_path_start_pos = Vector2.ZERO
 func _physics_process(delta) -> void:
+	
 	if is_dead:
-		if(blood_spawn_timer<=0 and blood_timer_enabled):
+		if(blood_spawn_timer<=0 and blood_timer_enabled and not is_burning):
 			var blood_path:Node2D = blood_path_scene.instantiate()
 			blood_path.position = global_position
 			if (blood_path_start_pos == Vector2.ZERO):
@@ -132,11 +135,13 @@ func _physics_process(delta) -> void:
 		move_and_slide()
 		return
 	
-	#region pathfinding
+	#region awareness
 	# set target if not set
 	
 	# find target
 	aquire_target()
+	
+	
 	
 	if target:
 		# TODO: add all circles, done
@@ -193,8 +198,26 @@ func _physics_process(delta) -> void:
 		target = null
 		#return
 	
+	# this overwrites some previous stuff, careful when moving
+	if is_burning:
+		if time_till_burnout <= 0:
+			print("all burnt out")
+			is_dead = true
+			health = 0
+			enemy_state = Enums.EnemyState.DEAD
+			timer.stop()
+			animated_sprite_2d.pause()
+			animated_sprite_2d.play("die")
+			fire.visible = false
+			fire.emitting = false
+		else:
+			# slowly make him darker
+			animated_sprite_2d.modulate.r -= 0.003
+			animated_sprite_2d.modulate.g -= 0.003
+			animated_sprite_2d.modulate.b -= 0.003
+			time_till_burnout -= delta
 	
-	#region awareness
+	#region legacy
 	return
 	# legacy code?
 	if player and player.position.distance_to(self.position) < visual_awareness_circle:
@@ -295,6 +318,13 @@ func _on_area_2d_body_entered(body) -> void:
 		# Apply impact force
 		var impact_force = randf_range(150,190)
 		velocity += impact_direction * impact_force
+	elif body.is_in_group("fire"):
+		body.queue_free()
+		is_burning = true
+		speed = 2.5
+		fire.visible = true
+		fire.emitting = true
+		# start the fire!
 	elif body.is_in_group("shrapnel"):
 		Messenger.screenshake.emit(1)
 		#was_hit = true
@@ -323,6 +353,7 @@ func _on_area_2d_body_entered(body) -> void:
 		var impact_force = randf_range(150*2,190*2)
 		velocity += impact_direction * impact_force
 		print("TODO: enemy hit by a shrapnel")
+
 func _on_timer_timeout() -> void:
 	play_random_growl_sound()
 	start_random_timer()
@@ -331,6 +362,7 @@ func _on_timer_timeout() -> void:
 
 func _on_anim_zombie_frame_changed() -> void:
 	blood_line()
+
 func _on_anim_zombie_animation_finished() -> void:
 	print("draw me")
 	anim_impact.pause()
@@ -345,7 +377,8 @@ func _on_anim_zombie_animation_finished() -> void:
 	
 	# spawn footstep trigger at global_position
 	# Messenger.spawn_footstep_trigger.emit(global_position)
-	spawn_footstep_trigger()
+	if not is_burning:
+		spawn_footstep_trigger()
 	
 	player.draw_me(self)
 func spawn_footstep_trigger():
@@ -390,3 +423,8 @@ func line2dexample() -> void:
 	line.default_color = Color(1, 0, 0)  # Red color
 	
 	# add_child(line)
+
+
+func _on_anim_zombie_animation_changed(arg) -> void:
+	print("change animation ",arg)
+	pass # Replace with function body.
