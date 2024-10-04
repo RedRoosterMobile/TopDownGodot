@@ -5,10 +5,12 @@ extends Node2D
 @onready var shrapnel_scene = preload("res://scenes/shrapnel.tscn")
 @onready var snd_explosion: AudioStreamPlayer2D = $sndExplosion
 @onready var explosion: AnimatedSprite2D = $Explosion
-@onready var grenade: Sprite2D = $RigidBody2D/Grenade
+#@onready var grenade: Sprite2D = $RigidBody2D/Grenade
+@onready var grenade: Sprite2D = $Grenade
 
 var initial_direction: Vector2 = Vector2.RIGHT  # Default direction
 # @onready var grenade: Sprite2D = $RigidBody2D/Grenade
+var has_exploded:bool= false
 
 var trigger_time:float = 3
 var initial_force:float = 1000
@@ -21,17 +23,16 @@ func _ready() -> void:
 	adjust_physics_properties()
 	start_explosion_timer()
 	$AnimationPlayer.play("scale")
-
-func _physics_process(delta: float) -> void:
-	# works
-	# $RigidBody2D/Grenade.scale = Vector2(4,4)
-	# does not work
-	#$AnimationPlayer.advance(delta)
-	pass
 	
+func _physics_process(delta: float) -> void:
+	if not has_exploded:
+		grenade.position = rigid_body_2d.position
+		grenade.rotation = rigid_body_2d.rotation
 
 func apply_initial_force() -> void:
-	rigid_body_2d.linear_velocity = initial_direction * initial_force
+	# same same
+	#rigid_body_2d.linear_velocity = initial_direction * initial_force
+	rigid_body_2d.apply_impulse(initial_direction*initial_force)
 
 func adjust_physics_properties() -> void:
 	# Create and assign PhysicsMaterial
@@ -50,15 +51,18 @@ func start_explosion_timer():
 	timer.start()
 
 func _on_timer_timeout() -> void:
+	
 	explode()
 	# trigger a bunch of (invisible) rigidbodies in a circle and accellerate them outwards
 	# make them disappear on first collision
 	# queue_free()
 func explode() -> void:
 	print("boom")
-	#region shochwave
+	
+	#region shockwave
 	# magic sauce: screen coorinates (aka on my screen in pixels)
 	var player_pos = grenade.get_global_transform_with_canvas()
+	has_exploded = true
 	grenade.queue_free()
 	var spawn_pos = player_pos.get_origin()
 	# from the window config

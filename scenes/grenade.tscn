@@ -37,7 +37,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_c3nay"]
 
 [sub_resource type="Animation" id="Animation_7trfn"]
-length = 0.001
+length = 3.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -45,10 +45,10 @@ tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 1.03333, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(1, 1)]
+"values": [Vector2(1, 1), Vector2(2, 2), Vector2(1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_0l38q"]
@@ -61,10 +61,10 @@ tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1, 2),
+"times": PackedFloat32Array(0, 0.202032, 0.519494),
 "transitions": PackedFloat32Array(0.659755, 1, 1),
 "update": 0,
-"values": [Vector2(1, 1), Vector2(5, 5), Vector2(1, 1)]
+"values": [Vector2(1, 1), Vector2(2, 2), Vector2(1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mrq43"]
@@ -172,16 +172,12 @@ animations = [{
 }]
 
 [node name="Grenade" type="Node2D"]
+position = Vector2(-1, 0)
 script = ExtResource("1_0aiai")
 
 [node name="RigidBody2D" type="RigidBody2D" parent="." groups=["grenade"]]
 collision_layer = 32
 collision_mask = 28
-
-[node name="Grenade" type="Sprite2D" parent="RigidBody2D"]
-position = Vector2(-2, 0)
-scale = Vector2(2, 2)
-texture = ExtResource("2_irsls")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
 scale = Vector2(3, 3)
@@ -190,11 +186,15 @@ shape = SubResource("CircleShape2D_c3nay")
 [node name="TriggerTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="Grenade" type="Sprite2D" parent="."]
+position = Vector2(-2, 0)
+scale = Vector2(2, 2)
+texture = ExtResource("2_irsls")
+
 [node name="sndExplosion" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("5_7to51")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-callback_mode_process = 2
 libraries = {
 "": SubResource("AnimationLibrary_mrq43")
 }

@@ -34,6 +34,7 @@ scale = Vector2(2.1, 2.1)
 shape = SubResource("CircleShape2D_bp6vh")
 
 [node name="debugimage" type="Sprite2D" parent="."]
+visible = false
 texture = ExtResource("2_xo03d")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
