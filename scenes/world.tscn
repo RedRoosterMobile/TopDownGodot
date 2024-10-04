@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=75 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -33,7 +33,6 @@
 [ext_resource type="Texture2D" uid="uid://dh7ib88momm0w" path="res://assets/sprites/footprint_16.png" id="26_fb1i4"]
 [ext_resource type="Texture2D" uid="uid://dj4t4cm1ado8" path="res://assets/sprites/sprExplosion_0.png" id="26_t410r"]
 [ext_resource type="PackedScene" uid="uid://x6ps2oxfbtva" path="res://scenes/actionable.tscn" id="27_5r2v5"]
-[ext_resource type="Texture2D" uid="uid://fj034rllarmf" path="res://assets/sprites/sprExplosion_1.png" id="28_u0jqy"]
 [ext_resource type="PackedScene" uid="uid://60vgvjxwb56s" path="res://scenes/flame_thrower.tscn" id="30_7x1mh"]
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/shockwave.gdshader" id="31_jt1d6"]
 [ext_resource type="PackedScene" uid="uid://d3n65vxxksodj" path="res://scenes/blood_path.tscn" id="32_0q14q"]
@@ -388,9 +387,6 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.869658, 0.17735)
 
-[sub_resource type="Gradient" id="Gradient_373mx"]
-colors = PackedColorArray(1, 1, 1, 1, 0.337255, 0, 0, 1)
-
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_6wv0r"]
 polygon = PackedVector2Array(5, -223, 5, -95, -43, -79, -75, -39, -83, 1, -67, 49, -27, 89, 13, 97, 117, 513, -349, 370, -340, -366, 53, -551)
 
@@ -520,7 +516,6 @@ zoom = Vector2(0.5, 0.5)
 position_smoothing_enabled = true
 
 [node name="NewPointLight2D" type="PointLight2D" parent="Player"]
-visible = false
 scale = Vector2(8, 8)
 blend_mode = 2
 range_item_cull_mask = 3
@@ -542,22 +537,8 @@ stream = ExtResource("6_frdab")
 bus = &"SFX"
 
 [node name="Cursor" type="Sprite2D" parent="Player"]
-visible = false
 scale = Vector2(3, 3)
 texture = ExtResource("26_1bgn4")
-
-[node name="CPUParticles2D" type="CPUParticles2D" parent="Player"]
-visible = false
-position = Vector2(84, -2)
-amount = 15
-explosiveness = 0.44
-texture = ExtResource("28_u0jqy")
-emission_shape = 3
-emission_rect_extents = Vector2(5, 5)
-spread = 0.0
-gravity = Vector2(200, 0)
-color = Color(1, 0.773333, 0.32, 1)
-color_ramp = SubResource("Gradient_373mx")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Player"]
 modulate = Color(1, 1, 1, 0)
@@ -573,11 +554,41 @@ rotation = -3.10742
 scale = Vector2(4, 4)
 player = NodePath("../Player")
 
+[node name="Enemy2" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(166, 1732)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="Enemy3" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(414, 1740)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
 [node name="Enemy4" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
 position = Vector2(205, 248)
 rotation = -3.10742
 scale = Vector2(4, 4)
 player = NodePath("../Player")
+
+[node name="Enemy5" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+position = Vector2(275, 1579)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="Enemy" parent="Enemy5" node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(352, 1924)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../../Player")
 
 [node name="Shockwave" type="CanvasLayer" parent="."]
 

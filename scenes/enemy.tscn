@@ -232,6 +232,7 @@ radius = 50.0
 debug_enabled = true
 
 [node name="Fire" type="GPUParticles2D" parent="."]
+visible = false
 material = SubResource("CanvasItemMaterial_6kov2")
 amount = 80
 process_material = SubResource("ParticleProcessMaterial_xs62v")

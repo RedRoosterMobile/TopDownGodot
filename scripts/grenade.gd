@@ -85,7 +85,7 @@ func explode() -> void:
 	
 	#region shrapnel
 	
-	var shrapnel_count = 20
+	var shrapnel_count = 40
 	var shrapnel_speed = 1000  # Adjust as needed
 
 	for i in range(shrapnel_count):

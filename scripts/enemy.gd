@@ -19,9 +19,12 @@ var enemy_state:Enums.EnemyState = Enums.EnemyState.IDLE
 @export var noise_awareness_circle:int = 700
 @export var visual_awareness_circle:int = 450
 @export var jump_circle:int = 250
+@export var target: Node2D = null
+# additional stuff
+# https://godotshaders.com/shader/qi-aura-outline/
+# https://godotshaders.com/shader/fire-distortion/
 @onready var fire: GPUParticles2D = $Fire
 
-@export var target: Node2D = null
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 
 @onready var sfx_zombie_growl := $AnimZombie/SfxZombieGrowl
@@ -103,7 +106,8 @@ var blood_path_start_pos = Vector2.ZERO
 func _physics_process(delta) -> void:
 	
 	if is_dead:
-		if(blood_spawn_timer<=0 and blood_timer_enabled and not is_burning):
+		if blood_spawn_timer <= 0 and blood_timer_enabled:
+		#if(blood_spawn_timer<=0 and blood_timer_enabled and not is_burning):
 			var blood_path:Node2D = blood_path_scene.instantiate()
 			blood_path.position = global_position
 			if (blood_path_start_pos == Vector2.ZERO):
@@ -140,8 +144,6 @@ func _physics_process(delta) -> void:
 	
 	# find target
 	aquire_target()
-	
-	
 	
 	if target:
 		# TODO: add all circles, done
@@ -185,7 +187,6 @@ func _physics_process(delta) -> void:
 				look_at(player.position)
 				motion = position.direction_to(navigation_agent_2d.get_next_path_position()) * speed/2
 				move_and_collide(motion)
-			
 		else:
 			# never happens?
 			enemy_state = Enums.EnemyState.IDLE
@@ -276,6 +277,7 @@ func is_player_in_fov() -> bool:
 	return angle_to_player < half_fov_rad
 
 func _on_area_2d_body_entered(body) -> void:
+	var was_dead = is_dead
 	if body.is_in_group("bullet"):
 		# kill bullet
 		# body.get_parent().queue_free()
@@ -286,7 +288,10 @@ func _on_area_2d_body_entered(body) -> void:
 		if health <= 0:
 			is_dead = true
 			timer.stop()
-			animated_sprite_2d.play("die")
+			fire.visible = false
+			fire.emitting = false
+			if not was_dead:
+				animated_sprite_2d.play("die")
 		else:
 			was_hit = true
 			get_tree().create_timer(0.2).timeout.connect(func():
@@ -316,7 +321,7 @@ func _on_area_2d_body_entered(body) -> void:
 		anim_impact.speed_scale = sfx_gore_splash.pitch_scale
 		anim_impact.play()
 		# Apply impact force
-		var impact_force = randf_range(150,190)
+		var impact_force = randf_range(150, 190)
 		velocity += impact_direction * impact_force
 	elif body.is_in_group("fire"):
 		body.queue_free()
@@ -335,8 +340,16 @@ func _on_area_2d_body_entered(body) -> void:
 		health -= 1
 		if health <= 0:
 			is_dead = true
+			fire.visible = false
+			fire.emitting = false
 			timer.stop()
-			animated_sprite_2d.play("die")
+			if not was_dead:
+				animated_sprite_2d.pause()
+				# E 0:00:09:0063   enemy.gd:345 @ _on_area_2d_body_entered(): Error calling from signal 'animation_changed' to callable: 'CharacterBody2D(enemy.gd)::_on_anim_zombie_animation_changed': Method expected 1 arguments, but called with 0.
+	#  <C++ Source>   core/object/object.cpp:1200 @ emit_signalp()
+	#  <Stack Trace>  enemy.gd:345 @ _on_area_2d_body_entered()
+				animated_sprite_2d.call_deferred("play","die")
+				# animated_sprite_2d.play("die")
 		else:
 			was_hit = true
 			get_tree().create_timer(0.2).timeout.connect(func():
@@ -352,7 +365,7 @@ func _on_area_2d_body_entered(body) -> void:
 		# Apply impact force
 		var impact_force = randf_range(150*2,190*2)
 		velocity += impact_direction * impact_force
-		print("TODO: enemy hit by a shrapnel")
+		print("enemy hit by a shrapnel")
 
 func _on_timer_timeout() -> void:
 	play_random_growl_sound()
@@ -368,7 +381,7 @@ func _on_anim_zombie_animation_finished() -> void:
 	anim_impact.pause()
 	blood_timer_enabled = false
 	velocity = Vector2.ZERO
-	animated_sprite_2d.pause()
+	#animated_sprite_2d.pause()
 	
 	# don't do it for ALL, just for this one. make it unique
 	animated_sprite_2d.material = animated_sprite_2d.material.duplicate()
@@ -376,7 +389,6 @@ func _on_anim_zombie_animation_finished() -> void:
 	animated_sprite_2d.material.light_mode = CanvasItemMaterial.LIGHT_MODE_NORMAL
 	
 	# spawn footstep trigger at global_position
-	# Messenger.spawn_footstep_trigger.emit(global_position)
 	if not is_burning:
 		spawn_footstep_trigger()
 	
@@ -387,7 +399,6 @@ func spawn_footstep_trigger():
 	var trigger : Node2D =footstep_trigger_scene.instantiate()
 	trigger.global_position=global_position
 	get_tree().get_root().add_child(trigger)
-	pass
 
 func blood_line() -> void:
 	# path
@@ -423,7 +434,6 @@ func line2dexample() -> void:
 	line.default_color = Color(1, 0, 0)  # Red color
 	
 	# add_child(line)
-
 
 func _on_anim_zombie_animation_changed(arg) -> void:
 	print("change animation ",arg)
