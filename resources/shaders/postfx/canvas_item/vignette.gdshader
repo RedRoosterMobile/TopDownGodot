@@ -7,7 +7,7 @@ void fragment() {
 	float x = abs(UV.x-.5)*2.0;
 	float y = abs(UV.y-.5)*2.0;
 	float v = (sqrt((x*x)+(y*y))/outerRadius);
-	COLOR = vec4(1,0,0,v*MainAlpha);
+	COLOR = vec4(0,0,0,v*MainAlpha);
 }
 //void light() {
 	// Called for every pixel for every light affecting the CanvasItem.

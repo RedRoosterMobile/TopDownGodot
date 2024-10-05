@@ -1,4 +1,4 @@
-[gd_scene load_steps=82 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=79 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -410,46 +410,8 @@ shader_parameter/noise_texture = SubResource("NoiseTexture2D_dl3bm")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u1d7g"]
 shader = ExtResource("34_0hwt5")
-shader_parameter/outerRadius = 0.623
-shader_parameter/MainAlpha = 0.0
-
-[sub_resource type="Animation" id="Animation_07nl2"]
-resource_name = "hurt"
-length = 0.2
-loop_mode = 2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Hurt:material:shader_parameter/MainAlpha")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 0.1]
-}
-
-[sub_resource type="Animation" id="Animation_rc37e"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Hurt:material:shader_parameter/MainAlpha")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_02rm8"]
-_data = {
-"RESET": SubResource("Animation_rc37e"),
-"hurt": SubResource("Animation_07nl2")
-}
+shader_parameter/outerRadius = 1.5
+shader_parameter/MainAlpha = 1.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ha61v"]
 shader = ExtResource("35_jovq4")
@@ -707,12 +669,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Hurt"]
-libraries = {
-"": SubResource("AnimationLibrary_02rm8")
-}
-autoplay = "hurt"
 
 [node name="Hurt2" type="CanvasLayer" parent="."]
 visible = false
