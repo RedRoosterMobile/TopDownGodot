@@ -42,6 +42,7 @@ shader_parameter/color_b = Color(1, 1, 1, 1)
 shader_parameter/colors_affect_alpha = false
 shader_parameter/flash_amount = 1.0
 shader_parameter/flash_speed = 1.0
+shader_parameter/tint = 1.0
 shader_parameter/transparency = 1.0
 shader_parameter/intensity = 1.0
 shader_parameter/current_intensity = 0.0

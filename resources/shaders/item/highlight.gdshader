@@ -19,6 +19,7 @@ uniform float flash_amount:hint_range(0.0, 1.0, 0.1) = 1.0;
 
 // if flash_amount is true, flash_speed controls the speed of the animation between color_a and color_b
 uniform float flash_speed = 1.0;
+uniform float tint: hint_range(0.0, 1.0, 0.1) = 1.0;
 
 // transparency, like modulate
 uniform float transparency:hint_range(0.0, 1.0, 0.01) = 1.0;
@@ -64,6 +65,9 @@ void fragment() {
 	}
 
 	out_color.a *= transparency;
+
+	in_color.rgb *= tint;
+	out_color.rgb *= tint;
 
 	// finally, use mix to control intensity of the entire effect
 	COLOR = mix(in_color, out_color, intensity);
