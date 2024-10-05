@@ -237,18 +237,6 @@ func _physics_process(delta) -> void:
 			animated_sprite_2d.modulate.b -= 0.003
 			time_till_burnout -= delta
 	
-	#region legacy
-	return
-	# legacy code?
-	if player and player.position.distance_to(self.position) < visual_awareness_circle:
-		# todo: only walk if the path is clear (raycast the motion vector)
-		motion = (player.position - position) / randf_range(55, 85) * speed
-
-		slowly_turn_towards(get_angle_to(player.position))
-		if ray_cast_2d.is_colliding():
-			# player in plain sight?
-			if ray_cast_2d.get_collider() == player:
-				move_and_collide(motion)
 
 func slowly_turn_towards(target_angle, turn_speed = 0.02) -> void:
 	rotation = lerp_angle(rotation, rotation + target_angle, turn_speed)
@@ -314,13 +302,10 @@ func _on_area_2d_body_entered(body) -> void:
 				highlight()
 				animated_sprite_2d.play("die")
 		else:
-			#var tt: ShaderMaterial = animated_sprite_2d.material
-			#tt.set_shader_parameter("current_intensity",1.0)
 			was_hit = true
 			highlight()
 			get_tree().create_timer(0.2).timeout.connect(func():
 				was_hit = false
-				#tt.set_shader_parameter("current_intensity",0.0)
 				# turn around towards player..
 				# same as look_at()
 				var target_angle = get_angle_to(player.position)
@@ -405,15 +390,16 @@ func _on_anim_zombie_animation_finished() -> void:
 	anim_impact.pause()
 	blood_timer_enabled = false
 	velocity = Vector2.ZERO
-	#animated_sprite_2d.pause()
-	
+	animated_sprite_2d.pause()
 	animated_sprite_2d.material = null
 	# spawn footstep trigger at global_position
 	if not is_burning:
 		spawn_footstep_trigger()
 	else:
 		fire.visible = false
+	
 	player.draw_me(self)
+
 func spawn_footstep_trigger():
 	print("spawing")
 	# instantiate new trigger

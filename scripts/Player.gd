@@ -277,7 +277,7 @@ func fire():
 	# bullet_rigid_body.collision_mask = 1 | 4  # Ignore layer 1 (player), interact with other layers (e.g., enemies on layer 4)
 	
 	# Add the bullet instance to the scene tree
-	get_tree().get_root().call_deferred("add_child", bullet_instance)
+	get_tree().root.call_deferred("add_child", bullet_instance)
 	# bullet_particles.restart()
 	# bullet_particles.emitting = true
 	
@@ -289,12 +289,12 @@ func fire():
 	var shell_accuracy: float = randf_range(-bullet_accuracy * 10, bullet_accuracy * 10)
 	var direction_shell := Vector2(1, 0).rotated(rotation + shell_accuracy + deg_to_rad(90))
 	shell.linear_velocity = direction_shell * bullet_speed/2
-	get_tree().get_root().call_deferred("add_child", shell)
+	get_tree().root.call_deferred("add_child", shell)
 	
 	# Instance and add the particles
 	var bullet_particles_instance := bullet_particles_scene.instantiate()
 	bullet_particles_instance.position = bullet_rigid_body.position # Adjust the position if needed
-	get_tree().get_root().call_deferred("add_child", bullet_particles_instance)
+	get_tree().root.call_deferred("add_child", bullet_particles_instance)
 	sfx_shot.play()
 
 # https://youtu.be/HycyFNQfqI0?si=NJQaapwXdqKIyq7M&t=410
@@ -333,17 +333,16 @@ func _on_example_balloon_tree_exited() -> void:
 func draw_me(arg:Node2D):
 	arg.reparent(rt_node)
 	# Connect to rt_node's after_draw signal with a one-shot connection
-	get_tree().create_timer(1).timeout.connect(func():
-		if(arg):
-			arg.queue_free()
-	)
+	await get_tree().create_timer(1).timeout
+	if(arg != null):
+		arg.queue_free()
 
 # works for transparent stuff
 func draw_me_add(arg:Node2D):
 	rt_node.add_child(arg)
 	
 	get_tree().create_timer(0.1).timeout.connect(func():
-		if(arg):
+		if(arg != null):
 			arg.queue_free()
 	)
 
