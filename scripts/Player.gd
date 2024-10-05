@@ -65,6 +65,7 @@ func _ready():
 func picked_up(item: Enums.PickupItems, data = null):
 	if item == Enums.PickupItems.SANDWICH:
 		print("yum!", data)
+		show_dialog("food")
 	elif item == Enums.PickupItems.SHAKE:
 		print("slurp!")
 
@@ -258,7 +259,17 @@ func _physics_process(delta):
 		time_to_footprint -= 0.1
 	
 	time += delta
-	
+
+func show_dialog(identifier:String = "start") -> void:
+	var resource = load("res://dialogue/main.dialogue")
+	var scn:CanvasLayer = balloon_scene.instantiate()
+	get_tree().root.add_child(scn)
+	scn.process_mode = Node.PROCESS_MODE_ALWAYS
+	scn.start(resource, identifier)
+	scn.connect("tree_exited", func():
+		toggle_pause()
+	)
+	toggle_pause()
 
 # check https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html
 func toggle_pause():
