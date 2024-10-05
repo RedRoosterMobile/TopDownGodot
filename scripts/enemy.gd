@@ -57,6 +57,24 @@ var sound_files: Array[String] = [
 	"res://assets/sounds/sfx/zombie/11.wav",
 ]
 
+func highlight():
+	var tween = get_tree().create_tween()
+	var tt: ShaderMaterial = animated_sprite_2d.material as ShaderMaterial
+	
+	tween.tween_method(
+	  func(value): tt.set_shader_parameter("current_intensity", value),  
+	  0.0,  # Start value
+	  1.0,  # End value
+	  0.1   # Duration
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT);
+	tween.tween_method(
+	  func(value): tt.set_shader_parameter("current_intensity", value),  
+	  1.0,  # Start value
+	  0.0,  # End value
+	  0.1   # Duration
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT);
+	
+
 func _draw():
 	if not is_dead and debug_cirlces:
 		# Draw Noise Awareness Circle (Red)
@@ -87,6 +105,7 @@ func _ready():
 	randomize() # Ensure randomness each time the game runs
 	play_random_growl_sound()
 	start_random_timer()
+	animated_sprite_2d.material = animated_sprite_2d.material.duplicate()
 	animated_sprite_2d.play("walk")
 	ray_cast_2d.target_position.x = visual_awareness_circle
 	call_deferred("nav_setup")
@@ -95,7 +114,7 @@ func _ready():
 func nav_setup():
 	await get_tree().physics_frame
 	if target:
-		print("set up")
+		print("set up nav")
 		navigation_agent_2d.target_position = player.global_position
 
 const blood_spawn_interval = 0.01  # Interval in seconds
@@ -115,7 +134,7 @@ func _physics_process(delta) -> void:
 			#blood_path.rotation_degrees = randi_range(1,4)*90
 			blood_path.rotation = blood_path.rotation + get_angle_to(player.global_position)
 			blood_path.scale = Vector2(4,4)
-			blood_path.modulate.a = randf_range(0.5, 1)
+			blood_path.modulate.a = randf_range(0.8, 1)
 			blood_path.modulate.h = randf_range(0.5, 0.9)
 			
 			player.draw_me_add(blood_path)
@@ -287,15 +306,21 @@ func _on_area_2d_body_entered(body) -> void:
 		health -= 1
 		if health <= 0:
 			is_dead = true
+			
 			timer.stop()
 			fire.visible = false
 			fire.emitting = false
 			if not was_dead:
+				highlight()
 				animated_sprite_2d.play("die")
 		else:
+			#var tt: ShaderMaterial = animated_sprite_2d.material
+			#tt.set_shader_parameter("current_intensity",1.0)
 			was_hit = true
+			highlight()
 			get_tree().create_timer(0.2).timeout.connect(func():
 				was_hit = false
+				#tt.set_shader_parameter("current_intensity",0.0)
 				# turn around towards player..
 				# same as look_at()
 				var target_angle = get_angle_to(player.position)
@@ -344,14 +369,13 @@ func _on_area_2d_body_entered(body) -> void:
 			fire.emitting = false
 			timer.stop()
 			if not was_dead:
+				highlight()
 				animated_sprite_2d.pause()
-				# E 0:00:09:0063   enemy.gd:345 @ _on_area_2d_body_entered(): Error calling from signal 'animation_changed' to callable: 'CharacterBody2D(enemy.gd)::_on_anim_zombie_animation_changed': Method expected 1 arguments, but called with 0.
-	#  <C++ Source>   core/object/object.cpp:1200 @ emit_signalp()
-	#  <Stack Trace>  enemy.gd:345 @ _on_area_2d_body_entered()
 				animated_sprite_2d.call_deferred("play","die")
 				# animated_sprite_2d.play("die")
 		else:
 			was_hit = true
+			highlight()
 			get_tree().create_timer(0.2).timeout.connect(func():
 				was_hit = false
 				slowly_turn_towards(randf_range(0,TAU),0.2)
@@ -383,15 +407,12 @@ func _on_anim_zombie_animation_finished() -> void:
 	velocity = Vector2.ZERO
 	#animated_sprite_2d.pause()
 	
-	# don't do it for ALL, just for this one. make it unique
-	animated_sprite_2d.material = animated_sprite_2d.material.duplicate()
-	# make sure we don't do light only for drawing
-	animated_sprite_2d.material.light_mode = CanvasItemMaterial.LIGHT_MODE_NORMAL
-	
+	animated_sprite_2d.material = null
 	# spawn footstep trigger at global_position
 	if not is_burning:
 		spawn_footstep_trigger()
-	
+	else:
+		fire.visible = false
 	player.draw_me(self)
 func spawn_footstep_trigger():
 	print("spawing")
@@ -434,7 +455,3 @@ func line2dexample() -> void:
 	line.default_color = Color(1, 0, 0)  # Red color
 	
 	# add_child(line)
-
-func _on_anim_zombie_animation_changed(arg) -> void:
-	print("change animation ",arg)
-	pass # Replace with function body.
