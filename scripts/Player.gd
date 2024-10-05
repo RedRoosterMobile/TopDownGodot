@@ -22,8 +22,8 @@ var time_to_footprint: float = FOOTPRINT_COOLDOWN
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
 @onready var grenade_scene = preload("res://scenes/grenade.tscn")
 @onready var shell_scene = preload("res://scenes/shell.tscn")
-#@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
-@onready var example_balloon: CanvasLayer = $ExampleBalloon
+@onready var balloon_scene = preload("res://dialogue/balloon.tscn")
+#@onready var example_balloon: CanvasLayer = $ExampleBalloon
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var cursor: Sprite2D = $Cursor
 @onready var flame_thrower: Node2D = $FlameThrower
@@ -53,13 +53,20 @@ func _ready():
 	z_index = 1
 	flame_thrower.is_active = false
 	#example_balloon = balloon_scene.instantiate()
-	print(example_balloon)
+	#print(example_balloon)
 	
 	Messenger.connect("screenshake", screenshake)
 	Messenger.connect("bloody_footsteps", soak_shoes_in_blood)
 	Messenger.connect("draw_node", draw_me)
+	Messenger.connect("pickup", picked_up)
 	original_position = camera_2d.position
 	rt_node = subviewport.get_node("Node2D")
+
+func picked_up(item: Enums.PickupItems, data = null):
+	if item == Enums.PickupItems.SANDWICH:
+		print("yum!", data)
+	elif item == Enums.PickupItems.SHAKE:
+		print("slurp!")
 
 func screenshake(strength:float = 1):
 	# Stackable intensity
@@ -158,13 +165,15 @@ func _physics_process(delta):
 		grenade.set_direction(direction)
 		get_tree().get_root().call_deferred("add_child", grenade)
 		
-		# particle effect
-		# somehow make it physics active
-		return
-		pass
-		if not dialogue_active:
+		if not dialogue_active and false:
 			var resource = load("res://dialogue/main.dialogue")
-			example_balloon.start(resource, "start")
+			var scn:CanvasLayer = balloon_scene.instantiate()
+			get_tree().root.add_child(scn)
+			scn.process_mode = Node.PROCESS_MODE_ALWAYS
+			scn.start(resource, "start")
+			scn.connect("tree_exited", func():
+				toggle_pause()
+			)
 			dialogue_active = true
 			toggle_pause()
 

@@ -7,5 +7,9 @@ extends Area2D
 
 func _on_body_entered(body: Node2D) -> void:
 	print("picked up ", Enums.PickupItems.find_key(item_type))
-	Messenger.pickup.emit(item_type)
+	const data = {
+		Food = "Food",
+		Food2 = "Food2"
+	}
+	Messenger.pickup.emit(item_type,data)
 	queue_free()

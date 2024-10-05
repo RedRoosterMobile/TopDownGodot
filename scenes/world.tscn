@@ -594,7 +594,6 @@ modulate = Color(1, 1, 1, 0)
 occluder = SubResource("OccluderPolygon2D_6wv0r")
 
 [node name="FlameThrower" parent="Player" instance=ExtResource("30_7x1mh")]
-visible = false
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
 light_mask = 2
