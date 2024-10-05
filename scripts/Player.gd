@@ -334,7 +334,7 @@ func draw_me(arg:Node2D):
 	arg.reparent(rt_node)
 	# Connect to rt_node's after_draw signal with a one-shot connection
 	await get_tree().create_timer(1).timeout
-	if(arg != null):
+	if arg != null:
 		arg.queue_free()
 
 # works for transparent stuff
@@ -342,7 +342,7 @@ func draw_me_add(arg:Node2D):
 	rt_node.add_child(arg)
 	
 	get_tree().create_timer(0.1).timeout.connect(func():
-		if(arg != null):
+		if arg != null:
 			arg.queue_free()
 	)
 
