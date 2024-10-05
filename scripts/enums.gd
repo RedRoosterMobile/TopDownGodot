@@ -18,7 +18,9 @@ enum PickupItems {
 	BATTERY,
 	KEYCARD,
 	VHS,
-	AUDIO_LOG
+	# story
+	AUDIO_LOG,
+	MESSAGE # param: the message key e.g. "start"
 }
 
 # nyi

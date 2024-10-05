@@ -68,6 +68,8 @@ func picked_up(item: Enums.PickupItems, data = null):
 		show_dialog("food")
 	elif item == Enums.PickupItems.SHAKE:
 		print("slurp!")
+	elif item == Enums.PickupItems.MESSAGE:
+		show_dialog(data)
 
 func screenshake(strength:float = 1):
 	# Stackable intensity

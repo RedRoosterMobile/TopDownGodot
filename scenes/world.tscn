@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=82 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -40,6 +40,7 @@
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/hurt.gdshader" id="35_jovq4"]
 [ext_resource type="PackedScene" uid="uid://ghyicpka64u0" path="res://scenes/pickup_item.tscn" id="39_vrq0c"]
 [ext_resource type="Texture2D" uid="uid://cxd5v581p2t3n" path="res://assets/sprites/sandwich-export.png" id="40_m5d80"]
+[ext_resource type="Texture2D" uid="uid://b56x2nqhh8vo1" path="res://assets/sprites/pink.png" id="41_m0cx1"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_0d3ph"]
 
@@ -719,6 +720,16 @@ collision_mask = 2
 [node name="DemoItemSandwich" type="Sprite2D" parent="PickupItem"]
 scale = Vector2(2, 2)
 texture = ExtResource("40_m5d80")
+
+[node name="PickupItem2" parent="." instance=ExtResource("39_vrq0c")]
+position = Vector2(1509, 1671)
+collision_mask = 2
+item_type = 12
+data = "test"
+
+[node name="DemoItemSandwich" type="Sprite2D" parent="PickupItem2"]
+scale = Vector2(10, 10)
+texture = ExtResource("41_m0cx1")
 
 [connection signal="tree_exited" from="Player/ExampleBalloon" to="Player" method="_on_example_balloon_tree_exited"]
 [connection signal="body_entered" from="Player/Area2D" to="Player" method="_on_area_2d_body_entered"]
