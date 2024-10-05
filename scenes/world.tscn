@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=81 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_c88fv"]
@@ -38,6 +38,8 @@
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/vignette.gdshader" id="34_0hwt5"]
 [ext_resource type="Texture2D" uid="uid://cdfgaiub122m4" path="res://assets/sprites/sprSmoke_0.png" id="35_gse2c"]
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/hurt.gdshader" id="35_jovq4"]
+[ext_resource type="PackedScene" uid="uid://ghyicpka64u0" path="res://scenes/pickup_item.tscn" id="39_vrq0c"]
+[ext_resource type="Texture2D" uid="uid://cxd5v581p2t3n" path="res://assets/sprites/sandwich-export.png" id="40_m5d80"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_0d3ph"]
 
@@ -592,6 +594,7 @@ modulate = Color(1, 1, 1, 0)
 occluder = SubResource("OccluderPolygon2D_6wv0r")
 
 [node name="FlameThrower" parent="Player" instance=ExtResource("30_7x1mh")]
+visible = false
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
 light_mask = 2
@@ -709,6 +712,14 @@ width = 50.0
 width_curve = SubResource("Curve_u2np6")
 texture = ExtResource("35_gse2c")
 texture_mode = 1
+
+[node name="PickupItem" parent="." instance=ExtResource("39_vrq0c")]
+position = Vector2(1214, 1514)
+collision_mask = 2
+
+[node name="DemoItemSandwich" type="Sprite2D" parent="PickupItem"]
+scale = Vector2(2, 2)
+texture = ExtResource("40_m5d80")
 
 [connection signal="tree_exited" from="Player/ExampleBalloon" to="Player" method="_on_example_balloon_tree_exited"]
 [connection signal="body_entered" from="Player/Area2D" to="Player" method="_on_area_2d_body_entered"]
