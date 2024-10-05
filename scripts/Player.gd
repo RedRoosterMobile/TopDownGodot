@@ -301,7 +301,9 @@ func fire():
 func kill():
 	print("player died!")
 	if get_tree().current_scene:
-		get_tree().reload_current_scene()
+		# if health below some threshold
+		$"../Hurt2".visible = true
+		#get_tree().reload_current_scene()
 
 func _on_area_2d_body_entered(body):
 	if body.is_in_group("shrapnel"):

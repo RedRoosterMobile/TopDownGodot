@@ -183,9 +183,12 @@ func handle_target_awareness(delta: float) -> void:
 	elif is_in_noise_awareness_zone:
 		handle_noise_awareness()
 	else:
-		enemy_state = Enums.EnemyState.IDLE
-		anim_zombie.play("walk")
-		anim_zombie.pause()
+		if target:
+			handle_noise_awareness()
+		else:
+			enemy_state = Enums.EnemyState.IDLE
+			anim_zombie.play("walk")
+			anim_zombie.pause()
 
 func handle_visual_awareness() -> void:
 	enemy_state = Enums.EnemyState.VISUAL
@@ -297,6 +300,7 @@ func _on_area_2d_body_entered(body) -> void:
 
 
 		health -= 1.0
+		target = player
 		if health <= 0.0:
 			is_dead = true
 			
