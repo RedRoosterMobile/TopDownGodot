@@ -449,6 +449,14 @@ data = "test"
 scale = Vector2(10, 10)
 texture = ExtResource("41_m0cx1")
 
+[node name="Chest" parent="Level1" instance=ExtResource("19_et3bi")]
+position = Vector2(1363, 1281)
+item = 3
+
+[node name="Chest2" parent="Level1" instance=ExtResource("19_et3bi")]
+position = Vector2(1998, 1499)
+item = 2
+
 [node name="RenderTexture" type="Sprite2D" parent="."]
 texture_filter = 1
 texture_repeat = 1
@@ -538,11 +546,3 @@ color = Color(0.272047, 0.272047, 0.272047, 1)
 stream = ExtResource("9_26m4r")
 autoplay = true
 bus = &"MUSIC"
-
-[node name="Chest" parent="." instance=ExtResource("19_et3bi")]
-position = Vector2(1363, 1281)
-item = 3
-
-[node name="Chest2" parent="." instance=ExtResource("19_et3bi")]
-position = Vector2(1998, 1499)
-item = 2
