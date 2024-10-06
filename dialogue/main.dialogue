@@ -9,7 +9,7 @@ Meet me at the lab – if you make it.
 => END
 
 ~ food
-Yum 😋
+Yum [color="#ff0000"]Text[/color] 😋
 => END
 # https://github.com/nathanhoad/godot_dialogue_manager/blob/main/docs/Writing_Dialogue.md
 ~ test
@@ -22,14 +22,14 @@ Jerry: [#happy, #surprised] So Long and good luck - Jerry
 => END
 
 ~ flamethrower
-You found a flamethrower. Let's BBQ those bitches!
-	Press Right mouse button to trigger it.
+You found a [color="#ff0000"]flamethrower[/color]. Let's BBQ those bitches!
+	Press [color="#ff0000"]Right mouse button[/color] to trigger it.
 	You still got some fuel left.
 => END
 
 ~ grenade
-Boom! You found a bunch of grenades.
-	Press E-key to throw one and watch it bounce for 3 seconds.
+Boom! You found a bunch of [color="#ff0000"]grenades[/color].
+	Press [color="#ff0000"]E-key[/color] to throw one and watch it bounce for [color="#ff0000"]3 seconds[/color].
 	Don't forget to take cover!
 	Happy crowd control!
 => END
