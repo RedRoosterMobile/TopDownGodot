@@ -22,6 +22,7 @@ var time_to_footprint: float = FOOTPRINT_COOLDOWN
 
 @onready var bullet_particles_scene = preload("res://scenes/bullet_particles_2d.tscn")
 @onready var grenade_scene = preload("res://scenes/grenade.tscn")
+@onready var rock_scene = preload("res://scenes/rock.tscn")
 @onready var shell_scene = preload("res://scenes/shell.tscn")
 @onready var balloon_scene = preload("res://dialogue/balloon.tscn")
 #@onready var example_balloon: CanvasLayer = $ExampleBalloon
@@ -164,7 +165,13 @@ func _physics_process(delta):
 		
 	flame_thrower.is_active = Input.is_action_pressed("flamethrower")
 	
-	# Interact with dialogue
+	if Input.is_action_just_pressed("rock"):
+		var rock = rock_scene.instantiate()
+		var direction := Vector2(1, 0).rotated(rotation)
+		rock.position = global_position
+		rock.set_direction(direction)
+		get_tree().get_root().call_deferred("add_child", rock)
+	
 	if Input.is_action_just_pressed("interact"):
 		print("grenade")
 		var grenade = grenade_scene.instantiate()

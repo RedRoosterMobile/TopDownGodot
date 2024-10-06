@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://d1giscb67rm44"]
+
+[ext_resource type="Texture2D" uid="uid://bunm758cepx0e" path="res://assets/sprites/Rocks/Rock 1.png" id="1_rkkj6"]
+[ext_resource type="Script" path="res://scripts/rock.gd" id="1_vjnx7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1kggv"]
+
+[node name="Rock" type="Node2D"]
+script = ExtResource("1_vjnx7")
+
+[node name="Rock" type="Sprite2D" parent="."]
+scale = Vector2(4, 4)
+texture = ExtResource("1_rkkj6")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+collision_mask = 28
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(3, 7)
+shape = SubResource("CircleShape2D_1kggv")
