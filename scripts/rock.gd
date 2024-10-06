@@ -28,7 +28,6 @@ func bounce_checker():
 	)
 	previous_velocity = current_velocity
 
-
 func apply_initial_force() -> void:
 	# same same
 	#rigid_body_2d.linear_velocity = initial_direction * initial_force

@@ -15,9 +15,9 @@ Yum [color="#ff0000"]Text[/color] 😋
 ~ test
 Unknown: We're so screwed.
 	The experiment went south fast! They broke out and are all over the place now!
-Unknown: They can hear us. So this might be a way to distract them.
-Unknown: I want to bug out of here asap!
-Jerry: [#happy, #surprised] So Long and good luck - Jerry
+Unknown: They can hear us.
+	[color="#ff0000"]Throw a rock with the R-key[/color] to distract them.
+Jerry: [#happy, #surprised] Over and out! - Jerry
 # do Messenger.pickup.emit(Enums.PickupItems.MESSAGE,"food")
 => END
 
