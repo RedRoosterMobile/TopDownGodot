@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=52 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Texture2D" uid="uid://dhpd8xll4o21" path="res://assets/sprites/player.png" id="3_d2r83"]
@@ -11,11 +11,9 @@
 [ext_resource type="PackedScene" uid="uid://c7i1uyik85k7t" path="res://scenes/player.tscn" id="8_wfe7k"]
 [ext_resource type="AudioStream" uid="uid://vm2xo6m2jejv" path="res://assets/sounds/music/music.ogg" id="9_26m4r"]
 [ext_resource type="Texture2D" uid="uid://d3m0nt0hlqjwg" path="res://assets/sprites/tiles/CosmicLilac_Tiles_.png" id="24_ihbf3"]
-[ext_resource type="PackedScene" uid="uid://x6ps2oxfbtva" path="res://scenes/actionable.tscn" id="27_5r2v5"]
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/shockwave.gdshader" id="31_jt1d6"]
 [ext_resource type="Script" path="res://scripts/shockwave.gd" id="32_er0l3"]
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/vignette.gdshader" id="34_0hwt5"]
-[ext_resource type="Texture2D" uid="uid://cdfgaiub122m4" path="res://assets/sprites/sprSmoke_0.png" id="35_gse2c"]
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/hurt.gdshader" id="35_jovq4"]
 [ext_resource type="PackedScene" uid="uid://ghyicpka64u0" path="res://scenes/pickup_item.tscn" id="39_vrq0c"]
 [ext_resource type="Texture2D" uid="uid://cxd5v581p2t3n" path="res://assets/sprites/sandwich-export.png" id="40_m5d80"]
@@ -365,10 +363,6 @@ _data = {
 "hurt": SubResource("Animation_qyqqt")
 }
 
-[sub_resource type="Curve" id="Curve_u2np6"]
-_data = [Vector2(0, 0.619759), 0.0, 6.13217, 0, 0, Vector2(0.360656, 0.647502), 0.0, 2.36832, 0, 0, Vector2(0.783905, 0.882501), 0.0, 0.0, 0, 0]
-point_count = 3
-
 [node name="world" type="Node2D"]
 
 [node name="Tiles" type="Node2D" parent="."]
@@ -422,6 +416,7 @@ visible = false
 texture = ExtResource("7_6504t")
 
 [node name="Player" parent="." node_paths=PackedStringArray("subviewport") instance=ExtResource("8_wfe7k")]
+position = Vector2(1362, 1496)
 subviewport = NodePath("../SubViewport")
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
@@ -517,21 +512,10 @@ color = Color(0.264753, 0.264753, 0.264753, 1)
 visible = false
 color = Color(0.272047, 0.272047, 0.272047, 1)
 
-[node name="Actionable" parent="." instance=ExtResource("27_5r2v5")]
-visible = false
-
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("9_26m4r")
 autoplay = true
 bus = &"MUSIC"
-
-[node name="Line2D" type="Line2D" parent="."]
-visible = false
-points = PackedVector2Array(0, 0, 2545, 635)
-width = 50.0
-width_curve = SubResource("Curve_u2np6")
-texture = ExtResource("35_gse2c")
-texture_mode = 1
 
 [node name="PickupItem" parent="." instance=ExtResource("39_vrq0c")]
 position = Vector2(1214, 1514)

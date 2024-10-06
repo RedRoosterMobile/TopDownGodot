@@ -101,13 +101,11 @@ fill_to = Vector2(0.869658, 0.17735)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_6wv0r"]
 polygon = PackedVector2Array(5, -223, 5, -95, -43, -79, -75, -39, -83, 1, -67, 49, -27, 89, 13, 97, 117, 513, -349, 370, -340, -366, 53, -551)
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("subviewport") groups=["player"]]
-position = Vector2(1355, 1519)
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 collision_layer = 2
 collision_mask = 28
 floor_block_on_wall = false
 script = ExtResource("1_o76pn")
-subviewport = NodePath("")
 
 [node name="ExampleBalloon" parent="." instance=ExtResource("2_gep54")]
 process_mode = 3
