@@ -162,10 +162,15 @@ func handle_attached_state(delta: float) -> void:
 	# handle this in the player, 
 	# pass the RID 
 	var distance = player.position.distance_to(position)
-	if(distance>100):
+	if distance > 100:
 		enemy_state = Enums.EnemyState.HIT
+		# without enemy
+		collision_mask =  2 |4 |5 |6 | 7
+		target = null
 	else:
-		velocity = velocity.move_toward(position.direction_to(player.position) * distance, 10000 * delta)
+		# with enemy
+		collision_mask =  2 |3 |4 |5 |6 | 7
+		velocity = velocity.move_toward(position.direction_to(player.position) * distance*2, 10* delta)
 		move_and_slide()
 
 func handle_awareness(delta: float) -> void:
