@@ -9,6 +9,7 @@ var burnout_time: float = 3.0
 var time_till_burnout: float = burnout_time
 var speed: float = 5.0
 var rt_node: Node2D
+var target_position: Vector2 = Vector2.ZERO
 
 var fov_angle: float = 90.0 # Field of view angle in degrees
 
@@ -112,6 +113,8 @@ func _ready():
 	print(self.get_rid())
 	# line2dexample()
 	
+	Messenger.connect("raise_attention", raise_attention)
+
 func nav_setup():
 	await get_tree().physics_frame
 	if target:
@@ -131,9 +134,22 @@ func _physics_process(delta) -> void:
 	elif enemy_state == Enums.EnemyState.ATTACHED:
 		handle_attached_state(delta)
 	else:
+		handle_attention()
 		handle_awareness(delta)
 		handle_burning(delta)
+func handle_attention():
+	if target_position!=Vector2.ZERO and target == null:
+		
+		var angle: float = get_angle_to(target_position)
+		#print(angle)
+		#print(pos.direction_to(position).angle())
+		slowly_turn_towards(angle, randf_range(0.02,0.2))
 
+func raise_attention(pos:Vector2):
+	if position.distance_to(pos) <= noise_awareness_circle and target == null:
+		print("raised at ", pos)
+		var angle: float = get_angle_to(pos)
+		target_position = pos
 func handle_death(delta: float) -> void:
 	if blood_spawn_timer <= 0 and blood_timer_enabled:
 		spawn_blood_path()
@@ -282,12 +298,15 @@ func aquire_target():
 	if (not target):
 		if is_in_visual_awareness_zone:
 			#enemy_state = EnemyState.VISUAL
+			target_position = Vector2.ZERO
 			target = player
 		elif is_in_noise_awareness_zone:
 			#enemy_state = EnemyState.NOISE
+			target_position = Vector2.ZERO
 			target = player
 		elif is_in_jump_zone:
 			#enemy_state = EnemyState.JUMP
+			target_position = Vector2.ZERO
 			target = player
 		else:
 			#enemy_state = EnemyState.IDLE
@@ -308,7 +327,7 @@ func _on_area_2d_body_entered(body) -> void:
 		# body.get_parent().queue_free()
 		var bullet_global_position: Vector2 = body.global_position
 		body.queue_free()
-
+		Messenger.raise_attention.emit(bullet_global_position)
 
 		health -= 1.0
 		target = player
@@ -390,7 +409,6 @@ func _on_area_2d_body_entered(body) -> void:
 		# Apply impact force
 		var impact_force = randf_range(150 * 2, 190 * 2)
 		velocity += impact_direction * impact_force * shrapnel_force
-		print("enemy hit by a shrapnel")
 
 func _on_timer_timeout() -> void:
 	play_random_growl_sound()

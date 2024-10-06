@@ -23,11 +23,22 @@ func _ready() -> void:
 	adjust_physics_properties()
 	start_explosion_timer()
 	$AnimationPlayer.play("scale")
-	
+var previous_rotation = 0
+var previous_position = Vector2.ZERO
 func _physics_process(delta: float) -> void:
 	if not has_exploded:
 		grenade.position = rigid_body_2d.position
 		grenade.rotation = rigid_body_2d.rotation
+		bounce_checker()
+		
+func bounce_checker():
+	var current_velocity:Vector2 = rigid_body_2d.linear_velocity.normalized()
+	var diff:Vector2 = current_velocity-previous_position
+	if diff.length_squared() > 0.7:
+		print("bounce")
+		Messenger.raise_attention.emit(grenade.global_position)
+	# print(current_velocity-previous_position)
+	previous_position = current_velocity
 
 func apply_initial_force() -> void:
 	# same same
@@ -58,7 +69,7 @@ func _on_timer_timeout() -> void:
 	# queue_free()
 func explode() -> void:
 	print("boom")
-	
+	Messenger.raise_attention.emit(grenade.global_position)
 	#region shockwave
 	# magic sauce: screen coorinates (aka on my screen in pixels)
 	var player_pos = grenade.get_global_transform_with_canvas()
@@ -108,3 +119,10 @@ func explode() -> void:
 
 func _on_explosion_animation_finished() -> void:
 	queue_free()
+
+# instead check if direction has changed and then fire it
+# this catches ALL cases where it bounces somewhere!
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.is_in_group("wall"):
+		print("##################### ",body)
+		Messenger.raise_attention.emit(grenade.global_position)

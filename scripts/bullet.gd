@@ -18,7 +18,7 @@ func handle_impact():
 	impact_anim.stop()
 	impact_anim.play()
 	impact_anim.visible = true
-	
+	Messenger.raise_attention.emit(bullet_rigid_body_2d.global_position)
 	get_tree().create_timer(0.25).timeout.connect(func():
 		impact_anim.queue_free()
 	)

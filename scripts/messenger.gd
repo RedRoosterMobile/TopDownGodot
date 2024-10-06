@@ -8,5 +8,7 @@ signal bloody_footsteps()
 signal draw_node(node: Node2D)
 signal pickup(item: Enums.PickupItems)
 
+signal raise_attention(pos:Vector2)
+
 # unused
 signal explosion

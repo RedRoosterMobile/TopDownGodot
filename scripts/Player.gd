@@ -85,7 +85,6 @@ func screenshake(strength:float = 1):
 	_start_shaking(strength)
 
 func soak_shoes_in_blood():
-	print("shoes fully soaking with blood")
 	footprint_alpha = 1
 	
 func draw_footprints(delta):

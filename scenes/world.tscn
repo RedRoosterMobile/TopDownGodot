@@ -380,6 +380,12 @@ scale = Vector2(10, 10)
 tile_map_data = PackedByteArray("AAD/////AAAAAAAAAAAPAAkAAAAKAAIAAAAOAAkAAAAKAAIAAAANAAkAAAAKAAIAAAANAAgAAAAKAAEAAAAOAAgAAAAKAAEAAAAPAAgAAAAKAAEAAAAHAAAAAAAGAAAAAAALAAgAAAAKAAMAAAACAAgAAAAAAAUAAAAAAAgAAAACAAEAAAAAAAcAAAACAAEAAAABAAgAAAACAAEAAAADAAgAAAACAAEAAAAEAAgAAAACAAEAAAADAAcAAAACAAEAAAABAAcAAAACAAEAAAACAAcAAAACAAEAAAAEAAcAAAACAAEAAAADAAYAAAACAAAAAAACAAYAAAACAAAAAAABAAYAAAACAAAAAAAAAAYAAAACAAAAAAAEAAYAAAACAAAAAAD//wYAAAAAAAAAAAD//wcAAAAAAAEAAAD//wgAAAAAAAEAAAAFAAYAAAACAAAAAAAGAAYAAAACAAAAAAAHAAYAAAAEAAEAAAAHAAcAAAACAAEAAAAGAAcAAAACAAEAAAAFAAcAAAACAAEAAAAHAAgAAAACAAEAAAAGAAgAAAACAAEAAAAFAAgAAAACAAEAAAA=")
 tile_set = SubResource("TileSet_3udj4")
 
+[node name="RenderTexture" type="Sprite2D" parent="Level1"]
+texture_filter = 1
+texture_repeat = 1
+texture = SubResource("ViewportTexture_wdujj")
+offset = Vector2(1440, 1440)
+
 [node name="LevelLights" type="Node2D" parent="Level1"]
 
 [node name="BreederLight" type="PointLight2D" parent="Level1/LevelLights"]
@@ -456,12 +462,6 @@ item = 3
 [node name="Chest2" parent="Level1" instance=ExtResource("19_et3bi")]
 position = Vector2(1998, 1499)
 item = 2
-
-[node name="RenderTexture" type="Sprite2D" parent="."]
-texture_filter = 1
-texture_repeat = 1
-texture = SubResource("ViewportTexture_wdujj")
-offset = Vector2(1440, 1440)
 
 [node name="SubViewport" type="SubViewport" parent="."]
 disable_3d = true
