@@ -20,3 +20,9 @@ Unknown: I want to bug out of here asap!
 Jerry: [#happy, #surprised] So Long and good luck - Jerry
 # do Messenger.pickup.emit(Enums.PickupItems.MESSAGE,"food")
 => END
+
+~ flamethrower
+You found a flamethrower. Set those beasts on fire, slowing then down,
+	Press Right mouse button to trigger it.
+	You still got some fuel left. 
+=> END
