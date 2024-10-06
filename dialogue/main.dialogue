@@ -22,7 +22,14 @@ Jerry: [#happy, #surprised] So Long and good luck - Jerry
 => END
 
 ~ flamethrower
-You found a flamethrower. Set those beasts on fire, slowing then down,
+You found a flamethrower. Let's BBQ those bitches!
 	Press Right mouse button to trigger it.
-	You still got some fuel left. 
+	You still got some fuel left.
+=> END
+
+~ grenade
+Boom! You found a bunch of grenades.
+	Press E-key to throw one and watch it bounce for 3 seconds.
+	Don't forget to take cover!
+	Happy crowd control!
 => END

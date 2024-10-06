@@ -541,3 +541,8 @@ bus = &"MUSIC"
 
 [node name="Chest" parent="." instance=ExtResource("19_et3bi")]
 position = Vector2(1363, 1281)
+item = 3
+
+[node name="Chest2" parent="." instance=ExtResource("19_et3bi")]
+position = Vector2(1998, 1499)
+item = 2

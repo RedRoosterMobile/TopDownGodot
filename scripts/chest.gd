@@ -1,5 +1,7 @@
 extends Node2D
 
+@export var item:Enums.PickupItems= Enums.PickupItems.SANDWICH
+
 @onready var closed: Sprite2D = $closed
 @onready var opened: Sprite2D = $opened
 @onready var trigger: Area2D = $trigger
@@ -17,7 +19,7 @@ func _process(delta: float) -> void:
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	opened.visible = true
 	closed.visible = false
-	Messenger.pickup.emit(Enums.PickupItems.FLAMETHROWER)
+	Messenger.pickup.emit(item)
 
 func _on_area_2d_body_exited(body: Node2D) -> void:
 	#if not is_empty:
