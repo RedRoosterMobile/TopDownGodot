@@ -37,8 +37,8 @@ func apply_initial_force() -> void:
 func adjust_physics_properties() -> void:
 	# Create and assign PhysicsMaterial
 	var physics_material = PhysicsMaterial.new()
-	physics_material.bounce = 0.9  # Increase bounce
-	physics_material.friction = 1.0  # Decrease friction
+	physics_material.bounce = 0.3  # Increase bounce
+	physics_material.friction = 1  # Decrease friction
 	rigid_body_2d.physics_material_override = physics_material
 
 	# Optional: Adjust mass and damping
