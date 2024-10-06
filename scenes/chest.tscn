@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://cjbh77s6nqsrb"]
+
+[ext_resource type="Texture2D" uid="uid://cjmup637k878u" path="res://assets/sprites/items/Chest Closed.png" id="1_84ht1"]
+[ext_resource type="Script" path="res://scripts/chest.gd" id="1_ima4w"]
+[ext_resource type="Texture2D" uid="uid://b6j2intcrsq3l" path="res://assets/sprites/items/Chest Opened.png" id="2_k3c75"]
+[ext_resource type="Shader" path="res://resources/shaders/item/outline.gdshader" id="2_myp8l"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5pwc1"]
+shader = ExtResource("2_myp8l")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/width = 0.0
+shader_parameter/pattern = 1
+shader_parameter/inside = false
+shader_parameter/add_margins = true
+shader_parameter/number_of_images = Vector2(1, 1)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_em2ty"]
+
+[node name="Chest" type="Node2D"]
+scale = Vector2(2, 2)
+script = ExtResource("1_ima4w")
+
+[node name="closed" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_5pwc1")
+scale = Vector2(4, 4)
+texture = ExtResource("1_84ht1")
+
+[node name="opened" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(4, 4)
+texture = ExtResource("2_k3c75")
+
+[node name="trigger" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="trigger"]
+scale = Vector2(5, 5)
+shape = SubResource("CircleShape2D_em2ty")
+
+[connection signal="body_entered" from="trigger" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="trigger" to="." method="_on_area_2d_body_exited"]

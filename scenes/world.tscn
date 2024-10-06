@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=4 uid="uid://c4kbg6yjncqfm"]
+[gd_scene load_steps=53 format=4 uid="uid://c4kbg6yjncqfm"]
 
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/crt.gdshader" id="1_mwh1s"]
 [ext_resource type="Texture2D" uid="uid://dhpd8xll4o21" path="res://assets/sprites/player.png" id="3_d2r83"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dhy3uu6fhxt2j" path="res://assets/sprites/blood/tile_blood_32_0.png" id="7_6504t"]
 [ext_resource type="PackedScene" uid="uid://c7i1uyik85k7t" path="res://scenes/player.tscn" id="8_wfe7k"]
 [ext_resource type="AudioStream" uid="uid://vm2xo6m2jejv" path="res://assets/sounds/music/music.ogg" id="9_26m4r"]
+[ext_resource type="PackedScene" uid="uid://cjbh77s6nqsrb" path="res://scenes/chest.tscn" id="19_et3bi"]
 [ext_resource type="Texture2D" uid="uid://d3m0nt0hlqjwg" path="res://assets/sprites/tiles/CosmicLilac_Tiles_.png" id="24_ihbf3"]
 [ext_resource type="Shader" path="res://resources/shaders/postfx/canvas_item/shockwave.gdshader" id="31_jt1d6"]
 [ext_resource type="Script" path="res://scripts/shockwave.gd" id="32_er0l3"]
@@ -537,3 +538,6 @@ color = Color(0.272047, 0.272047, 0.272047, 1)
 stream = ExtResource("9_26m4r")
 autoplay = true
 bus = &"MUSIC"
+
+[node name="Chest" parent="." instance=ExtResource("19_et3bi")]
+position = Vector2(1363, 1281)
