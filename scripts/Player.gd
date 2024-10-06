@@ -175,6 +175,7 @@ func _physics_process(delta):
 			scn.process_mode = Node.PROCESS_MODE_ALWAYS
 			scn.start(resource, "start")
 			scn.connect("tree_exited", func():
+				# await get_tree().create_timer(1).timeout
 				toggle_pause()
 			)
 			dialogue_active = true
@@ -256,7 +257,7 @@ func _physics_process(delta):
 	if time_to_footprint <= 0 and get_real_velocity().length_squared() > 0:
 		draw_footprints(delta)
 		time_to_footprint = FOOTPRINT_COOLDOWN
-		footprint_alpha -= 0.1
+		footprint_alpha -= 0.075
 	else:
 		time_to_footprint -= 0.1
 	
@@ -269,6 +270,7 @@ func show_dialog(identifier:String = "start") -> void:
 	scn.process_mode = Node.PROCESS_MODE_ALWAYS
 	scn.start(resource, identifier)
 	scn.connect("tree_exited", func():
+		await get_tree().create_timer(0.1).timeout
 		toggle_pause()
 	)
 	toggle_pause()
@@ -334,14 +336,14 @@ func _on_area_2d_body_entered(body):
 	if body.is_in_group("enemy"):
 		var enemy = body as Enemy
 		if not enemy.is_dead and enemy.enemy_state == Enums.EnemyState.JUMP:
-			#enemy.enemy_state = Enums.EnemyState.ATTACHED
-			#attached_enemies.push_back(enemy)
-			#print(attached_enemies.size())
+			enemy.enemy_state = Enums.EnemyState.ATTACHED
+			attached_enemies.push_back(enemy)
+			print(attached_enemies.size())
 			kill()
 		elif not enemy.is_dead and enemy.enemy_state == Enums.EnemyState.ATTACHED:
 			#enemy.enemy_state = Enums.EnemyState.ATTACHED
-			#attached_enemies.push_back(enemy)
-			#print(attached_enemies.size())
+			enemy.look_at(self.position)
+			print(attached_enemies.size())
 			print("bite?")
 			pass
 		elif not body.is_dead:

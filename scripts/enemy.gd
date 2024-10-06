@@ -109,6 +109,7 @@ func _ready():
 	anim_zombie.play("walk")
 	ray_cast_2d.target_position.x = visual_awareness_circle
 	call_deferred("nav_setup")
+	print(self.get_rid())
 	# line2dexample()
 	
 func nav_setup():
@@ -158,9 +159,14 @@ func handle_hit(delta: float) -> void:
 	velocity = velocity.move_toward(Vector2.ZERO, 1000 * delta)
 
 func handle_attached_state(delta: float) -> void:
+	# handle this in the player, 
+	# pass the RID 
 	var distance = player.position.distance_to(position)
-	velocity = velocity.move_toward(position.direction_to(player.position) * distance, 10000 * delta)
-	move_and_slide()
+	if(distance>100):
+		enemy_state = Enums.EnemyState.HIT
+	else:
+		velocity = velocity.move_toward(position.direction_to(player.position) * distance, 10000 * delta)
+		move_and_slide()
 
 func handle_awareness(delta: float) -> void:
 	aquire_target()

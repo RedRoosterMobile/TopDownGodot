@@ -188,8 +188,7 @@ shape = SubResource("CapsuleShape2D_qr2qq")
 material = SubResource("ShaderMaterial_efakv")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_g1f26")
-animation = &"walk"
-frame_progress = 0.0028186
+animation = &"die"
 
 [node name="SfxZombieGrowl" type="AudioStreamPlayer2D" parent="AnimZombie"]
 stream = ExtResource("3_fyqbl")

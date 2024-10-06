@@ -13,10 +13,10 @@ Yum 😋
 => END
 # https://github.com/nathanhoad/godot_dialogue_manager/blob/main/docs/Writing_Dialogue.md
 ~ test
-Unknown: We're so screwed. 
+Unknown: We're so screwed.
 	The experiment went south fast! They broke out and are all over the place now!
 Unknown: They can hear us. So this might be a way to distract them.
 Unknown: I want to bug out of here asap!
 Jerry: [#happy, #surprised] So Long and good luck - Jerry
-do Messenger.pickup.emit(Enums.PickupItems.MESSAGE,"food")
+# do Messenger.pickup.emit(Enums.PickupItems.MESSAGE,"food")
 => END

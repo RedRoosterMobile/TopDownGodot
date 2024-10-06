@@ -528,6 +528,7 @@ subviewport = NodePath("../SubViewport")
 
 [node name="ExampleBalloon" parent="Player" instance=ExtResource("4_hgol1")]
 process_mode = 3
+visible = false
 next_action = &"interact"
 
 [node name="AnimLegs" type="AnimatedSprite2D" parent="Player"]
