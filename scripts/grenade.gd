@@ -23,22 +23,22 @@ func _ready() -> void:
 	adjust_physics_properties()
 	start_explosion_timer()
 	$AnimationPlayer.play("scale")
-var previous_rotation = 0
-var previous_position = Vector2.ZERO
+
+
 func _physics_process(delta: float) -> void:
 	if not has_exploded:
 		grenade.position = rigid_body_2d.position
 		grenade.rotation = rigid_body_2d.rotation
 		bounce_checker()
 		
+var previous_velocity:Vector2 = Vector2.ZERO
 func bounce_checker():
 	var current_velocity:Vector2 = rigid_body_2d.linear_velocity.normalized()
-	var diff:Vector2 = current_velocity-previous_position
-	if diff.length_squared() > 0.7:
-		print("bounce")
+	Helpers.bounce_checker(current_velocity,previous_velocity,func():
 		Messenger.raise_attention.emit(grenade.global_position)
-	# print(current_velocity-previous_position)
-	previous_position = current_velocity
+	)
+	previous_velocity = current_velocity
+
 
 func apply_initial_force() -> void:
 	# same same
