@@ -365,33 +365,94 @@ _data = {
 
 [node name="world" type="Node2D"]
 
-[node name="Tiles" type="Node2D" parent="."]
+[node name="Level1" type="Node2D" parent="."]
 
-[node name="CosmicLilacLayer" type="TileMapLayer" parent="Tiles" groups=["wall"]]
+[node name="Tiles" type="Node2D" parent="Level1"]
+
+[node name="CosmicLilacLayer" type="TileMapLayer" parent="Level1/Tiles" groups=["wall"]]
 scale = Vector2(10, 10)
 tile_map_data = PackedByteArray("AAABAAAAAAAHAAEAAAACAAAAAAAHAAEAAAADAAAAAAAHAAEAAAACAAEAAAAHAAMAAAACAAIAAAAHAAMAAAADAAIAAAAHAAMAAAAEAAIAAAAGAAMAAAAFAAIAAAAGAAMAAAAGAAIAAAAGAAMAAAAHAAIAAAAGAAMAAAAIAAIAAAAGAAMAAAAJAAIAAAAHAAMAAAAKAAIAAAAGAAMAAAALAAIAAAAGAAMAAAAMAAIAAAAGAAMAAAANAAIAAAAHAAMAAAAOAAIAAAALAAMAAAANAAEAAAAHAAEAAAAMAAEAAAAHAAEAAAALAAEAAAAHAAEAAAAKAAEAAAAHAAEAAAAJAAEAAAAHAAEAAAAIAAEAAAAHAAEAAAAHAAEAAAAHAAEAAAAGAAEAAAAHAAEAAAAEAAEAAAAGAAIAAAADAAEAAAAGAAMAAAAFAAEAAAAHAAEAAAAKAAMAAAAGAAMAAAAJAAMAAAAGAAMAAAAIAAMAAAAGAAMAAAABAP//AAACAAAAAAACAP//AAACAAAAAAADAP//AAACAAAAAAAEAP//AAADAAAAAAAEAAAAAAAFAAEAAAAFAAAAAAACAAAAAAAGAAAAAAACAAAAAAAHAAAAAAACAAAAAAAIAAAAAAACAAAAAAAJAAAAAAACAAAAAAAKAAAAAAACAAAAAAALAAAAAAACAAAAAAAMAAAAAAACAAAAAAANAAAAAAACAAAAAAACAAMAAAABAAMAAAADAAMAAAABAAMAAAAEAAMAAAABAAMAAAAFAAMAAAABAAMAAAAGAAMAAAABAAMAAAAHAAMAAAAFAAMAAAAHAAQAAAAAAAEAAAAJAAQAAAAEAAMAAAAKAAQAAAABAAMAAAALAAQAAAADAAMAAAALAAMAAAAEAAMAAAAMAAMAAAABAAMAAAANAAMAAAABAAMAAAAOAAMAAAABAAMAAAAPAAMAAAADAAMAAAAPAAEAAAADAAAAAAAOAAEAAAAFAAEAAAAOAAAAAAADAAAAAAAIAAQAAAAGAAMAAAABAAEAAAAHAAMAAAABAAIAAAAIAAMAAAAAAAIAAAACAAIAAAAAAAEAAAACAAIAAAAAAAAAAAACAAIAAAD/////AAAAAAAAAAAAAP//AAABAAAAAAD//wAAAAAAAAEAAAD//wEAAAAAAAEAAAD//wIAAAAAAAEAAAABAAMAAAACAAMAAAAAAAMAAAACAAMAAAD//wMAAAAAAAMAAAAHAAUAAAAAAAIAAAAHAAYAAAAAAAIAAAAHAAcAAAAAAAIAAAAJAAUAAAADAAIAAAAJAAYAAAADAAIAAAAJAAcAAAADAAIAAAAIAAUAAAAHAAMAAAAIAAYAAAAIAAMAAAAIAAcAAAAGAAMAAAAPAAIAAAADAAEAAAAHAAgAAAAEAAEAAAAJAAgAAAAFAAEAAAAKAAgAAAABAAAAAAALAAgAAAABAAAAAAAMAAgAAAABAAAAAAANAAgAAAABAAAAAAAOAAgAAAABAAAAAAAPAAgAAAABAAAAAAAGAAgAAAACAAAAAAAFAAgAAAACAAAAAAAEAAgAAAACAAAAAAABAAgAAAAEAAEAAAD//wgAAAAAAAAAAAD//wkAAAAAAAEAAAD//woAAAAAAAEAAAD//wsAAAAAAAEAAAD//wwAAAAAAAEAAAD//w0AAAAAAAMAAAAAAA0AAAABAAMAAAABAA0AAAABAAMAAAACAA0AAAABAAMAAAADAA0AAAABAAMAAAAEAA0AAAABAAMAAAAFAA0AAAABAAMAAAAGAA0AAAABAAMAAAAHAA0AAAABAAMAAAAIAA0AAAABAAMAAAAJAA0AAAABAAMAAAAKAA0AAAABAAMAAAALAA0AAAABAAMAAAAMAA0AAAABAAMAAAANAA0AAAABAAMAAAAOAA0AAAABAAMAAAAPAA0AAAABAAMAAAAAAAkAAAAGAAMAAAABAAkAAAAGAAMAAAACAAkAAAAGAAMAAAADAAkAAAAHAAMAAAAEAAkAAAAHAAMAAAAFAAkAAAAHAAMAAAAGAAkAAAAHAAMAAAAHAAkAAAAHAAMAAAAIAAkAAAAHAAMAAAAJAAkAAAAHAAMAAAAKAAkAAAAHAAMAAAALAAkAAAAHAAMAAAAMAAkAAAAHAAMAAAANAAkAAAAHAAMAAAAOAAkAAAAHAAMAAAAPAAkAAAAGAAMAAAAPAAoAAAAHAAMAAAAOAAoAAAAHAAMAAAAOAAsAAAAHAAMAAAANAAsAAAAGAAMAAAAMAAsAAAAHAAMAAAALAAsAAAAGAAMAAAAKAAsAAAAHAAMAAAAJAAsAAAAHAAMAAAAIAAsAAAAKAAUAAAAHAAsAAAAHAAMAAAAGAAsAAAAIAAMAAAAFAAsAAAAHAAMAAAAEAAsAAAAHAAMAAAADAAsAAAAIAAMAAAACAAsAAAAHAAMAAAABAAsAAAAHAAMAAAAAAAsAAAAHAAMAAAAAAAoAAAAHAAMAAAABAAoAAAAHAAMAAAACAAoAAAAHAAMAAAADAAoAAAADAAQAAAAMAAoAAAAHAAMAAAANAAoAAAAIAAMAAAALAAoAAAAHAAMAAAAKAAoAAAABAAEAAAAJAAoAAAAHAAMAAAAIAAoAAAABAAEAAAAHAAoAAAAHAAMAAAAGAAoAAAABAAEAAAAFAAoAAAAGAAMAAAAEAAoAAAAGAAMAAAAAAAwAAAAHAAMAAAABAAwAAAAGAAMAAAACAAwAAAAHAAMAAAADAAwAAAAHAAMAAAAEAAwAAAAHAAMAAAAFAAwAAAAHAAMAAAAGAAwAAAAHAAMAAAAHAAwAAAAHAAMAAAAMAAwAAAAIAAMAAAANAAwAAAAHAAMAAAAOAAwAAAAHAAMAAAAPAAwAAAAHAAMAAAAPAAsAAAAHAAMAAAALAAwAAAAHAAMAAAAKAAwAAAAHAAMAAAAJAAwAAAAHAAMAAAAIAAwAAAAHAAMAAAAIAAgAAAALAAMAAAAQAAgAAAADAAAAAAAQAAkAAAADAAEAAAAQAAoAAAADAAEAAAAQAAsAAAADAAEAAAAQAAwAAAADAAEAAAAQAA0AAAADAAMAAAAAAAgAAAABAAAAAAADAAgAAAAFAAEAAAA=")
 tile_set = SubResource("TileSet_3udj4")
 
-[node name="InteractableLayer" type="TileMapLayer" parent="Tiles"]
+[node name="InteractableLayer" type="TileMapLayer" parent="Level1/Tiles"]
 scale = Vector2(10, 10)
 tile_map_data = PackedByteArray("AAD/////AAAAAAAAAAAPAAkAAAAKAAIAAAAOAAkAAAAKAAIAAAANAAkAAAAKAAIAAAANAAgAAAAKAAEAAAAOAAgAAAAKAAEAAAAPAAgAAAAKAAEAAAAHAAAAAAAGAAAAAAALAAgAAAAKAAMAAAACAAgAAAAAAAUAAAAAAAgAAAACAAEAAAAAAAcAAAACAAEAAAABAAgAAAACAAEAAAADAAgAAAACAAEAAAAEAAgAAAACAAEAAAADAAcAAAACAAEAAAABAAcAAAACAAEAAAACAAcAAAACAAEAAAAEAAcAAAACAAEAAAADAAYAAAACAAAAAAACAAYAAAACAAAAAAABAAYAAAACAAAAAAAAAAYAAAACAAAAAAAEAAYAAAACAAAAAAD//wYAAAAAAAAAAAD//wcAAAAAAAEAAAD//wgAAAAAAAEAAAAFAAYAAAACAAAAAAAGAAYAAAACAAAAAAAHAAYAAAAEAAEAAAAHAAcAAAACAAEAAAAGAAcAAAACAAEAAAAFAAcAAAACAAEAAAAHAAgAAAACAAEAAAAGAAgAAAACAAEAAAAFAAgAAAACAAEAAAA=")
 tile_set = SubResource("TileSet_3udj4")
+
+[node name="LevelLights" type="Node2D" parent="Level1"]
+
+[node name="BreederLight" type="PointLight2D" parent="Level1/LevelLights"]
+position = Vector2(2329, 1357)
+color = Color(0.921155, 0.821449, 0.812847, 1)
+texture = ExtResource("4_as6n4")
+script = ExtResource("4_43y7n")
+
+[node name="BlinkingLight" parent="Level1/LevelLights" instance=ExtResource("4_p8lqx")]
+
+[node name="Player" parent="Level1" node_paths=PackedStringArray("subviewport", "hurt_shader") instance=ExtResource("8_wfe7k")]
+position = Vector2(1362, 1496)
+subviewport = NodePath("../../SubViewport")
+hurt_shader = NodePath("../../Hurt2")
+
+[node name="Enemy" parent="Level1" node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(352, 1924)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="Enemy2" parent="Level1" node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(166, 1732)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="Enemy3" parent="Level1" node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(414, 1740)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="Enemy4" parent="Level1" node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+position = Vector2(205, 248)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="Enemy5" parent="Level1" node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
+position = Vector2(275, 1579)
+rotation = -3.10742
+scale = Vector2(4, 4)
+player = NodePath("../Player")
+
+[node name="PickupItem" parent="Level1" instance=ExtResource("39_vrq0c")]
+position = Vector2(1214, 1514)
+collision_mask = 2
+
+[node name="DemoItemSandwich" type="Sprite2D" parent="Level1/PickupItem"]
+scale = Vector2(2, 2)
+texture = ExtResource("40_m5d80")
+
+[node name="PickupItem2" parent="Level1" instance=ExtResource("39_vrq0c")]
+position = Vector2(1509, 1671)
+collision_mask = 2
+item_type = 12
+data = "test"
+
+[node name="DemoItemSandwich" type="Sprite2D" parent="Level1/PickupItem2"]
+scale = Vector2(10, 10)
+texture = ExtResource("41_m0cx1")
 
 [node name="RenderTexture" type="Sprite2D" parent="."]
 texture_filter = 1
 texture_repeat = 1
 texture = SubResource("ViewportTexture_wdujj")
 offset = Vector2(1440, 1440)
-
-[node name="LevelLights" type="Node2D" parent="."]
-
-[node name="BreederLight" type="PointLight2D" parent="LevelLights"]
-position = Vector2(2329, 1357)
-color = Color(0.921155, 0.821449, 0.812847, 1)
-texture = ExtResource("4_as6n4")
-script = ExtResource("4_43y7n")
-
-[node name="BlinkingLight" parent="LevelLights" instance=ExtResource("4_p8lqx")]
 
 [node name="SubViewport" type="SubViewport" parent="."]
 disable_3d = true
@@ -414,46 +475,6 @@ texture = ExtResource("3_d2r83")
 [node name="Blood" type="Sprite2D" parent="SubViewport/Node2D"]
 visible = false
 texture = ExtResource("7_6504t")
-
-[node name="Player" parent="." node_paths=PackedStringArray("subviewport") instance=ExtResource("8_wfe7k")]
-position = Vector2(1362, 1496)
-subviewport = NodePath("../SubViewport")
-
-[node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
-light_mask = 2
-visibility_layer = 2
-position = Vector2(352, 1924)
-rotation = -3.10742
-scale = Vector2(4, 4)
-player = NodePath("../Player")
-
-[node name="Enemy2" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
-light_mask = 2
-visibility_layer = 2
-position = Vector2(166, 1732)
-rotation = -3.10742
-scale = Vector2(4, 4)
-player = NodePath("../Player")
-
-[node name="Enemy3" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
-light_mask = 2
-visibility_layer = 2
-position = Vector2(414, 1740)
-rotation = -3.10742
-scale = Vector2(4, 4)
-player = NodePath("../Player")
-
-[node name="Enemy4" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
-position = Vector2(205, 248)
-rotation = -3.10742
-scale = Vector2(4, 4)
-player = NodePath("../Player")
-
-[node name="Enemy5" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_fhhcs")]
-position = Vector2(275, 1579)
-rotation = -3.10742
-scale = Vector2(4, 4)
-player = NodePath("../Player")
 
 [node name="Shockwave" type="CanvasLayer" parent="."]
 
@@ -516,21 +537,3 @@ color = Color(0.272047, 0.272047, 0.272047, 1)
 stream = ExtResource("9_26m4r")
 autoplay = true
 bus = &"MUSIC"
-
-[node name="PickupItem" parent="." instance=ExtResource("39_vrq0c")]
-position = Vector2(1214, 1514)
-collision_mask = 2
-
-[node name="DemoItemSandwich" type="Sprite2D" parent="PickupItem"]
-scale = Vector2(2, 2)
-texture = ExtResource("40_m5d80")
-
-[node name="PickupItem2" parent="." instance=ExtResource("39_vrq0c")]
-position = Vector2(1509, 1671)
-collision_mask = 2
-item_type = 12
-data = "test"
-
-[node name="DemoItemSandwich" type="Sprite2D" parent="PickupItem2"]
-scale = Vector2(10, 10)
-texture = ExtResource("41_m0cx1")

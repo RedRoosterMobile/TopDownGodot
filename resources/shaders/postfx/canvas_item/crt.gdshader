@@ -67,6 +67,6 @@ void fragment(  )
     float comp = smoothstep( 0.1, 0.9, sin(TIME) );
 
 	//vec4 noise_color = texture( noise_texture, vec2(q.x,q.y) );
-    COLOR = vec4(col,1.0);
+    COLOR = vec4(col+vec3(0.0,.2,0.0),1.0);
 	//COLOR=noise_color;
 }

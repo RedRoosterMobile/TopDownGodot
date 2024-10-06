@@ -2,6 +2,7 @@ extends CharacterBody2D
 class_name Player
 # original tutorial https://www.youtube.com/watch?v=HycyFNQfqI0
 @export var subviewport:SubViewport
+@export var hurt_shader:CanvasLayer
 var movespeed:float = 700
 @export var bullet_speed:float = 3000
 @export var bullet_accuracy:float = 0.05
@@ -326,7 +327,7 @@ func kill():
 	print("player died!")
 	if get_tree().current_scene:
 		# if health below some threshold
-		$"../Hurt2".visible = true
+		hurt_shader.visible = true
 		#get_tree().reload_current_scene()
 
 func _on_area_2d_body_entered(body):
