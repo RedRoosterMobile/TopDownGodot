@@ -24,7 +24,6 @@ func _ready() -> void:
 	start_explosion_timer()
 	$AnimationPlayer.play("scale")
 
-
 func _physics_process(delta: float) -> void:
 	if not has_exploded:
 		grenade.position = rigid_body_2d.position
@@ -38,7 +37,6 @@ func bounce_checker():
 		Messenger.raise_attention.emit(grenade.global_position)
 	)
 	previous_velocity = current_velocity
-
 
 func apply_initial_force() -> void:
 	# same same
@@ -62,7 +60,6 @@ func start_explosion_timer():
 	timer.start()
 
 func _on_timer_timeout() -> void:
-	
 	explode()
 	# trigger a bunch of (invisible) rigidbodies in a circle and accellerate them outwards
 	# make them disappear on first collision
@@ -70,6 +67,7 @@ func _on_timer_timeout() -> void:
 func explode() -> void:
 	print("boom")
 	Messenger.raise_attention.emit(grenade.global_position)
+	Messenger.slowdown.emit(0.3)
 	#region shockwave
 	# magic sauce: screen coorinates (aka on my screen in pixels)
 	var player_pos = grenade.get_global_transform_with_canvas()

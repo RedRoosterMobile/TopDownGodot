@@ -291,7 +291,7 @@ func aquire_target():
 		# always works (on any target), needs to turn first if not in fov
 		print("noise  ", is_in_noise_awareness_zone)
 		
-		print("fov    ", is_player_in_fov())
+		print("fov    ", is_player_in_fov(fov_angle))
 		print("---")
 	
 	# check if target empty
@@ -312,7 +312,7 @@ func aquire_target():
 			#enemy_state = EnemyState.IDLE
 			target = null
 	
-func is_player_in_fov() -> bool:
+func is_player_in_fov(fov_angle:float) -> bool:
 	var to_player = (player.global_position - global_position).normalized()
 	var facing_direction = Vector2.RIGHT.rotated(global_rotation)
 	var dot_product = facing_direction.dot(to_player)
@@ -441,8 +441,6 @@ func _on_anim_zombie_animation_finished() -> void:
 	player.draw_me(self)
 
 func spawn_footstep_trigger():
-	print("spawing")
-	# instantiate new trigger
 	var trigger: Node2D = footstep_trigger_scene.instantiate()
 	trigger.global_position = global_position
 	get_tree().get_root().add_child(trigger)

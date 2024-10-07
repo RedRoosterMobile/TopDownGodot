@@ -508,7 +508,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Hurt" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="Hurt" type="ColorRect" parent="Hurt"]
 material = SubResource("ShaderMaterial_u1d7g")
@@ -543,6 +542,7 @@ visible = false
 color = Color(0.272047, 0.272047, 0.272047, 1)
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
+process_mode = 3
 stream = ExtResource("9_26m4r")
 autoplay = true
 bus = &"MUSIC"

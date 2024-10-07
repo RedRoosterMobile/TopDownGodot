@@ -7,7 +7,6 @@ var movespeed:float = 700
 @export var bullet_speed:float = 3000
 @export var bullet_accuracy:float = 0.05
 var bullet = preload("res://scenes/bullet.tscn")
-var dialogue_active:bool = false
 var time: float = 0.0
 var time_rotation: float = 0.0
 @onready var sfx_shot := $SfxShot
@@ -54,16 +53,23 @@ var rt_node:Node2D
 func _ready():
 	z_index = 1
 	flame_thrower.is_active = false
-	#example_balloon = balloon_scene.instantiate()
-	#print(example_balloon)
 	
 	Messenger.connect("screenshake", screenshake)
 	Messenger.connect("bloody_footsteps", soak_shoes_in_blood)
 	Messenger.connect("draw_node", draw_me)
 	Messenger.connect("pickup", picked_up)
+	Messenger.connect("slowdown", slowdown)
 	original_position = camera_2d.position
 	rt_node = subviewport.get_node("Node2D")
-
+func slowdown(duration:float):
+	print("slowdown ", duration)
+	var tween = get_tree().create_tween()
+	tween.tween_property(Engine, "time_scale",0.5, duration / 2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(Engine, "time_scale",1, duration / 2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_callback(func():
+		print("done")
+	)
+	pass
 func picked_up(item: Enums.PickupItems, data = null):
 	if item == Enums.PickupItems.SANDWICH:
 		print("yum!", data)
@@ -179,19 +185,6 @@ func _physics_process(delta):
 		grenade.position = global_position
 		grenade.set_direction(direction)
 		get_tree().get_root().call_deferred("add_child", grenade)
-		
-		if not dialogue_active and false:
-			var resource = load("res://dialogue/main.dialogue")
-			var scn:CanvasLayer = balloon_scene.instantiate()
-			get_tree().root.add_child(scn)
-			scn.process_mode = Node.PROCESS_MODE_ALWAYS
-			scn.start(resource, "start")
-			scn.connect("tree_exited", func():
-				# await get_tree().create_timer(1).timeout
-				toggle_pause()
-			)
-			dialogue_active = true
-			toggle_pause()
 
 	# Shoot action
 	if Input.is_action_just_pressed("shoot"):
@@ -291,7 +284,6 @@ func show_dialog(identifier:String = "start") -> void:
 func toggle_pause():
 	if get_tree():
 		get_tree().paused = not get_tree().paused
-		dialogue_active = get_tree().paused
 
 func fire():
 	var bullet_instance = bullet.instantiate()
