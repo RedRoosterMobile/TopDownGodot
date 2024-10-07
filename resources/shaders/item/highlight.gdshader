@@ -2,8 +2,8 @@
 // Overlays/Mixes between an animated color A and color B (alpha of each controls mix amount)
 shader_type canvas_item;
 
-//render_mode blend_mix,light_only;
-render_mode blend_mix;
+render_mode blend_mix,light_only;
+//render_mode blend_mix;
 
 // Color A: grey by default
 uniform vec4 color_a:source_color = vec4(0.7, 0.7, 0.7, 1.0);
