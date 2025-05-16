@@ -36,3 +36,4 @@ func create_burner():
 	
 	burner_instance.direction = Vector2.RIGHT.rotated(global_rotation)
 	get_tree().root.call_deferred("add_child", burner_instance)
+	#self.get_parent().call_deferred("add_child", burner_instance)

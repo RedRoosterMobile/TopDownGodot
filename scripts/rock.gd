@@ -15,8 +15,13 @@ func _ready() -> void:
 	adjust_physics_properties()
 	# $AnimationPlayer.play("scale")
 
+var time:float = 0.0
 func _physics_process(delta: float) -> void:
-	grenade.position = rigid_body_2d.position
+	time += delta
+	#grenade.position = rigid_body_2d.position
+	var weight: float = 0.5
+	# alternate weight over time 
+	grenade.position = lerp(grenade.position, rigid_body_2d.position, weight)
 	grenade.rotation = rigid_body_2d.rotation
 	bounce_checker()
 		

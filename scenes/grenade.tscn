@@ -1,6 +1,6 @@
 [gd_scene load_steps=39 format=3 uid="uid://cm8bteog724uj"]
 
-[ext_resource type="Script" path="res://scripts/grenade.gd" id="1_0aiai"]
+[ext_resource type="Script" uid="uid://dhpkskj2yjlss" path="res://scripts/grenade.gd" id="1_0aiai"]
 [ext_resource type="Texture2D" uid="uid://1btll1ijp6sb" path="res://assets/sprites/grenade.png" id="2_irsls"]
 [ext_resource type="AudioStream" uid="uid://bklkrsnphul7a" path="res://assets/sounds/sfx/sndExplosion.wav" id="5_7to51"]
 [ext_resource type="Texture2D" uid="uid://c2g2cxqyipmrv" path="res://assets/sprites/Explosion3/0001.png" id="6_i5x36"]
@@ -69,8 +69,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mrq43"]
 _data = {
-"RESET": SubResource("Animation_7trfn"),
-"scale": SubResource("Animation_0l38q")
+&"RESET": SubResource("Animation_7trfn"),
+&"scale": SubResource("Animation_0l38q")
 }
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_sx1ir"]
@@ -196,7 +196,7 @@ stream = ExtResource("5_7to51")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_mrq43")
+&"": SubResource("AnimationLibrary_mrq43")
 }
 
 [node name="Explosion" type="AnimatedSprite2D" parent="."]

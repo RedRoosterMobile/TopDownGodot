@@ -16,7 +16,7 @@ var trigger_time:float = 3
 var initial_force:float = 1000
 
 func set_direction(direction: Vector2) -> void:
-	initial_direction = direction.normalized()
+	initial_direction = direction.normalized()*-1
 
 func _ready() -> void:
 	apply_initial_force()

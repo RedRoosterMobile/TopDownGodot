@@ -1,7 +1,7 @@
 [gd_scene load_steps=39 format=3 uid="uid://dg2icd6fsnaur"]
 
-[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_bcf45"]
-[ext_resource type="Shader" path="res://resources/shaders/item/highlight.gdshader" id="2_2o5wd"]
+[ext_resource type="Script" uid="uid://dwo5vukt6qyne" path="res://scripts/enemy.gd" id="1_bcf45"]
+[ext_resource type="Shader" uid="uid://dqxovi5o6obmp" path="res://resources/shaders/item/highlight.gdshader" id="2_2o5wd"]
 [ext_resource type="AudioStream" uid="uid://byic1s2ye1oge" path="res://assets/sounds/sfx/zombie/1.wav" id="3_fyqbl"]
 [ext_resource type="Texture2D" uid="uid://c142ch7r31wku" path="res://assets/sprites/enemy/enemy5.png" id="4_f177n"]
 [ext_resource type="Texture2D" uid="uid://bhy06hsu6aasb" path="res://assets/sprites/enemy/enemy6.png" id="5_1wch4"]
@@ -17,7 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://diw2wr47mn26k" path="res://assets/sounds/sfx/sndGoreSplash.wav" id="15_7igtv"]
 [ext_resource type="Texture2D" uid="uid://coknc8x25v432" path="res://assets/sprites/enemy/enemy2.png" id="15_k201j"]
 [ext_resource type="Texture2D" uid="uid://cbdohqpnpbxxh" path="res://assets/sprites/sprElectricity1.png" id="15_tcrkf"]
-[ext_resource type="Script" path="res://scripts/sprite_2d.gd" id="16_0qwgh"]
+[ext_resource type="Script" uid="uid://bjjb0vwg3sh4m" path="res://scripts/sprite_2d.gd" id="16_0qwgh"]
 [ext_resource type="Texture2D" uid="uid://bwwoj8wblhirh" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_0.png" id="18_2lh8j"]
 [ext_resource type="Texture2D" uid="uid://dmxpnfmct4c1q" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_1.png" id="19_8be12"]
 [ext_resource type="Texture2D" uid="uid://c8q00fu8wdp1i" path="res://assets/sprites/sprBloodHit1/sprBloodHit1_2.png" id="20_q3xak"]
@@ -189,6 +189,8 @@ material = SubResource("ShaderMaterial_efakv")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_g1f26")
 animation = &"die"
+frame = 7
+frame_progress = 1.0
 
 [node name="SfxZombieGrowl" type="AudioStreamPlayer2D" parent="AnimZombie"]
 stream = ExtResource("3_fyqbl")
@@ -239,8 +241,8 @@ radius = 50.0
 visible = false
 material = SubResource("CanvasItemMaterial_6kov2")
 amount = 80
-process_material = SubResource("ParticleProcessMaterial_xs62v")
 draw_order = 2
+process_material = SubResource("ParticleProcessMaterial_xs62v")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

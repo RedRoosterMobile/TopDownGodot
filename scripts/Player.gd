@@ -5,6 +5,7 @@ class_name Player
 @export var hurt_shader:CanvasLayer
 var movespeed:float = 700
 @export var bullet_speed:float = 3000
+@export var bullets:int = 30
 @export var bullet_accuracy:float = 0.05
 var bullet = preload("res://scenes/bullet.tscn")
 var time: float = 0.0
@@ -74,9 +75,12 @@ func picked_up(item: Enums.PickupItems, data = null):
 	if item == Enums.PickupItems.SANDWICH:
 		print("yum!", data)
 		show_dialog("food")
+		hurt_shader.visible = false
+		
 	elif item == Enums.PickupItems.SHAKE:
 		print("slurp!")
 		show_dialog("food")
+		hurt_shader.visible = false
 	elif item == Enums.PickupItems.MESSAGE:
 		show_dialog(data)
 	elif item == Enums.PickupItems.FLAMETHROWER:
@@ -181,16 +185,27 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("interact"):
 		print("grenade")
 		var grenade = grenade_scene.instantiate()
-		var direction := Vector2(1, 0).rotated(rotation)
+		var direction := Vector2.LEFT.rotated(rotation)
 		grenade.position = global_position
 		grenade.set_direction(direction)
-		get_tree().get_root().call_deferred("add_child", grenade)
+		self.get_parent().call_deferred("add_child", grenade)
+		#get_tree().root.call_deferred("add_child", grenade)
 
 	# Shoot action
 	if Input.is_action_just_pressed("shoot"):
-		fire()
+		if bullets > 0:
+			fire()
+			#bullets -= 1
+		else:
+			print("out of bullets")
+	# Reload action
+	if Input.is_action_just_pressed("reload"):
+		if bullets <= 0:
+			print("reloading 10 bullets")
+			bullets = 10
+		
 
-	# Normalize motion to prevpent faster diagonal movement
+	# Normalize motion to prevent faster diagonal movement
 	if motion.length() > 0:
 		motion = motion.normalized()
 
@@ -222,18 +237,24 @@ func _physics_process(delta):
 	var scale_factor = 3.0 + sin(time * 10.0) * 0.5  # Adjust the speed and amplitude of the sine wave
 	cursor.scale = Vector2(scale_factor, scale_factor)  # Set the cursor scale
 	
-	# camera
+	# camera # fixme: there is sth off here
 	var viewport_size = get_viewport().get_visible_rect().size
-	# var half_width = viewport_size.x * 0.381
-	var half_height = viewport_size.x * 0.381
+	var half_width = viewport_size.x * 0.381
+	var half_height = viewport_size.y * 0.381
 	var clamped_cursor_position = Vector2(
 		clamp(cursor.position.x,-half_height,half_height),
 		clamp(cursor.position.y,-half_height,half_height)
 	)
+	#print("distance ", 
+	#	(global_position).distance_to(cursor.global_position)
+	#)
+	
 	# Calculate the midpoint between the player and the clamped cursor position
 	# var midpoint = (position+clamped_cursor_position)/2
-	# Lerp the camera position for smooth movement
-	camera_2d.position = camera_2d.position.slerp(clamped_cursor_position, 0.005)
+	if (global_position).distance_to(cursor.global_position) > 500:
+		# Lerp the camera position for smooth movement
+		pass
+	camera_2d.position = camera_2d.position.slerp(clamped_cursor_position, 1-0.005)
 	
 	# ignore player rotaion
 	camera_2d.rotation= -rotation
@@ -289,7 +310,7 @@ func fire():
 	var bullet_instance = bullet.instantiate()
 	var bullet_rigid_body:RigidBody2D = bullet_instance.get_node("BulletRigidBody2D")
 	
-	bullet_rigid_body.position = get_global_position() + Vector2(120, 0).rotated(rotation)
+	bullet_rigid_body.position = self.position + Vector2(120, 0).rotated(rotation)
 	bullet_rigid_body.rotation = rotation
 
 	var accuracy:float = randf_range(-bullet_accuracy, bullet_accuracy)
@@ -305,24 +326,27 @@ func fire():
 	# bullet_rigid_body.collision_mask = 1 | 4  # Ignore layer 1 (player), interact with other layers (e.g., enemies on layer 4)
 	
 	# Add the bullet instance to the scene tree
-	get_tree().root.call_deferred("add_child", bullet_instance)
+	self.get_parent().call_deferred("add_child", bullet_instance)
+	#get_tree().root.call_deferred("add_child", bullet_instance)
 	# bullet_particles.restart()
 	# bullet_particles.emitting = true
 	
 	# shell
 	var shell:RigidBody2D = shell_scene.instantiate()
 	
-	shell.position = get_global_position() + Vector2(60, 0).rotated(rotation)
+	shell.position = get_global_position() #+ Vector2(60, 0).rotated(rotation)
 	shell.rotation = rotation
 	var shell_accuracy: float = randf_range(-bullet_accuracy * 10, bullet_accuracy * 10)
 	var direction_shell := Vector2(1, 0).rotated(rotation + shell_accuracy + deg_to_rad(90))
 	shell.linear_velocity = direction_shell * bullet_speed/2
-	get_tree().root.call_deferred("add_child", shell)
+	#get_tree().root.call_deferred("add_child", shell)
+	self.get_parent().call_deferred("add_child", shell)
 	
 	# Instance and add the particles
 	var bullet_particles_instance := bullet_particles_scene.instantiate()
 	bullet_particles_instance.position = bullet_rigid_body.position # Adjust the position if needed
-	get_tree().root.call_deferred("add_child", bullet_particles_instance)
+	#get_tree().root.call_deferred("add_child", bullet_particles_instance)
+	self.get_parent().call_deferred("add_child", bullet_particles_instance)
 	sfx_shot.play()
 
 # https://youtu.be/HycyFNQfqI0?si=NJQaapwXdqKIyq7M&t=410

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bfjil3s3lxm3a"]
 
-[ext_resource type="Script" path="res://scripts/footstep_trigger.gd" id="1_6yrvi"]
+[ext_resource type="Script" uid="uid://bgyna2yv2skw7" path="res://scripts/footstep_trigger.gd" id="1_6yrvi"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sdl18"]
 

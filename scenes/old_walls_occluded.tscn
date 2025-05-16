@@ -10,7 +10,7 @@ resource_name = "wall"
 texture = ExtResource("1_2eaer")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
-0:0/0/occlusion_layer_0/polygon = SubResource("OccluderPolygon2D_j850j")
+0:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_j850j")
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 
 [sub_resource type="TileSet" id="TileSet_dw68l"]

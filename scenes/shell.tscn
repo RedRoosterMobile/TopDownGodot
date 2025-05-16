@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://7fo5ykvguhd"]
 
 [ext_resource type="Texture2D" uid="uid://r6digphhhdxv" path="res://assets/sprites/shell.png" id="1_nts11"]
-[ext_resource type="Script" path="res://scripts/shell.gd" id="1_wmxmc"]
+[ext_resource type="Script" uid="uid://d4lf314lo7db3" path="res://scripts/shell.gd" id="1_wmxmc"]
 [ext_resource type="AudioStream" uid="uid://bjhcx44haec05" path="res://assets/sounds/sfx/sndShells.ogg" id="3_x15bc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6gcrh"]

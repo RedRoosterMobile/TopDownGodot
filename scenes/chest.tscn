@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://cjbh77s6nqsrb"]
 
 [ext_resource type="Texture2D" uid="uid://cjmup637k878u" path="res://assets/sprites/items/Chest Closed.png" id="1_84ht1"]
-[ext_resource type="Script" path="res://scripts/chest.gd" id="1_ima4w"]
+[ext_resource type="Script" uid="uid://dv2baxsqspggt" path="res://scripts/chest.gd" id="1_ima4w"]
 [ext_resource type="Texture2D" uid="uid://b6j2intcrsq3l" path="res://assets/sprites/items/Chest Opened.png" id="2_k3c75"]
-[ext_resource type="Shader" path="res://resources/shaders/item/outline.gdshader" id="2_myp8l"]
+[ext_resource type="Shader" uid="uid://cbu4h0kul8reu" path="res://resources/shaders/item/outline.gdshader" id="2_myp8l"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5pwc1"]
 shader = ExtResource("2_myp8l")
